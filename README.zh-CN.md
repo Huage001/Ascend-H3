@@ -47,7 +47,7 @@ Full 和 VDN 不需要这里的自定义 CANN 扩展。当前使用源码可编�
 | 方法 | 所需权重 | 注意力机制 |
 | --- | --- | --- |
 | `full` | H3，默认 LightX2V 4-step，也可使用社区 LoRA | 全注意力 |
-| `vsa` | H3 + 带训练后 compression gate 的 Sol-H3 VSA LoRA | 逻辑 tile64，选中的两个 KV64 在片上配对成 KV128 计算 |
+| `vsa` | H3 + 带训练后 compression gate 的 Sol-H3 VSA LoRA | 默认名义视频稀疏度 90%；逻辑 tile64，选中的两个 KV64 在片上配对成 KV128 计算 |
 | `veda` | H3 + LightX2V 4-step + 官方训练的 Veda predictor | 每层、每个 head 动态选块，默认名义稀疏度 90% |
 | `vdn` | H3 + 官方 VDN stage-DMD 权重目录 | local softmax + 保留 128 维状态的 DeltaNet 分支 |
 | `spark` | H3 + LightX2V 4-step | 内容相关层次分块，原 token 与 proxy 联合 softmax，精确分支默认名义稀疏度 90% |
@@ -202,72 +202,118 @@ RTX PRO 6000 · 1344×768 · 单卡 · 四步 · seed 42，**每行一次正式�
 | 帧数 | 精度 | 方法 | 完整视频 + 音频 | 相对同精度 Full4 | BF16 / INT8 | 内存策略 |
 | ---: | --- | --- | ---: | ---: | ---: | --- |
 | 345 | BF16 | Full + LightX2V | 250.88 秒 | 1.00× | — | Offload |
+| 345 | BF16 | Veda + LightX2V | 103.06 秒 | 2.43× | — | Offload |
+| 345 | BF16 | Spark-H3 + LightX2V | 115.23 秒 | 2.18× | — | Offload |
 
-已完整验收：昇腾 16/16 组，PRO 6000 1/16 组。 其余组合仍在补齐，不使用预热或失败记录作为测量结果。
+已完整验收：昇腾 16/16 组，PRO 6000 3/16 组。 其余组合仍在补齐，不使用预热或失败记录作为测量结果。
 
 [高分辨率原始记录和独立分项测量](benchmarks/single-card-four-step-highres.json)。
 
 <!-- END HIGHRES RESULTS -->
 
-
-
-
-
-
-
-
-
-
-
-
-
 详见[端到端计时、Offload 和图表口径](docs/benchmark-protocol.md)。
 
-## 效果与验证范围
+## 效果展示与验证范围
 
-默认 LightX2V 四步，Full、原生 INT8、单卡昇腾 910B3，672×384 / 124 帧、seed 42。
-LoRA 在量化和推理前合并；四次 DiT 前向输出有限，每步经过全部 50 层，QKV 权重为 INT8。
+仅展示昇腾 910B3 的 **1344×768、345 帧、24 FPS（14.375 秒，约 14.4 秒）**完整音视频。
 
-https://github.com/user-attachments/assets/8f1a4fc0-35a7-4fbd-a861-95fe3ca2cfb9
+左列 BF16，右列原生 W8A8 INT8；所有样例单卡、相同 prompt、seed 42、同一 Offload 策略。
 
-[含音轨 MP4](examples/videos/full4-int8-single-672124.mp4) ·
-[权重来源、采样规则与校验和](examples/videos/full4-int8-single-672124.json)。
-这是一例定性展示，不宣称普遍的画质等价。
+Full、VSA、Veda、Spark 为四步；**VDN 保留官方八步**，仅用于定性展示，不计入四步加速比。
 
-VSA INT8、原生 TP4、672×384、124 帧、四步 VSA 学生模型也已完整成片：
-四个 rank 均完成四次 DiT 前向，每一步检查到全部 50 个非零 gate。
+> A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.
 
-https://github.com/user-attachments/assets/590be000-8cbd-458e-9198-afb2a2bdcaa4
+<!-- BEGIN QUALITATIVE GALLERY -->
+<table>
+<tr><th width="50%">BF16</th><th width="50%">INT8 (W8A8)</th></tr>
+<tr>
+<td>
 
-[带音频 MP4](examples/videos/vsa-int8-tp4-672124.mp4) ·
-[样例参数](examples/videos/vsa-int8-tp4-672124.json)。
-逐帧检查发现该 VSA INT8 样例在约 3.4 秒处有短暂亮度回落，
-同条件 BF16 在同一位置也有回落，因此不是 INT8 独有现象。
-[同种子 BF16 MP4](examples/videos/vsa-bf16-tp4-672124.mp4)及
-[参数记录](examples/videos/vsa-bf16-tp4-672124.json)已保留。
-[时间连续性诊断](benchmarks/vsa-temporal-sample-check.json)记录了观测结果，
-解码与生成 latent 的影响仍待区分。生成检查通过不代表没有闪烁或画质等价。
-该样例用于定性验收，不是 Full 与 VSA 的画质等价评估。
-VSA INT8 TP4 的四种视频规格现已全部通过完整生成和解码，
-[审计矩阵](benchmarks/vsa-int8-tp4-matrix.json)记录各规格帧数与视频校验值。
+**Full + LightX2V · 4 步**
 
-Veda BF16、单卡昇腾 910B3、1344×768、345 帧，使用默认 LightX2V 四步 LoRA、
-官方预测器和名义 90% 稀疏度，seed 42；四次 DiT 更新均输出有限值，每步经过全部 50 层。
+https://github.com/user-attachments/assets/cd6c4619-7cef-42fc-abc2-eebea5ed4b9b
+
+</td>
+<td>
+
+**Full + LightX2V · 4 步**
+
+https://github.com/user-attachments/assets/e0039d68-b50b-4f65-8714-07d4cfc3855a
+
+</td>
+</tr>
+<tr>
+<td>
+
+**VSA · FastH3 · 4 步**
+
+https://github.com/user-attachments/assets/bc04612e-43e9-4d2e-a8df-14a891ecfdc6
+
+</td>
+<td>
+
+**VSA · FastH3 · 4 步**
+
+https://github.com/user-attachments/assets/37576726-d635-4f7c-80d3-c73de2837844
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Veda + LightX2V · 4 步**
 
 https://github.com/user-attachments/assets/c2e08051-3753-495b-bb69-7ed8b7208b2a
 
-[样例参数与视频校验和](examples/videos/veda4-bf16-single-1344345.json)。
-已确认 345 帧和音轨，并抽样检查画面；这不构成与 Full 的画质等价证明。
-此前使用 Turbo8 的 Veda INT8 TP4 四种规格验证，保留在
-[历史审计矩阵](benchmarks/veda-int8-tp4-matrix.json)中。
+</td>
+<td>
 
-此前严格 Spark 实验已生成 1344×768 的 124/345 帧视频，与优化前昇腾
-参考实现的每个解码后 uint8 像素一致。这证明的是昇腾实现之间的一致性，
-不等于与 CUDA 或 Full 输出一致，框架整合后还需要重新验收。
-此前 VDN 短视频样例可正常成片。其求逆是数值近似；自动策略下的 BF16
-时间卷积还会比上游 FP32 tap 累加更早发生一次特征舍入。FP32 时间卷积
-选项见[架构说明](docs/architecture.md)。不宣称逐位 Cholesky 等价，
-也不据单个样例宣称普遍画质等价。
+**Veda + LightX2V · 4 步**
+
+https://github.com/user-attachments/assets/ef130119-c58f-4cff-86c2-706524bbb550
+
+</td>
+</tr>
+<tr>
+<td>
+
+**VDN · 官方学生 · 8 步**
+
+https://github.com/user-attachments/assets/bc743b7a-8587-46ea-9707-a93e514befa8
+
+</td>
+<td>
+
+**VDN · 官方学生 · 8 步**
+
+https://github.com/user-attachments/assets/6144e35d-1a10-4d6c-91d0-55f469bae653
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Spark-H3 + LightX2V · 4 步**
+
+https://github.com/user-attachments/assets/6ebfcaed-b023-42d5-b850-e86897c0209d
+
+</td>
+<td>
+
+**Spark-H3 + LightX2V · 4 步**
+
+https://github.com/user-attachments/assets/aba1d8ee-c178-4cd2-bb63-5e4a4c9f979e
+
+</td>
+</tr>
+</table>
+<!-- END QUALITATIVE GALLERY -->
+
+VSA 与 Veda 均使用名义 **90% 视频稀疏率**（保留预算 10%）；文本/音频前缀按原规则保持稠密，实际比例有块取整误差。
+
+[十个视频的参数、SHA256 与原始来源](examples/videos/qualitative-1344-345.json)。所有视频已核对分辨率、345 帧、音轨及 DiT 有限输出。
+
+相同 prompt 与 seed 不意味着不同学生的结果逐像素或感知等价。VDN 求逆为完整 128 维的数值近似；时间卷积的舍入差异见[架构说明](docs/architecture.md)。VSA 历史样例出现过亮度回落，见[时间连续性记录](benchmarks/vsa-temporal-sample-check.json)；此处不作无闪烁保证。
 
 首版目标是 batch=1、无参考视频的 T2VA。更多信息见
 [架构设计](docs/architecture.md)、[验证状态](docs/validation.md)

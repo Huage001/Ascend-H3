@@ -27,7 +27,11 @@ This document records evidence, not intended support inferred from CLI flags.
 | Full LightX2V4 INT8 single-card 672×384 / 124 frames | Complete video/audio passed; four finite DiT updates and all 50 blocks; visually inspected |
 | VSA INT8 single-card 672×384 / 124 frames | Complete video/audio passed; four updates, 50 nonzero active gates each step |
 | VDN official eight-step INT8 single-card 672×384 / 124 frames | Complete video/audio passed with all eight finite updates and 50 blocks; excluded from the four-step performance figure |
+| VDN official eight-step BF16 and INT8 single-card 1344×768 / 345 frames | Both complete MP4s with audio passed; eight finite updates and all 50 blocks, full 128-dimensional state; sampled frames visually inspected |
+| Qualitative gallery | Ten single-card 1344×768 / 345-frame MP4s, BF16 and INT8 columns, Full/VSA/Veda/VDN/Spark rows; same prompt and seed 42; VDN marked eight-step |
 | Veda and Spark BF16 single-card 1344×768 / 345 frames | Complete four-step MP4s and independent profiling requests passed |
+| Ascend high-resolution single-card four-step performance matrix | All 16 combinations passed: Full/VSA/Veda/Spark × BF16/INT8 × 124/345 frames at 1344×768; matched Offload, one formal complete request and an independent profile per row |
+| PRO 6000 Full, Veda and Spark BF16, 1344×768 / 345 frames | Complete four-step MP4s and independent profiling requests passed; remaining reference combinations are in progress |
 | Cross-device original DiT tensors | All 535 tensors match in shape, dtype and SHA256 after lossless native repacking |
 | New framework server, single-card full video matrix | In progress |
 | New framework server, INT8 full video matrix | In progress |
@@ -63,7 +67,9 @@ active gates and verified complete hook removal after the audited warmup.
 
 The complete VSA INT8 TP4 matrix is recorded in
 `benchmarks/vsa-int8-tp4-matrix.json`; all four videos have audio.
-Only the short 672×384 example has received visual sample inspection so far.
+The current high-resolution single-card 345-frame samples also received visual
+sample inspection. Historical TP4 sample checks remain separate from the new
+single-card qualitative gallery.
 
 Frame-by-frame inspection of the VSA INT8 short sample found a brief
 luminance dip near frames 82–84 (zero-based), around 3.4 seconds.

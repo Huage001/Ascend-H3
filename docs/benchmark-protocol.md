@@ -23,6 +23,12 @@ resolution and native frame count. No 50/4 multiplier is applied. The earlier
 | Veda | LightX2V + official trained predictor | 4 |
 | Spark-H3 | LightX2V | 4 |
 
+VSA and Veda use **90% nominal video-block sparsity** on both hardware
+platforms and in both weight precisions: the video keep budget is 10%.
+Text/audio global prefixes retain their native dense policy. Block rounding,
+padding and mandatory diagonal handling can change the effective block
+fraction slightly. These results do not use the earlier 97% experiments.
+
 VDN retains its official eight-step student in the inference implementation.
 It is documented separately and excluded from the four-step candidate figure;
 forcing it to four steps would violate its released configuration.

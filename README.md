@@ -49,7 +49,7 @@ require these custom CANN extensions. Keep the editable checkout available.
 | Method | Required model assets | Computation |
 | --- | --- | --- |
 | `full` | H3 base; LightX2V 4-step by default, or a community LoRA | Dense attention |
-| `vsa` | H3 base + Sol-H3 VSA student LoRA with trained compression gates | Logical KV64, selected KV blocks paired into KV128 on chip |
+| `vsa` | H3 base + Sol-H3 VSA student LoRA with trained compression gates | Nominal 90% video sparsity; logical KV64, selected KV blocks paired into KV128 on chip |
 | `veda` | H3 base + LightX2V 4-step + official trained Veda predictor | Dynamic per-head Veda block routes, nominal 90% sparsity |
 | `vdn` | H3 base + official VDN stage-DMD checkpoint directory | Local softmax plus 128-dimensional learned DeltaNet branch |
 | `spark` | H3 base + LightX2V 4-step | Spark-H3 hierarchical partition and joint exact/proxy softmax, nominal 90% exact-branch sparsity |
@@ -221,80 +221,118 @@ RTX PRO 6000 · 1344×768 · single card · four steps · seed 42 · **one forma
 | Frames | Precision | Method | Complete video + audio | vs same-precision Full4 | BF16 / INT8 | Memory |
 | ---: | --- | --- | ---: | ---: | ---: | --- |
 | 345 | BF16 | Full + LightX2V | 250.88 s | 1.00× | — | Offload |
+| 345 | BF16 | Veda + LightX2V | 103.06 s | 2.43× | — | Offload |
+| 345 | BF16 | Spark-H3 + LightX2V | 115.23 s | 2.18× | — | Offload |
 
-Fully validated: Ascend 16/16 cases; PRO 6000 1/16 cases. Remaining cases are in progress; warmups and failed attempts are excluded.
+Fully validated: Ascend 16/16 cases; PRO 6000 3/16 cases. Remaining cases are in progress; warmups and failed attempts are excluded.
 
 [Raw high-resolution records and independent profiles](benchmarks/single-card-four-step-highres.json).
 
 <!-- END HIGHRES RESULTS -->
 
-
-
-
-
-
-
-
-
-
-
-
-
 [Measurement and figure protocol](docs/benchmark-protocol.md).
 
-## Quality and validation
+## Qualitative results and validation
 
-Full LightX2V four-step, native INT8, single Ascend 910B3, 672×384 / 124
-frames, seed 42. The LoRA merged before quantization and inference. All four
-DiT updates were finite, with all 50 blocks and INT8 QKV weights.
+Ascend 910B3 only: **1344×768, 345 frames, 24 FPS (14.375 seconds, approximately 14.4 seconds)**, with audio.
 
-https://github.com/user-attachments/assets/8f1a4fc0-35a7-4fbd-a861-95fe3ca2cfb9
+Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt, seed 42 and the same Offload policy.
 
-[MP4 with audio](examples/videos/full4-int8-single-672124.mp4) ·
-[source, schedule and checksum](examples/videos/full4-int8-single-672124.json).
-This is a qualitative sample, not a claim of universal perceptual equivalence.
+Full, VSA, Veda and Spark use four steps; **VDN retains its official eight steps** and is excluded from the four-step speedup comparison.
 
-VSA INT8, native TP4, 672×384, 124 frames, four-step trained VSA student:
-all four ranks completed four DiT forwards with 50 nonzero gates each step.
-The complete pipeline produced the expected video and audio.
+> A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.
 
-https://github.com/user-attachments/assets/590be000-8cbd-458e-9198-afb2a2bdcaa4
+<!-- BEGIN QUALITATIVE GALLERY -->
+<table>
+<tr><th width="50%">BF16</th><th width="50%">INT8 (W8A8)</th></tr>
+<tr>
+<td>
 
-[MP4 with audio](examples/videos/vsa-int8-tp4-672124.mp4) ·
-[sample contract](examples/videos/vsa-int8-tp4-672124.json).
-Frame-by-frame inspection found a brief brightness dip around 3.4 seconds
-in this VSA INT8 sample. The same-seed BF16 sample also dips at that position;
-it is not exclusive to INT8. [Same-seed BF16 MP4](examples/videos/vsa-bf16-tp4-672124.mp4)
-and [its contract](examples/videos/vsa-bf16-tp4-672124.json) are included.
-[Temporal diagnostics](benchmarks/vsa-temporal-sample-check.json)
-record the observations; decoder versus latent causality remains unresolved.
-Generation checks passing do not establish flicker-free or equivalent quality.
-This is a qualitative smoke test, not a Full-versus-VSA quality evaluation.
-All four workloads have now passed complete VSA INT8 TP4 inference and
-decode; [the audited matrix](benchmarks/vsa-int8-tp4-matrix.json) records
-exact frame counts and video hashes.
+**Full + LightX2V · 4 steps**
 
-Veda BF16, single Ascend 910B3, 1344×768 / 345 frames, default LightX2V
-four-step LoRA, official predictor, nominal 90% sparsity, seed 42.
-All four DiT outputs were finite, with all 50 blocks per update.
+https://github.com/user-attachments/assets/cd6c4619-7cef-42fc-abc2-eebea5ed4b9b
+
+</td>
+<td>
+
+**Full + LightX2V · 4 steps**
+
+https://github.com/user-attachments/assets/e0039d68-b50b-4f65-8714-07d4cfc3855a
+
+</td>
+</tr>
+<tr>
+<td>
+
+**VSA · FastH3 · 4 steps**
+
+https://github.com/user-attachments/assets/bc04612e-43e9-4d2e-a8df-14a891ecfdc6
+
+</td>
+<td>
+
+**VSA · FastH3 · 4 steps**
+
+https://github.com/user-attachments/assets/37576726-d635-4f7c-80d3-c73de2837844
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Veda + LightX2V · 4 steps**
 
 https://github.com/user-attachments/assets/c2e08051-3753-495b-bb69-7ed8b7208b2a
 
-[Sample contract and video checksum](examples/videos/veda4-bf16-single-1344345.json).
-The video has 345 frames and audio; sampled frames were visually inspected.
-This does not establish perceptual equivalence with Full attention.
-Earlier Turbo8 Veda INT8 TP4 qualification remains in
-[the historical audited matrix](benchmarks/veda-int8-tp4-matrix.json).
+</td>
+<td>
 
-Previous strict Spark experiments generated 1344×768 videos at 124 and 345
-frames with every decoded uint8 pixel matching the previous Ascend reference.
-That is an Ascend-to-Ascend implementation check, not equality with CUDA or
-Full attention. It must be requalified after framework integration.
-Previous VDN tests produced plausible short clips. Numerical inversion is
-approximate; the automatic BF16 temporal-convolution path also has a different
-feature-rounding boundary from the upstream FP32 tap loop. See
-[architecture](docs/architecture.md) for the FP32 temporal option.
-No universal perceptual-equivalence claim is made.
+**Veda + LightX2V · 4 steps**
+
+https://github.com/user-attachments/assets/ef130119-c58f-4cff-86c2-706524bbb550
+
+</td>
+</tr>
+<tr>
+<td>
+
+**VDN · official student · 8 steps**
+
+https://github.com/user-attachments/assets/bc743b7a-8587-46ea-9707-a93e514befa8
+
+</td>
+<td>
+
+**VDN · official student · 8 steps**
+
+https://github.com/user-attachments/assets/6144e35d-1a10-4d6c-91d0-55f469bae653
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Spark-H3 + LightX2V · 4 steps**
+
+https://github.com/user-attachments/assets/6ebfcaed-b023-42d5-b850-e86897c0209d
+
+</td>
+<td>
+
+**Spark-H3 + LightX2V · 4 steps**
+
+https://github.com/user-attachments/assets/aba1d8ee-c178-4cd2-bb63-5e4a4c9f979e
+
+</td>
+</tr>
+</table>
+<!-- END QUALITATIVE GALLERY -->
+
+VSA and Veda both use nominal **90% video sparsity** (10% keep budget); text/audio prefixes retain the native dense policy, with block-rounding differences in the effective fraction.
+
+[Parameters, SHA256 and provenance for all ten videos](examples/videos/qualitative-1344-345.json). Dimensions, 345 frames, audio and finite DiT outputs were checked.
+
+The same prompt and seed do not establish pixel or perceptual equivalence across students. VDN uses a full 128-dimensional numerical inverse approximation; temporal-convolution rounding is described in [architecture](docs/architecture.md). Earlier VSA samples exhibited brightness dips, documented in [temporal diagnostics](benchmarks/vsa-temporal-sample-check.json); no flicker-free claim is made.
 
 The initial integration targets batch-one T2VA without reference videos.
 See [architecture](docs/architecture.md), [validation status](docs/validation.md)
