@@ -1,0 +1,521 @@
+[
+  {
+    "statistic": "mean_20_balanced_samples",
+    "width": 1344,
+    "height": 768,
+    "frames": 124,
+    "seq": 37861,
+    "full_ms": 304.6330895740539,
+    "vsa_ms": 137.19648062251508,
+    "miowtion_ms": [
+      76.03992675431073,
+      74.04346778057516,
+      73.03437031805515
+    ],
+    "full_over_vsa": 2.2204147525637117,
+    "full_over_miowtion": [
+      4.006225447301396,
+      4.114246654098128,
+      4.171092161778304
+    ],
+    "vsa_over_miowtion": [
+      1.804268973927403,
+      1.852918086293464,
+      1.8785193878586521
+    ],
+    "miowtion_config": {
+      "kernel": "schedule128",
+      "route": "fused",
+      "stack_tiles": 4,
+      "head_chunk": 56,
+      "pack_channels": 64,
+      "scatter_rows": 64,
+      "pack_mode": "split",
+      "query_group": 16,
+      "prefix_dense": false,
+      "query_order": 0
+    },
+    "miowtion_per_layer": {
+      "0": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 64,
+        "pack_mode": "split",
+        "query_group": 16,
+        "prefix_dense": false,
+        "query_order": 0
+      },
+      "24": {
+        "kernel": "pipe3",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 64,
+        "pack_mode": "split",
+        "query_group": 16,
+        "prefix_dense": false,
+        "query_order": 0
+      }
+    },
+    "vsa_config": {
+      "prefix_fa": true,
+      "stack": 4,
+      "layout": "BNSD",
+      "joint": false
+    },
+    "full_config": {
+      "variant": "infer_bnsd_bsnd"
+    },
+    "global_prefix_tokens": 565,
+    "global_prefix_fraction": 0.01492300784448377,
+    "allhead_workspace_layers": []
+  },
+  {
+    "statistic": "mean_20_balanced_samples",
+    "width": 1344,
+    "height": 768,
+    "frames": 345,
+    "seq": 104117,
+    "full_ms": 2415.606547985226,
+    "vsa_ms": 711.2462249118835,
+    "miowtion_ms": [
+      358.4523929283023,
+      362.9377248696983,
+      369.2290287464857
+    ],
+    "full_over_vsa": 3.396301397992652,
+    "full_over_miowtion": [
+      6.738988483941844,
+      6.655705324797734,
+      6.542298573289567
+    ],
+    "vsa_over_miowtion": [
+      1.9842139122060403,
+      1.9596921900781594,
+      1.9263009393560664
+    ],
+    "miowtion_config": {
+      "kernel": "schedule128",
+      "route": "fused",
+      "stack_tiles": 4,
+      "head_chunk": 28,
+      "pack_channels": 64,
+      "scatter_rows": 128,
+      "pack_mode": "split",
+      "query_group": 8,
+      "prefix_dense": false,
+      "query_order": 0
+    },
+    "miowtion_per_layer": {
+      "0": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 28,
+        "pack_channels": 64,
+        "scatter_rows": 128,
+        "pack_mode": "split",
+        "query_group": 8,
+        "prefix_dense": true,
+        "query_order": 0
+      },
+      "24": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 28,
+        "pack_channels": 64,
+        "scatter_rows": 128,
+        "pack_mode": "split",
+        "query_group": 8,
+        "prefix_dense": true,
+        "query_order": 0
+      },
+      "49": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 128,
+        "pack_mode": "split",
+        "query_group": 8,
+        "prefix_dense": true,
+        "query_order": 0
+      }
+    },
+    "vsa_config": {
+      "prefix_fa": true,
+      "stack": 4,
+      "layout": "BNSD",
+      "joint": false
+    },
+    "full_config": {
+      "variant": "infer_bnsd_bsnd"
+    },
+    "global_prefix_tokens": 1301,
+    "global_prefix_fraction": 0.012495557881998137,
+    "allhead_workspace_layers": []
+  },
+  {
+    "statistic": "mean_20_balanced_samples",
+    "width": 672,
+    "height": 384,
+    "frames": 124,
+    "seq": 9889,
+    "full_ms": 21.047564037144184,
+    "vsa_ms": 18.530744966119528,
+    "miowtion_ms": [
+      15.733527392148972,
+      15.606015222147107,
+      15.79536972567439
+    ],
+    "full_over_vsa": 1.1358185585968752,
+    "full_over_miowtion": [
+      1.3377524004977368,
+      1.3486827827307744,
+      1.3325148067241932
+    ],
+    "vsa_over_miowtion": [
+      1.1777870597134097,
+      1.1874104120968576,
+      1.173175765300318
+    ],
+    "miowtion_config": {
+      "kernel": "schedule128",
+      "route": "fused",
+      "stack_tiles": 4,
+      "head_chunk": 56,
+      "pack_channels": 64,
+      "scatter_rows": 64,
+      "pack_mode": "split",
+      "query_group": 16,
+      "prefix_dense": false,
+      "query_order": 0
+    },
+    "miowtion_per_layer": {
+      "0": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 64,
+        "pack_mode": "split",
+        "query_group": 8,
+        "prefix_dense": true,
+        "query_order": 0
+      },
+      "24": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 64,
+        "pack_mode": "split",
+        "query_group": 8,
+        "prefix_dense": true,
+        "query_order": 0
+      },
+      "49": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 28,
+        "pack_channels": 64,
+        "scatter_rows": 64,
+        "pack_mode": "split",
+        "query_group": 8,
+        "prefix_dense": true,
+        "query_order": 0
+      }
+    },
+    "vsa_config": {
+      "prefix_fa": true,
+      "stack": 2,
+      "layout": "TND",
+      "joint": false
+    },
+    "full_config": {
+      "variant": "infer_bnsd_bsnd"
+    },
+    "global_prefix_tokens": 565,
+    "global_prefix_fraction": 0.057134189503488725,
+    "allhead_workspace_layers": [
+      49
+    ]
+  },
+  {
+    "statistic": "mean_20_balanced_samples",
+    "width": 672,
+    "height": 384,
+    "frames": 345,
+    "seq": 27005,
+    "full_ms": 151.28654232248664,
+    "vsa_ms": 95.12748708948493,
+    "miowtion_ms": [
+      59.41173690371215,
+      59.06206872314215,
+      61.85524230822921
+    ],
+    "full_over_vsa": 1.5903557105442485,
+    "full_over_miowtion": [
+      2.546408339612673,
+      2.561483970899387,
+      2.4458160161852525
+    ],
+    "vsa_over_miowtion": [
+      1.6011564725612524,
+      1.6106358809645176,
+      1.537905010790479
+    ],
+    "miowtion_config": {
+      "kernel": "schedule128",
+      "route": "fused",
+      "stack_tiles": 4,
+      "head_chunk": 28,
+      "pack_channels": 64,
+      "scatter_rows": 128,
+      "pack_mode": "split",
+      "query_group": 8,
+      "prefix_dense": false,
+      "query_order": 0
+    },
+    "miowtion_per_layer": {
+      "0": {
+        "kernel": "pipe3",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 28,
+        "pack_channels": 64,
+        "scatter_rows": 128,
+        "pack_mode": "split",
+        "query_group": 32,
+        "prefix_dense": true,
+        "query_order": 1
+      },
+      "24": {
+        "kernel": "pipe3",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 128,
+        "pack_mode": "split",
+        "query_group": 32,
+        "prefix_dense": true,
+        "query_order": 1
+      },
+      "49": {
+        "kernel": "pipe3",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 128,
+        "pack_mode": "split",
+        "query_group": 32,
+        "prefix_dense": true,
+        "query_order": 1
+      }
+    },
+    "vsa_config": {
+      "prefix_fa": true,
+      "stack": 4,
+      "layout": "BNSD",
+      "joint": false
+    },
+    "full_config": {
+      "variant": "infer_bnsd_bsnd"
+    },
+    "global_prefix_tokens": 1301,
+    "global_prefix_fraction": 0.048176263654878725,
+    "allhead_workspace_layers": [
+      0
+    ]
+  },
+  {
+    "statistic": "mean_20_balanced_samples",
+    "width": 448,
+    "height": 256,
+    "frames": 124,
+    "seq": 4709,
+    "full_ms": 5.685874493792653,
+    "vsa_ms": 6.776711205020547,
+    "miowtion_ms": [
+      7.297325879335403,
+      6.386036099866033,
+      6.778937298804522
+    ],
+    "full_over_vsa": 0.8390315481616297,
+    "full_over_miowtion": [
+      0.7791723417332828,
+      0.8903605311457498,
+      0.8387560237200258
+    ],
+    "vsa_over_miowtion": [
+      0.9286567870308307,
+      1.0611764636223573,
+      0.9996716161124005
+    ],
+    "miowtion_config": {
+      "kernel": "schedule128",
+      "route": "fused",
+      "stack_tiles": 4,
+      "head_chunk": 56,
+      "pack_channels": 64,
+      "scatter_rows": 64,
+      "pack_mode": "split",
+      "query_group": 16,
+      "prefix_dense": false,
+      "query_order": 0
+    },
+    "miowtion_per_layer": {
+      "0": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 64,
+        "pack_mode": "split",
+        "query_group": 1,
+        "prefix_dense": true,
+        "query_order": 0
+      },
+      "24": {
+        "kernel": "cached128",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 64,
+        "pack_mode": "split",
+        "query_group": 1,
+        "prefix_dense": true,
+        "query_order": 0,
+        "execution": "graph_copy_clone"
+      },
+      "49": {
+        "kernel": "cached128",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 64,
+        "pack_mode": "split",
+        "query_group": 1,
+        "prefix_dense": true,
+        "query_order": 0
+      }
+    },
+    "vsa_config": {
+      "prefix_fa": true,
+      "stack": 4,
+      "layout": "TND",
+      "joint": false
+    },
+    "full_config": {
+      "variant": "infer_bnsd_bsnd"
+    },
+    "global_prefix_tokens": 565,
+    "global_prefix_fraction": 0.11998301125504353,
+    "allhead_workspace_layers": [
+      0
+    ]
+  },
+  {
+    "statistic": "mean_20_balanced_samples",
+    "width": 448,
+    "height": 256,
+    "frames": 345,
+    "seq": 12725,
+    "full_ms": 35.23368057794869,
+    "vsa_ms": 32.45560461655259,
+    "miowtion_ms": [
+      20.27377402409911,
+      20.788037171587348,
+      21.571775199845433
+    ],
+    "full_over_vsa": 1.0855961857502805,
+    "full_over_miowtion": [
+      1.7378945102212826,
+      1.6949017498441528,
+      1.6333231851127925
+    ],
+    "vsa_over_miowtion": [
+      1.6008664483471668,
+      1.5612635454064046,
+      1.5045402761653637
+    ],
+    "miowtion_config": {
+      "kernel": "schedule128",
+      "route": "fused",
+      "stack_tiles": 4,
+      "head_chunk": 28,
+      "pack_channels": 64,
+      "scatter_rows": 128,
+      "pack_mode": "split",
+      "query_group": 8,
+      "prefix_dense": false,
+      "query_order": 0
+    },
+    "miowtion_per_layer": {
+      "0": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 28,
+        "pack_channels": 64,
+        "scatter_rows": 128,
+        "pack_mode": "split",
+        "query_group": 8,
+        "prefix_dense": true,
+        "query_order": 0
+      },
+      "24": {
+        "kernel": "schedule2",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 28,
+        "pack_channels": 64,
+        "scatter_rows": 128,
+        "pack_mode": "split",
+        "query_group": 8,
+        "prefix_dense": true,
+        "query_order": 0
+      },
+      "49": {
+        "kernel": "pipe3",
+        "route": "fused",
+        "stack_tiles": 4,
+        "head_chunk": 56,
+        "pack_channels": 64,
+        "scatter_rows": 128,
+        "pack_mode": "split",
+        "query_group": 8,
+        "prefix_dense": true,
+        "query_order": 0
+      }
+    },
+    "vsa_config": {
+      "prefix_fa": true,
+      "stack": 4,
+      "layout": "TND",
+      "joint": false
+    },
+    "full_config": {
+      "variant": "infer_bsnd"
+    },
+    "global_prefix_tokens": 1301,
+    "global_prefix_fraction": 0.10223968565815324,
+    "allhead_workspace_layers": [
+      0
+    ]
+  }
+]

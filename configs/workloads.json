@@ -1,0 +1,6 @@
+{
+  "672-124": {"width": 672, "height": 384, "frames": 124, "fps": 24, "latent_frames": 37},
+  "672-345": {"width": 672, "height": 384, "frames": 345, "fps": 24, "latent_frames": 102},
+  "1344-124": {"width": 1344, "height": 768, "frames": 124, "fps": 24, "latent_frames": 37},
+  "1344-345": {"width": 1344, "height": 768, "frames": 345, "fps": 24, "latent_frames": 102}
+}

@@ -1,0 +1,4 @@
+# Preserve the source snapshots and patch context exactly as imported.
+csrc/** -whitespace
+src/h3_ascend/_vendor/** -whitespace
+patches/*.patch -whitespace

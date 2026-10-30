@@ -1,0 +1,878 @@
+[
+  {
+    "path": "src/h3_ascend/_vendor/spark/attention_blockptr.py",
+    "source": "spark/code/attention_blockptr.py",
+    "source_sha256": "0c36aed74a6cb8da35a1d3e8169dd885671fce025f54fb7a68776f5ca8a16c10",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/attention_cann.py",
+    "source": "spark/code/attention_cann.py",
+    "source_sha256": "3a5dcc1cee728599616ebb6f009d781d30c03098b4f4fcc29e4760d54468db1b",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/attention_cann_joint.py",
+    "source": "spark/code/attention_cann_joint.py",
+    "source_sha256": "90a4d85d01412db1ed3aafefd160d9e4cb600276c525f7d9fe058f8ec50b6b1d",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/attention_fused_reweight.py",
+    "source": "spark/code/attention_fused_reweight.py",
+    "source_sha256": "366e358b72e49ce6efff6541296b4f894569dd3bfe51c6ad32cfff3042318d5f",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/attention_overlap.py",
+    "source": "spark/code/attention_overlap.py",
+    "source_sha256": "36367b4239841b21669d83f610f0a0ba9b3c763b44d9b5e8aec8ad9b521dbfe6",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/attention_workspace.py",
+    "source": "spark/code/attention_workspace.py",
+    "source_sha256": "34379335db4bcad77a9be01cb35865429e679838a673beeb74ce23dcb755cf51",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/backend.py",
+    "source": "spark/code/backend.py",
+    "source_sha256": "f0355118b97ace7ee214f50029ff66a74c7e90c61ce7893bfae9a2c7dcb27246",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/bias_prepare.py",
+    "source": "spark/code/bias_prepare.py",
+    "source_sha256": "f151a0d8c544b058d06deda34331386162e66238eaec4a1b49f0274018f28d60",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/cholesky_panel.py",
+    "source": "spark/code/cholesky_panel.py",
+    "source_sha256": "e0c0c375afb61be0d0995f560207a17777f3d2a27341a405f7bbddf1a8fcb65e",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/feature_kernels.py",
+    "source": "spark/code/feature_kernels.py",
+    "source_sha256": "a859cd06f0da04a3157a839559df6874d81798567e8574d49e985a7cfc42f4bf",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/index_kernels.py",
+    "source": "spark/code/index_kernels.py",
+    "source_sha256": "2544e2c9a63c0378aeebcee266a0602d1dfccfe6c708dbe015d08bffe053226d",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/inverse_native.py",
+    "source": "spark/code/inverse_native.py",
+    "source_sha256": "a8d9a961b21b108c32df350ab6851b6949ab9136f2edffb989e1d65dc7260e75",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/kernels.py",
+    "source": "spark/code/kernels.py",
+    "source_sha256": "cc7fd3cf96feaf2a7be22d5264e8549b6a33c6e67e72c564419e200b9381cec7",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/meta32_native.py",
+    "source": "spark/code/meta32_native.py",
+    "source_sha256": "60b1467e25fe5b2daad3b5118a79e5795fe1e34a371c205f1179a01841d7904c",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/partition_fast_native.py",
+    "source": "spark/code/partition_fast_native.py",
+    "source_sha256": "6fedaf3a374397c874ab890a6197a1b0f240a096f7728b97504397644e5d24e6",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/partition_positions.py",
+    "source": "spark/code/partition_positions.py",
+    "source_sha256": "7d02a244abb7cd24258780d867394d657fd41df2e9d4ad0e4a0fe951d71bb7fe",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/partition_prefix.py",
+    "source": "spark/code/partition_prefix.py",
+    "source_sha256": "728dfba237cd36bf633cf233498fca9927a3ea75e7d37e539436f2f60ec8a0b7",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/permute_fused.py",
+    "source": "spark/code/permute_fused.py",
+    "source_sha256": "515137765569a4021613464d538bf603f4c87a59d398a7216f5ff30f79ee5728",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/permute_native.py",
+    "source": "spark/code/permute_native.py",
+    "source_sha256": "b8a131428df952abad9e57e8cb0a624637699172404fb1c9e1796e0e11855daa",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/permute_tail_native.py",
+    "source": "spark/code/permute_tail_native.py",
+    "source_sha256": "2429c1814e6987ba42530ce8621bfb6611dc491d21aaca199091c304e39748b8",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/preproc_native.py",
+    "source": "spark/code/preproc_native.py",
+    "source_sha256": "d627f817d24a162b1ab29bfc5dbcc4e051498dd36522942248892a37eac0c35d",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_batch.py",
+    "source": "spark/code/proxy_batch.py",
+    "source_sha256": "865cfc2d2f03bdd400aa9775031868e6001d364faf3c4e82101bee80be039fce",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_dist.py",
+    "source": "spark/code/proxy_dist.py",
+    "source_sha256": "fbfa0232c127ed538371bb4bf87882a49e9af53d2f94a378e4faa70d36877f15",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_four_native.py",
+    "source": "spark/code/proxy_four_native.py",
+    "source_sha256": "e130fed01b8d4a577ef6d4bb79d04d41ef3bb80e3d97936d35e6980f629f0e3b",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_fused.py",
+    "source": "spark/code/proxy_fused.py",
+    "source_sha256": "7fde1f8f336e1f3485b332b12c3e8313f882f2de569b761be76314422ff6b911",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_fused_column.py",
+    "source": "spark/code/proxy_fused_column.py",
+    "source_sha256": "4e6825b8073ad75e93a99b8afe4d2327e0271ff8d5b0566be5240232bc3e2e37",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_hybrid_general.py",
+    "source": "spark/code/proxy_hybrid_general.py",
+    "source_sha256": "062d7fc3117cdce68bdd7b302af5b981d23deb1dde15a0fa3d9529b16556c774",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_hybrid_max.py",
+    "source": "spark/code/proxy_hybrid_max.py",
+    "source_sha256": "9b65cab0868659618dd69e7f9ab341a06fd9fd8d9c546f41510ac89f60d90fef",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_hybrid_ranklayout.py",
+    "source": "spark/code/proxy_hybrid_ranklayout.py",
+    "source_sha256": "63d1df45304c2be119c9455803d0c2aad40633bb5e42b940df0a2984c3d50160",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_hybrid_split.py",
+    "source": "spark/code/proxy_hybrid_split.py",
+    "source_sha256": "fce51b4fb64b4440356156aef29c20e243a7a5e299f4cb92094a88d01e47c5b1",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_hybrid_uniform.py",
+    "source": "spark/code/proxy_hybrid_uniform.py",
+    "source_sha256": "d25d122378b5564a18960de6fc0cc7e1c7695a4fc5a2c5118ff3806ec4b275d0",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_terminal_constant.py",
+    "source": "spark/code/proxy_terminal_constant.py",
+    "source_sha256": "1110e2ad31f5aa4918f3a0845b2e17637ae7b5dc531de3a3466831f326648caf",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_terminal_onchip.py",
+    "source": "spark/code/proxy_terminal_onchip.py",
+    "source_sha256": "93385374b5fb2f0e3bc4c9fc93d91b00aa3eaeeb56a9fd7ae7de0d49afef6354",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_terminal_sort128_bits.py",
+    "source": "spark/code/proxy_terminal_sort128_bits.py",
+    "source_sha256": "e621acc44e6023dfc75037b8473770b7c027a3451d89af01ef5372f806687b70",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_terminal_sort1d.py",
+    "source": "spark/code/proxy_terminal_sort1d.py",
+    "source_sha256": "5c0c5bb304588c67808386a6c0a1794513903c6b746f003099ef5b94caa33a29",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_terminal_sort32.py",
+    "source": "spark/code/proxy_terminal_sort32.py",
+    "source_sha256": "736fb3bba072333abfd37e5b1bb1059513c83c7fc8a7bbfd486b255066bd6f68",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_terminal_staged.py",
+    "source": "spark/code/proxy_terminal_staged.py",
+    "source_sha256": "328fdb73cef9baca27b886fbb835aa07a9322e05153dd599b2ec5c3a2cf5bce5",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_terminal_staged_int32.py",
+    "source": "spark/code/proxy_terminal_staged_int32.py",
+    "source_sha256": "2c98fb63360ba04b579e68c1ef571a0a667d14bf06b69fed10d164a5bb15d18b",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/proxy_terminal_staged_native.py",
+    "source": "spark/code/proxy_terminal_staged_native.py",
+    "source_sha256": "ba6e6534ba81a1fd42dcf561286ed6e9d548828fa5ec066bdb0c1155fdf0b024",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/route_cache_native.py",
+    "source": "spark/code/route_cache_native.py",
+    "source_sha256": "44100b780ef07960b8f6fd34314419258848fb3ddbb669df6625045fbea4b363",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/route_fast_native.py",
+    "source": "spark/code/route_fast_native.py",
+    "source_sha256": "9eb278043a843b0f8131598f9433e0875eb7a7adef4f3d93530950d09db9c2da",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/route_hybrid_native.py",
+    "source": "spark/code/route_hybrid_native.py",
+    "source_sha256": "ab6c0438fdf1bf56ac21f4a2167e13b4f2cd5d5771f291dedc71ec0952b9edf6",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/route_kernels.py",
+    "source": "spark/code/route_kernels.py",
+    "source_sha256": "c3d93bc74cd4ac61e5ba1c0a92c140ef12d023e66d48a859727658976ff9e06d",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/route_radix_native.py",
+    "source": "spark/code/route_radix_native.py",
+    "source_sha256": "94fce0f132effe1fbbe92736bd41a0d9107b20570e1bd674282d2cb03b451e3e",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/route_vcount_native.py",
+    "source": "spark/code/route_vcount_native.py",
+    "source_sha256": "399514dfc76186dde5f4d63fe9399a5840b4d60e5505c06c9dc33fa63508bac1",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/scores_dense.py",
+    "source": "spark/code/scores_dense.py",
+    "source_sha256": "4563d7f2495cb5f876dbc36e0df717849307bb7ea730bbf4d77c71e4634742d9",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/scores_preunit.py",
+    "source": "spark/code/scores_preunit.py",
+    "source_sha256": "92ab55f7155663280bad48e0e0c993ba30a89eca10817e5e286cb8d467dad7c9",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/select32_native.py",
+    "source": "spark/code/select32_native.py",
+    "source_sha256": "e5781af85a1323c604f4ed86794bd2abd5ab1343535b0c9a03b77182ef348fef",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/small_split_native.py",
+    "source": "spark/code/small_split_native.py",
+    "source_sha256": "3cb67738246d1c9a630c7b515aebee764fab837f6a48b32a907b5e0c5f206910",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/summary_vec.py",
+    "source": "spark/code/summary_vec.py",
+    "source_sha256": "44d38d0b30e7e2b02aa2e23d8f29d2aec069155f66a2926fba390037992f9053",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/terminal_native.py",
+    "source": "spark/code/terminal_native.py",
+    "source_sha256": "ac3baac2d7f2634b30eeb0cfc55ae8c7aab479f62ce518390f7982d0179c29a2",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/terminal_preunit_fused.py",
+    "source": "spark/code/terminal_preunit_fused.py",
+    "source_sha256": "397a80dc6dd6810dc1813c563183b0aecccdf95a47ec1a6c3533cc99c075bed7",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/spark/tree_graph.py",
+    "source": "spark/code/tree_graph.py",
+    "source_sha256": "da4ade130556333aa859eab79720cfdf706284085e64b7535609f4539b3ef253",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/__init__.py",
+    "source": "veda/vendor/miowtion/__init__.py",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/sol.py",
+    "source": "veda/vendor/miowtion/kernels/sol.py",
+    "source_sha256": "f5eb072b1ff390f7c153e89c285e734c354f6e9797f2a96f6fe88154ca90071b",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/elementwise_triton.py",
+    "source": "veda/vendor/miowtion/kernels/elementwise_triton.py",
+    "source_sha256": "6de7f1b0a2379d4c47bd5ed5ab39410095756a32c3a54bd4bbe23d7de009342f",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/arch.py",
+    "source": "veda/vendor/miowtion/kernels/arch.py",
+    "source_sha256": "a9393120b9ac90560262a8a98bc37501f511a78ba591ab5d2a72b0e988971b0b",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/__init__.py",
+    "source": "veda/vendor/miowtion/kernels/__init__.py",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/bench.py",
+    "source": "veda/vendor/miowtion/kernels/bench.py",
+    "source_sha256": "a3e622d1622c5ffaa0935f80ab38ca95174bb45b15e16d08eb7f49ad28818935",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/fa4.py",
+    "source": "veda/vendor/miowtion/kernels/fa4.py",
+    "source_sha256": "9c6fabc6c532532a49a9fa43da3fcc951193e3af4c52de3e7ed342386741f9f3",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/tile_gather_triton.py",
+    "source": "veda/vendor/miowtion/kernels/tile_gather_triton.py",
+    "source_sha256": "c9f955958b59a7de71f92717a4857a43b59637585fedab00c5781f22182e4a1a",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/reference.py",
+    "source": "veda/vendor/miowtion/kernels/reference.py",
+    "source_sha256": "4845da720475efccf96d5737cf21bc5cd425b03cd95f9dfefa22b2a8287727f4",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/block_heat_triton.py",
+    "source": "veda/vendor/miowtion/kernels/block_heat_triton.py",
+    "source_sha256": "ad4540ea3668f5bbd7dcdb618b9c606138bbdb86134f8172a811db452ce3de64",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/sol_veda.py",
+    "source": "veda/vendor/miowtion/kernels/sol_veda.py",
+    "source_sha256": "24e7ea9b28829e0558880cc49e8b1474945233398d56dac80317b1e312b92161",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/compensation_triton.py",
+    "source": "veda/vendor/miowtion/kernels/compensation_triton.py",
+    "source_sha256": "a71ae27e01e574f93942fe60644ad148dcc5b97319687126665e9db87aa0af51",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/synthetic.py",
+    "source": "veda/vendor/miowtion/h3/synthetic.py",
+    "source_sha256": "133b0d3b56c52493ea41443654258111a9a03cb59401498d4d8ec100687fd0c0",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/attention.py",
+    "source": "veda/vendor/miowtion/h3/attention.py",
+    "source_sha256": "e4ff270170c92bf4e061adfa4169484e862f689d6234aa54beeaac26a4cef225",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/release.py",
+    "source": "veda/vendor/miowtion/h3/release.py",
+    "source_sha256": "819ffc44d086a6873f708100f51a016195c31799672ed5452e8b64ee4013a573",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/config.py",
+    "source": "veda/vendor/miowtion/h3/config.py",
+    "source_sha256": "4a53d31fe0edddf11a89d24ed7f5fcbbbe79a8158883ffcfe918bc6a1a4f0eaa",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/layout.py",
+    "source": "veda/vendor/miowtion/h3/layout.py",
+    "source_sha256": "4f80a6d6783773f9b7abdd215dfbc0903758e9090fdb4af21838a05f7e250d2b",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/__init__.py",
+    "source": "veda/vendor/miowtion/h3/__init__.py",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/model.py",
+    "source": "veda/vendor/miowtion/h3/model.py",
+    "source_sha256": "5f31bf9f6f245aa3d17cc9f31a0070e0c8e2476443d7afde0042e3021828c9a1",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/flops.py",
+    "source": "veda/vendor/miowtion/h3/flops.py",
+    "source_sha256": "5b22000691c8359c80fa49dc688b046dea8939b8cd58cb3c23f835cf5ec6d1ef",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/noise.py",
+    "source": "veda/vendor/miowtion/h3/noise.py",
+    "source_sha256": "07d0323cc27c5862089bf56f9efd244d6c2e936532368d718304ede43c197748",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/geometry.py",
+    "source": "veda/vendor/miowtion/h3/geometry.py",
+    "source_sha256": "1366ff0b6f919aea258ab74048cdd647c185115abf6d878067d4b70d4b7da77f",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/schedule.py",
+    "source": "veda/vendor/miowtion/h3/schedule.py",
+    "source_sha256": "33901257e07d934b02fd8f28d715ef899d3de678a994816ed7618c19a56b7836",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/h3/weights.py",
+    "source": "veda/vendor/miowtion/h3/weights.py",
+    "source_sha256": "b18f017f52d49a6035c4d85df2f8e9945a4f7e16d2269848875fc0d6b90374c8",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/predictor.py",
+    "source": "veda/vendor/miowtion/veda/predictor.py",
+    "source_sha256": "747a92472071740bf2ea74d1f9244850687a0da01af2e6939dce26debef33109",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/mask.py",
+    "source": "veda/vendor/miowtion/veda/mask.py",
+    "source_sha256": "0e58b797a535b5ac8c639c0d9cab6e0bd0716dd1fab58b342ab61d5063dabc3a",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/bundle.py",
+    "source": "veda/vendor/miowtion/veda/bundle.py",
+    "source_sha256": "e68f8a1669d01e8cfdc2dd7b2f6e988816cb87689fea5aecd66004a2f7235e74",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/solattn.py",
+    "source": "veda/vendor/miowtion/veda/solattn.py",
+    "source_sha256": "9d9bd23891b119fb6117dadf23ffcd3880dc89e307540c9f290bc7bba9c47825",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/plan.py",
+    "source": "veda/vendor/miowtion/veda/plan.py",
+    "source_sha256": "c90b262e500adae01513678b4318b017655aa08e2ea839f7fe7cf6b3fa7d5762",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/heatmap.py",
+    "source": "veda/vendor/miowtion/veda/heatmap.py",
+    "source_sha256": "15b8c37f8dafe22a197b2cc19794ce78489fc9176ab16f68eb590f81e258f3b0",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/attention.py",
+    "source": "veda/vendor/miowtion/veda/attention.py",
+    "source_sha256": "aa58f17347e91c8347c8c6c2586a170d6ad8eca02474330dde595687420849eb",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/__init__.py",
+    "source": "veda/vendor/miowtion/veda/__init__.py",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/search.py",
+    "source": "veda/vendor/miowtion/veda/search.py",
+    "source_sha256": "08a45db7040858a1153b9ffd4fc0429e66f1ca5873f2facad4fd06f809012b55",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/tiling.py",
+    "source": "veda/vendor/miowtion/veda/tiling.py",
+    "source_sha256": "ff4c61c3f90a32d7efa402761d13678b5890d8224156454a5393f5ebea24c1a8",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/veda/quant.py",
+    "source": "veda/vendor/miowtion/veda/quant.py",
+    "source_sha256": "f8fead0d332bb59b0682db7b0fe7f3867896788279878b3fb5dfab8f68aa5a25",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/utils/__init__.py",
+    "source": "veda/vendor/miowtion/utils/__init__.py",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/utils/progress.py",
+    "source": "veda/vendor/miowtion/utils/progress.py",
+    "source_sha256": "e8cc45d7c1829f8b1c31aee7b59e950e78c3574377e8d11428e443aaec354d1e",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/wan/attention.py",
+    "source": "veda/vendor/miowtion/wan/attention.py",
+    "source_sha256": "e7538572b38fbaed884951ab23dde48e72349a68073a3c4e172d0cec9350fcac",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/wan/layout.py",
+    "source": "veda/vendor/miowtion/wan/layout.py",
+    "source_sha256": "0371689021598d9985c33f8b3592b7be0b932fa759ae113965721f585815f653",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/wan/__init__.py",
+    "source": "veda/vendor/miowtion/wan/__init__.py",
+    "source_sha256": "a06772507abdd80fb8ff991227ecbdb782537daa8ffafcc3429360ad69502443",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/encode.py",
+    "source": "veda/vendor/miowtion/train/encode.py",
+    "source_sha256": "abd3947f28cb01611968b5008cbb04263db9ce2371ac80880214c4f282f7940d",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/monitor.py",
+    "source": "veda/vendor/miowtion/train/monitor.py",
+    "source_sha256": "816d4ae04296414e032e0a8af390641fd26accadcf02bf53b5deab20d8a0f123",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/teacher.py",
+    "source": "veda/vendor/miowtion/train/teacher.py",
+    "source_sha256": "7e715570406ba7b724d93d44ed6fde609500af2a5d2ff74f61aeedd9587a231e",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/checkpoint.py",
+    "source": "veda/vendor/miowtion/train/checkpoint.py",
+    "source_sha256": "bf2d5ab36c0363a6da03eb540b1699c90f8d8c11934cb94a3d3bbda7c1973350",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/__init__.py",
+    "source": "veda/vendor/miowtion/train/__init__.py",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/prompt_expansion.py",
+    "source": "veda/vendor/miowtion/train/prompt_expansion.py",
+    "source_sha256": "559f499743beadfa03ae417e4581829679e17ad0ab82eb75aad744cba6572704",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/trajectory.py",
+    "source": "veda/vendor/miowtion/train/trajectory.py",
+    "source_sha256": "97809bad91044eb4b45bdd3e42fa56ce500e567a01d14b885716c071eb9a70fa",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/reference_example.py",
+    "source": "veda/vendor/miowtion/train/reference_example.py",
+    "source_sha256": "c5f555455018319893e4eaa63555e7168d3c18c91059e1dc472c0d26150d9ec5",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/adaln.py",
+    "source": "veda/vendor/miowtion/train/adaln.py",
+    "source_sha256": "a195ff7fd7b5a8c5f54176b0a426e0e37711599fab62450281809e51c46a7b48",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/muon.py",
+    "source": "veda/vendor/miowtion/train/muon.py",
+    "source_sha256": "00bc80d9560a0030fca0bfa582d3ced15a2c79b0d053fe59d065773de94d67ce",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/trainer.py",
+    "source": "veda/vendor/miowtion/train/trainer.py",
+    "source_sha256": "6e696cc1f545a6633546e3fd9ac7d6f415890b466d0a54e3ae093c946f67e2e0",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/lora.py",
+    "source": "veda/vendor/miowtion/train/lora.py",
+    "source_sha256": "d6ed8c55cd300a1c4ac99b698f90a8a4615047555f3ef107ae8bee5a8eb0c8d9",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/parallel.py",
+    "source": "veda/vendor/miowtion/train/parallel.py",
+    "source_sha256": "384d53c1f17a6f9ef1966219f887e1ac35f24c86b93b5bdf5782124e45235546",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/optim.py",
+    "source": "veda/vendor/miowtion/train/optim.py",
+    "source_sha256": "feab1b2aa2ffad03de3eda0ea8cededefa8c9132532661de9386d698c92ee6b4",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/train/data.py",
+    "source": "veda/vendor/miowtion/train/data.py",
+    "source_sha256": "8868d8dec68b4601d727c1f1b913b3efb5b59eb3aefdb41bb2e4d3e684e9d707",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/infer/config.py",
+    "source": "veda/vendor/miowtion/infer/config.py",
+    "source_sha256": "76bf1cd263f7e591bd3cc7891c7a481700c74b0bab607be7f94c29cb79ddc6e7",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/infer/__init__.py",
+    "source": "veda/vendor/miowtion/infer/__init__.py",
+    "source_sha256": "0a54eb630c8d1d7bf3510b2fef12e46a7f67ca28e9ef86ae30d568b0b4542448",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/infer/pipeline.py",
+    "source": "veda/vendor/miowtion/infer/pipeline.py",
+    "source_sha256": "dc1fc507b447057f537d5460196eb6be60d66bbd4de9bf800665744397036f30",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/infer/decode.py",
+    "source": "veda/vendor/miowtion/infer/decode.py",
+    "source_sha256": "4d1aa2819ec41bf94c74d1fa73b357516c8210a82766b219d0dbf58cb6962b7c",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/check.py",
+    "source": "veda/vendor/miowtion/mlx/check.py",
+    "source_sha256": "17b09d8bfe07f85350edbe2d6f1de786dc5d3fd007e42d197455d0aab0460b21",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/video_vae.py",
+    "source": "veda/vendor/miowtion/mlx/video_vae.py",
+    "source_sha256": "dacb781af59e39900e9054a7c9c89252fbf9aab3ed602d0469b893424fe45206",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/convert.py",
+    "source": "veda/vendor/miowtion/mlx/convert.py",
+    "source_sha256": "9c6a826f8a5a59011ff796eca289e3a3601e439180d5a783b8f88408cb54068f",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/sparse_attention.py",
+    "source": "veda/vendor/miowtion/mlx/sparse_attention.py",
+    "source_sha256": "d7fb26990220b0af18826e262afe763c9b2f0be3bbc9ba7479e3503b740d6815",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/__init__.py",
+    "source": "veda/vendor/miowtion/mlx/__init__.py",
+    "source_sha256": "39c6bb3ea47c09ae0f58ca517b00a1b1944d1897958d3dadef94187f5855bf9f",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/bench.py",
+    "source": "veda/vendor/miowtion/mlx/bench.py",
+    "source_sha256": "8bbb2c03d9ef125317d919dd6aaf8f55fa2f4180d05c5f842eef4916220f24e4",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/model.py",
+    "source": "veda/vendor/miowtion/mlx/model.py",
+    "source_sha256": "18df3f623e2513c913331b1a752a510885c6964e6c39c415fd51c20d39888670",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/text_encoder.py",
+    "source": "veda/vendor/miowtion/mlx/text_encoder.py",
+    "source_sha256": "139ecd41b7451c8be0c51ebfd439f69bfe08560fbe116c0659531c509ed785d5",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/interop.py",
+    "source": "veda/vendor/miowtion/mlx/interop.py",
+    "source_sha256": "32a44d7be9422e00a75637a4ce3c6f1a82cf2ed35794fbdcd9f5da88fc9f5852",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/pipeline.py",
+    "source": "veda/vendor/miowtion/mlx/pipeline.py",
+    "source_sha256": "922b6f46a02781b0fc5ce04b07cc6960bff546deaaf846d3ccf4de2b63553c3a",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/block.py",
+    "source": "veda/vendor/miowtion/mlx/block.py",
+    "source_sha256": "2ac58c99edc0fd0b7814c1682f7396814f37aaf7e8b5968528ca3cdacffbdff0",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/veda_predictor.py",
+    "source": "veda/vendor/miowtion/mlx/veda_predictor.py",
+    "source_sha256": "d3bb000a4756bcd3989f63447425b544421f30f05caf0842bfee387a5ab40480",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/slab.py",
+    "source": "veda/vendor/miowtion/mlx/slab.py",
+    "source_sha256": "51d522b5571d27b60877115ed69713bff6616a743cb364d959c12c6394717741",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/dit.py",
+    "source": "veda/vendor/miowtion/mlx/dit.py",
+    "source_sha256": "f429d5c0381b176151bd1e30db606659a7da8e52a699df24f0a31c6d745d8f5f",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/offload.py",
+    "source": "veda/vendor/miowtion/mlx/offload.py",
+    "source_sha256": "5d88233f92347ee849be2c5f94f3019410a220a0ff52d38970ee40ab9542458b",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/mlx/veda_plan.py",
+    "source": "veda/vendor/miowtion/mlx/veda_plan.py",
+    "source_sha256": "eea4af38e5f213d7b00bb5bafc4af0d518b3b2477065d2907516419312655943",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/sol_veda_patched/attention.py",
+    "source": "veda/vendor/miowtion/kernels/sol_veda_patched/attention.py",
+    "source_sha256": "1c8e53ca43bb709d540e1027898cc58424380235debdadaca88963cd9cbe19b8",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/sol_veda_patched/__init__.py",
+    "source": "veda/vendor/miowtion/kernels/sol_veda_patched/__init__.py",
+    "source_sha256": "bc6785121daada7b09af89bfd9ba0d1e35ee8e1a31d94c5dda596b5db60ff98c",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/fa4_sm8x/flash_bwd.py",
+    "source": "veda/vendor/miowtion/kernels/fa4_sm8x/flash_bwd.py",
+    "source_sha256": "0d7fffb59e3013d0e24172f7c897f9a0fec71549c62ed1b1b29e19358b33038c",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/fa4_sm8x/block_sparsity.py",
+    "source": "veda/vendor/miowtion/kernels/fa4_sm8x/block_sparsity.py",
+    "source_sha256": "9b539633f15a8475c873dfff30ee7090144b466cc6bed4665c6149c0c7d66cdf",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/fa4_sm8x/interface.py",
+    "source": "veda/vendor/miowtion/kernels/fa4_sm8x/interface.py",
+    "source_sha256": "2db27ac666538a74c598f6c3feccf9b0969a7d1db9941947a8bea1ecef0acab2",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/fa4_sm8x/__init__.py",
+    "source": "veda/vendor/miowtion/kernels/fa4_sm8x/__init__.py",
+    "source_sha256": "25c763c0018b6c39f97428a2c8214652faf4043579dce805ffd559b0ef4b2b3b",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/fa4_sm8x/flash_fwd.py",
+    "source": "veda/vendor/miowtion/kernels/fa4_sm8x/flash_fwd.py",
+    "source_sha256": "a2e543e5a35f20747df059f692210791047f36af8cf483b788f79cef543c4fdc",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/miowtion/kernels/fa4_sm8x/block_sparse_utils.py",
+    "source": "veda/vendor/miowtion/kernels/fa4_sm8x/block_sparse_utils.py",
+    "source_sha256": "69b7a955e7a7cb756b0b475241e771feba7497670b570dd5ddb279e2b51ac7ad",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/veda/backend_v2.py",
+    "source": "veda/runtime/backend_v2.py",
+    "source_sha256": "fd91baf802edb9c7e8a3e9454c75878681105ccff364da312fcc384826cc1078",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/veda/fused.py",
+    "source": "veda/runtime/fused.py",
+    "source_sha256": "e7e2a1b8861d3562ccdd1889464ad49c0f09bcd7826308b159d545401ef188d2",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/veda/fused_route.py",
+    "source": "veda/runtime/fused_route.py",
+    "source_sha256": "2dc455c8f95e01912504fbf3e67141a07b5a1c7626a9b29aef7eaf4c65d13789",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/veda/pack_split.py",
+    "source": "veda/runtime/pack_split.py",
+    "source_sha256": "012a6a4728f4d2d58e9f410c39374d562bb39d6087483dc6ad2c189ca8af3132",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/veda/hybrid_prefix.py",
+    "source": "veda/runtime/hybrid_prefix.py",
+    "source_sha256": "2c56ea59edf894d1c8e8b30525b9a9ba96a3aaf51f02f3deec8653ee918376fc",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/veda/probe_kernel.py",
+    "source": "veda/runtime/probe_kernel.py",
+    "source_sha256": "e9590959200063b6d14851fbe5ee308d549c9cd4e3f30476ae7acb0e74bd7dee",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/veda/veda_reorder.py",
+    "source": "veda/runtime/veda_reorder.py",
+    "source_sha256": "0403d0bb9f858c03a530c8809ae9fd19c7ebb1cb721af423fbb30db7697b09eb",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/vsa/tile_geometry.py",
+    "source": "vsa-handoff/tile_geometry.py",
+    "source_sha256": "14b8e7af3e6efb2eecaf61cec54dd4b88304dd27c878817baf9209e2d85e7180",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/vsa/npu_vsa64_ascendc.py",
+    "source": "vsa-handoff/npu_vsa64_ascendc.py",
+    "source_sha256": "1196d129e8cf0d7757340bef47e6c76f446c4d234dc21f6d6e2a806675399a92",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  },
+  {
+    "path": "src/h3_ascend/_vendor/vsa/vsa64_ascendc_tile.py",
+    "source": "vsa-handoff/vsa64_ascendc_tile.py",
+    "source_sha256": "82dcb8a5a36f12325858b6560ce71db60379d1124ce0f782676022e06b462006",
+    "changes": "namespace imports; portable paths; explicitly documented head sharding/config below"
+  }
+]

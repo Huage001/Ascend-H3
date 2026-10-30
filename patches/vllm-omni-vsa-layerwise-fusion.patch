@@ -1,0 +1,22 @@
+diff --git a/vllm_omni/diffusion/models/minimax_h3/fasth3.py b/vllm_omni/diffusion/models/minimax_h3/fasth3.py
+index 9f04c20..363bf01 100644
+--- a/vllm_omni/diffusion/models/minimax_h3/fasth3.py
++++ b/vllm_omni/diffusion/models/minimax_h3/fasth3.py
+@@ -42,7 +42,7 @@ import torch
+ from safetensors import safe_open
+ from vllm.logger import init_logger
+ 
+-from vllm_omni.diffusion.offloader.config import offload_enabled, resolve_offload_strategy
++from vllm_omni.diffusion.offloader.config import OffloadStrategy, resolve_offload_strategy
+ from vllm_omni.diffusion.sched.sigma_schedule import DMD2SigmaSchedule
+ from vllm_omni.errors import OmniClientError
+ from vllm_omni.platforms import current_omni_platform
+@@ -609,7 +609,7 @@ class FastH3WeightFusion:
+         """Hold a starting server to the ladder this student was trained on."""
+         if partition == "ref2va":
+             raise ValueError("FastH3 preview v1 distills T2VA only, so it cannot serve a Ref2VA partition")
+-        if offload_enabled(od_config):
++        if resolve_offload_strategy(od_config) is OffloadStrategy.DISTRIBUTED_LAYER_WISE:
+             # A host-weight plan installs the transformer without going through
+             # load_weights(), which is where the fusion and its completeness
+             # check live. Serving base H3 weights under a four-step schedule

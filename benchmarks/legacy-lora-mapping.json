@@ -1,0 +1,17 @@
+{
+  "targets": 259,
+  "pairs": 363,
+  "schedule": [
+    1.0,
+    0.875,
+    0.75,
+    0.625,
+    0.5,
+    0.375,
+    0.25,
+    0.125,
+    0.0
+  ],
+  "source": "Explicitly marked already-scaled legacy Turbo8 Diffusers adapter",
+  "mapped_shapes_match_native_checkpoint": true
+}

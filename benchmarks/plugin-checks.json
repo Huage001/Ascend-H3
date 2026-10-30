@@ -1,0 +1,32 @@
+[
+  {
+    "method": "full",
+    "backend": "AscendSparseBackend",
+    "implementation": "AscendSparseImpl",
+    "packed_padding": true
+  },
+  {
+    "method": "veda",
+    "backend": "AscendSparseBackend",
+    "implementation": "AscendSparseImpl",
+    "packed_padding": true
+  },
+  {
+    "method": "spark",
+    "backend": "AscendSparseBackend",
+    "implementation": "AscendSparseImpl",
+    "packed_padding": true
+  },
+  {
+    "method": "vsa",
+    "backend": "AscendVSABackend",
+    "implementation": "FastVideoVSAImpl",
+    "packed_padding": true
+  },
+  {
+    "method": "vdn",
+    "backend": "AscendVDNBackend",
+    "implementation": "VDNAttentionImpl",
+    "packed_padding": true
+  }
+]

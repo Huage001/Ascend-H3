@@ -1,0 +1,2 @@
+include CMakeLists.txt LICENSE README.md
+recursive-include csrc *.cpp *.h *.hpp CMakeLists.txt SOURCE_README.md

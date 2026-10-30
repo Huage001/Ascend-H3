@@ -1,0 +1,99 @@
+
+"""Architecture constants and configuration of the MiniMax-H3 DiT."""
+from __future__ import annotations
+import importlib as _importlib
+import dataclasses
+import json
+import os
+from h3_ascend._vendor.miowtion.h3 import release
+TAG_VIDEO = 0
+TAG_TEXT = 1
+TAG_AUDIO = 2
+TAG_PAD = -1
+MODALITY_NUM = 3
+PACKED_SEQUENCE_ALIGNMENT = 64
+FP32_PARAM_PREFIXES = ('video_patch_proj.', 'audio_patch_proj.', 'time_embedder.', 'final_layer.video_out.', 'final_layer.audio_out.')
+FP32_BUFFER_NAMES = ('rope.inv_freq',)
+CONFIG_KEYS = {'hidden_size': ('hidden_size',), 'num_layers': ('num_layers',), 'num_refiner_layers': ('num_refiner_layers', 'token_refiner_num_layers'), 'num_heads': ('num_attention_heads',), 'head_dim': ('attention_head_dim',), 'ffn_dim': ('ffn_dim', 'ffn_hidden_size'), 'video_channels': ('in_channels', 'latents_dim'), 'audio_channels': ('audio_in_channels', 'audio_latents_dim'), 'patch_size': ('patch_size',), 'text_dim': ('text_dim',), 'freq_dim': ('freq_dim', 'timestep_input_dim'), 'time_embed_hidden': ('time_embed_hidden_dim', 'time_embed_hidden_size'), 'time_embed_dim': ('time_embed_dim',), 'rope_freqs_per_axis': ('rope_freq_dim', 'rope_inv_freq_len'), 'norm_eps': ('norm_eps',), 'qk_norm_eps': ('qk_norm_eps',), 'final_norm_eps': ('final_norm_eps',)}
+OPTIONAL_CONFIG_KEYS = {'rope_theta': ('rope_theta',)}
+
+@dataclasses.dataclass(frozen=True)
+class H3Config:
+    """Shape hyper-parameters of the H3 DiT (defaults: the released 33B)."""
+    hidden_size: int = 5376
+    num_layers: int = 50
+    num_refiner_layers: int = 2
+    num_heads: int = 56
+    head_dim: int = 128
+    ffn_dim: int = 14336
+    video_channels: int = 24
+    audio_channels: int = 32
+    patch_size: tuple[int, int, int] = (1, 2, 2)
+    text_dim: int = 5120
+    freq_dim: int = 256
+    time_embed_hidden: int = 5376
+    time_embed_dim: int = 2688
+    rope_freqs_per_axis: int = 16
+    rope_theta: float = 10000.0
+    norm_eps: float = 1e-05
+    qk_norm_eps: float = 1e-05
+    final_norm_eps: float = 1e-05
+    mlp_gate_first: bool = True
+
+    @property
+    def video_patch_dim(self) -> int:
+        pt, ph, pw = self.patch_size
+        return self.video_channels * pt * ph * pw
+
+    @property
+    def inner_dim(self) -> int:
+        return self.num_heads * self.head_dim
+
+    @property
+    def rope_dim(self) -> int:
+        """Rotated channels per head: (t, h, w) frequencies, cos and sin."""
+        return 2 * 3 * self.rope_freqs_per_axis
+
+    @classmethod
+    def from_pretrained(cls, transformer_dir: str) -> H3Config:
+        """Reads `<checkpoint>/<variant>/transformer/config.json`.
+
+        Two releases are in circulation and they spell the same fields
+        differently (see CONFIG_KEYS); every field must be present under one
+        of its spellings, so a third schema fails loudly instead of silently
+        falling back to the defaults of this class. The release also decides
+        `mlp_gate_first`, which is read from `_class_name` rather than
+        guessed: the two releases fuse the SwiGLU halves in opposite orders
+        and the wrong order is invisible to every shape and norm check
+        (miowtion.h3.release.MLP_GATE_FIRST).
+
+        Raises:
+            KeyError: When a field is missing under every known spelling.
+            ValueError: When the AdaLN width contradicts hidden_size, or
+                the release is not one this repo knows.
+        """
+        with open(os.path.join(transformer_dir, 'config.json')) as f:
+            raw = json.load(f)
+        kwargs = {}
+        for field, keys in CONFIG_KEYS.items():
+            present = [k for k in keys if k in raw]
+            if not present:
+                raise KeyError(f'{transformer_dir}/config.json has no key for {field} (tried {list(keys)})')
+            kwargs[field] = raw[present[0]]
+        for field, keys in OPTIONAL_CONFIG_KEYS.items():
+            for key in keys:
+                if key in raw:
+                    kwargs[field] = raw[key]
+                    break
+        kwargs['patch_size'] = tuple(kwargs['patch_size'])
+        kwargs['mlp_gate_first'] = release.mlp_gate_first(release.schema_from_class_name(raw.get('_class_name')))
+        config = cls(**kwargs)
+        expected_adaln = 6 * MODALITY_NUM * config.hidden_size
+        if raw.get('adaln_out_features', expected_adaln) != expected_adaln:
+            raise ValueError(f'adaln_out_features {raw['adaln_out_features']} != {expected_adaln}')
+        return config
+
+    @classmethod
+    def tiny(cls, num_layers: int=2, num_heads: int=4) -> H3Config:
+        """A small config with the real structure, for CPU tests."""
+        return cls(hidden_size=64, num_layers=num_layers, num_refiner_layers=1, num_heads=num_heads, head_dim=32, ffn_dim=96, text_dim=48, freq_dim=32, time_embed_hidden=64, time_embed_dim=32, rope_freqs_per_axis=4)

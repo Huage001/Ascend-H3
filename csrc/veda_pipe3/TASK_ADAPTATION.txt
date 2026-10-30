@@ -1,0 +1,1 @@
+Task scheduling only: original query-major, grouped query locality, or head-major. Per-query selected KV order and arithmetic unchanged. Namespace isolated; require bitexact native128 gates.

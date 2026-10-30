@@ -1,0 +1,62 @@
+# Integration design
+
+The vLLM-Omni pipeline owns tokenization, text/audio/video encoders, denoising,
+LoRA loading, quantized projections, head parallelism and media decoding.
+Ascend-H3 replaces attention computation through an explicit general plugin.
+Without `H3_ASCEND_METHOD`, importing the package changes no backend.
+
+## Attention paths
+
+* **Full:** CANN fused inference attention. Explicit masks in auxiliary token
+  refiners use the upstream masked SDPA path.
+* **VSA:** spatial-temporal logical blocks of 4×4×4 tokens, pooled routing,
+  selected-token softmax and trained compressed attention gates. The CANN
+  kernel pairs selected KV64 blocks into KV128 compute tiles. Invalid edge
+  tokens remain masked. Text/audio prefix regions retain dense attention.
+* **Veda:** pretrained per-layer/per-head route prediction, per-head token
+  permutations, fused route/pack stages, CANN sparse softmax and inverse
+  permutation. Native TP slices data heads, while predictor calls retain the
+  original global head IDs. Selection is recomputed for every attention call.
+* **Spark:** content-dependent metric, hierarchical balanced token partition,
+  pooled route selection and selected-block softmax. CANN stable partitions,
+  terminal routing and a shared captured tree reduce dispatch overhead.
+  Workspaces and launch plans are reusable; content-dependent routes are not.
+* **VDN:** upstream learned local-softmax plus full-width DeltaNet linear
+  branch. Frame windows are batched into two CANN calls. A centered Newton
+  inverse and captured bidirectional scans replace expensive host launches.
+  The default retains all 128 state coordinates. Newton inversion is
+  numerically approximate and is not advertised as bitwise Cholesky.
+
+## Quantization boundary
+
+`--precision int8` selects the native vLLM-Omni transformer INT8 recipe.
+Projection results enter attention as BF16 tensors. FP32 predictor, routing,
+softmax accumulators and VDN state operations keep their defined precision.
+Sparse attention is not itself advertised as INT8 matrix arithmetic.
+
+## Parallelism and lifetime
+
+Default multi-card launches use vLLM tensor parallel head sharding: QKV and
+output projections are managed upstream, and this package sees local heads.
+56 heads support TP sizes 1, 2, 4, 7 and 8. Veda translates local IDs back to
+global checkpoint head IDs. Optional Ulysses is exposed separately; upstream
+VDN currently forbids Ulysses and distributed layerwise offload. VSA and VDN
+use ordinary layerwise offload so their load-time weight fusion is not skipped
+by a direct checkpoint host-weight plan. The VSA compatibility patch narrows
+the upstream offload rejection to the distributed path; its normal weight
+loader and complete-fusion validation still run.
+
+The initial release targets one T2VA document per request. Plan objects hold
+mutable scratch tensors and NPU graph buffers, so one worker must serialize
+attention execution on its stream. The default LRU holds one shape/stream
+plan; VDN scan and window caches are process-local. Independent servers must
+use separate device allocations. Ref-video, I2V, multi-document co-packing
+and concurrent calls sharing the same buffers require additional validation.
+
+## Build and distribution
+
+Only source is distributed. CANN operators compile into an external cache
+keyed by source hash, Torch/NPU ABI, SoC and CANN installation. Build receipts
+record source and library hashes. Use an editable source installation so
+`configs/` and `csrc/` remain available. A wheel-only installation is not
+currently supported.

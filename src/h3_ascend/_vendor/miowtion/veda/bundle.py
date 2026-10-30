@@ -1,0 +1,256 @@
+
+"""Self-contained predictor bundle: live weights plus the tile plans.
+
+A training checkpoint is not a deployment artifact. It carries the EMA
+shadow next to the live weights (twice the size for something inference
+never reads), it is a `torch.load` pickle, and it says nothing about which
+tile shapes the predictor was trained against -- those live in a separate
+plan directory that has to be shipped and named correctly alongside it.
+Getting that pairing wrong is silent: the predictor still produces scores,
+they are just scores for a tiling it never saw.
+
+The bundle is one safetensors file holding the live predictor weights, with
+every plan of the plan table serialized into its `__metadata__` (which
+safetensors defines as str -> str, so the plans go in as one JSON blob).
+Geometry, tile shapes and the weights therefore travel together and a
+mismatch is impossible by construction.
+
+EMA is deliberately dropped: which of the two the run should deploy is a
+decision made once, at export time, and recorded in `source_weights`.
+
+Weights are stored in bf16 by default. `LayerPredictor.embed` upcasts the
+projection it selects (`proj.index_select(0, heads).float()`), so the
+scoring arithmetic is fp32 whatever the storage dtype is; keeping fp32 on
+disk only doubles the file and, more importantly, doubles the resident copy
+each inference replica holds on its own card.
+
+`float8_e4m3fn` is offered one step below bf16, with a per-head amax scale
+alongside each tensor. It loads back as bf16 parameters (bmm has no e4m3
+path), so it halves the file and the load, not the resident copy; its real
+use is to measure what three mantissa bits do to the selected block set.
+"""
+from __future__ import annotations
+import importlib as _importlib
+import dataclasses
+import json
+from collections.abc import Sequence
+import torch
+from safetensors import safe_open
+from safetensors.torch import save_file
+from h3_ascend._vendor.miowtion.h3 import geometry as h3_geometry
+from h3_ascend._vendor.miowtion.veda import plan as veda_plan
+from h3_ascend._vendor.miowtion.veda import predictor as veda_predictor
+from h3_ascend._vendor.miowtion.veda import mask as veda_mask
+from h3_ascend._vendor.miowtion.veda import tiling
+FORMAT = 'miowtion-veda-predictor-v1'
+_PREFIX = 'predictor.'
+DTYPES = {'float32': torch.float32, 'bfloat16': torch.bfloat16, 'float8_e4m3fn': torch.float8_e4m3fn}
+_E4M3_MAX = 448.0
+_SCALE_SUFFIX = '.__scale'
+_LEGACY_DTYPE = 'float32'
+
+def _quantize_fp8(weight: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    """Splits `[H, ...]` weights into e4m3 values and a per-head scale.
+
+    The scale maps each head's amax onto the largest finite e4m3 value, so
+    the whole exponent budget of the format is spent on that head's own
+    range. A head of all zeros gets a tiny scale and stays zero.
+
+    Returns:
+        (values `[H, ...]` e4m3, scale `[H]` fp32) with
+        `weight ~= values * scale`.
+    """
+    dims = tuple(range(1, weight.dim()))
+    amax = weight.float().abs().amax(dim=dims)
+    scale = (amax / _E4M3_MAX).clamp(min=torch.finfo(torch.float32).tiny)
+    values = weight.float() / scale.view(-1, *[1] * len(dims))
+    return (values.to(torch.float8_e4m3fn).contiguous(), scale.contiguous())
+
+def _dequantize_fp8(values: torch.Tensor, scale: torch.Tensor, dtype: torch.dtype) -> torch.Tensor:
+    """Inverse of `_quantize_fp8`, into `dtype`."""
+    dims = values.dim() - 1
+    return (values.float() * scale.view(-1, *[1] * dims)).to(dtype)
+
+@dataclasses.dataclass
+class Bundle:
+    """A loaded bundle.
+
+    Attributes:
+        predictor: The predictor, on the requested device, in eval mode.
+        plans: Tile plans the predictor was trained against.
+        target_budget: Target/current visual block budget used in training.
+        ref_budget: Reference visual block budget, when references are tiled.
+        tile_conditions: Whether visual references are tiled instead of
+            staying in the dense global block.
+        keep_ratio: Legacy alias for a ratio target budget; None for an
+            absolute-tile target budget.
+        metadata: The file's raw string metadata (provenance).
+    """
+    predictor: veda_predictor.TileScorePredictor
+    plans: veda_plan.PlanTable
+    target_budget: veda_mask.Budget
+    ref_budget: veda_mask.Budget | None
+    tile_conditions: bool
+    keep_ratio: float | None
+    metadata: dict[str, str]
+
+def _budget_metadata(prefix: str, ratio: float | None, tiles: float | None) -> dict[str, str]:
+    if (ratio is None) == (tiles is None):
+        raise ValueError(f'set exactly one of {prefix}_ratio / {prefix}_tiles')
+    if tiles is not None:
+        veda_mask.Budget(tiles=tiles)
+        return {f'{prefix}_budget_kind': 'tiles', f'{prefix}_budget_value': repr(float(tiles))}
+    veda_mask.Budget(ratio=ratio)
+    return {f'{prefix}_budget_kind': 'ratio', f'{prefix}_budget_value': repr(float(ratio))}
+
+def _read_budget(metadata: dict[str, str], prefix: str, *, legacy_ratio: str | None=None) -> veda_mask.Budget | None:
+    kind = metadata.get(f'{prefix}_budget_kind')
+    value = metadata.get(f'{prefix}_budget_value')
+    if kind is None:
+        return veda_mask.Budget(ratio=float(metadata[legacy_ratio])) if legacy_ratio and legacy_ratio in metadata else None
+    if kind not in ('ratio', 'tiles') or value is None:
+        raise ValueError(f'invalid {prefix} budget metadata: kind={kind!r}, value={value!r}')
+    return veda_mask.Budget(**{kind: float(value)})
+
+def save(path: str, weights: dict[str, torch.Tensor], plans: veda_plan.PlanTable, *, num_layers: int, num_heads: int, head_dim: int, keep_ratio: float | None=None, keep_tiles: float | None=None, ref_keep_ratio: float | None=None, ref_keep_tiles: float | None=None, tile_conditions: bool=False, source: str, source_weights: str, step: int, dtype: torch.dtype=torch.bfloat16, second_order_rank: int=0, count_term: bool=False) -> None:
+    """Writes a bundle.
+
+    Args:
+        path: Destination `.safetensors` file.
+        weights: Predictor state dict, keys either bare (`layers.0.proj_q`)
+            or checkpoint style (`predictor.layers.0.proj_q`).
+        plans: Plans to embed; every plan of the table is written.
+        num_layers: Layers the predictor was built with.
+        num_heads: Heads per layer.
+        head_dim: Head dimension.
+        keep_ratio / keep_tiles: Target/current budget used in training.
+        ref_keep_ratio / ref_keep_tiles: Independent reference budget.
+        tile_conditions: Whether visual references were tiled in training.
+        source: Checkpoint directory the weights came from (provenance).
+        source_weights: 'live' or 'ema' (which of the two was exported).
+        step: Training update the checkpoint was written at.
+        dtype: Storage dtype; must be one of `DTYPES`.
+        second_order_rank: Rank of the predictor's second-cumulant head
+            (see veda.predictor). Recorded so `load` rebuilds the same
+            shape; 0 is the plain predictor.
+        count_term: Whether the predictor scores log B_j. Likewise.
+
+    Raises:
+        ValueError: If `weights` is empty, mixes prefixed and bare keys, or
+            `dtype` is not a supported storage dtype.
+    """
+    if not weights:
+        raise ValueError('no predictor weights to save')
+    target_metadata = _budget_metadata('target', keep_ratio, keep_tiles)
+    if ref_keep_ratio is not None or ref_keep_tiles is not None:
+        if not tile_conditions:
+            raise ValueError('a reference budget requires tile_conditions')
+        ref_metadata = _budget_metadata('ref', ref_keep_ratio, ref_keep_tiles)
+    else:
+        if tile_conditions:
+            raise ValueError('tile_conditions requires a reference budget')
+        ref_metadata = {}
+    names = {v: k for k, v in DTYPES.items()}
+    if dtype not in names:
+        raise ValueError(f'unsupported storage dtype {dtype}; expected one of {sorted(DTYPES)}')
+    prefixed = [k for k in weights if k.startswith(_PREFIX)]
+    if prefixed and len(prefixed) != len(weights):
+        raise ValueError('weights mix prefixed and bare keys')
+    bare = {k[len(_PREFIX):] if prefixed else k: v for k, v in weights.items()}
+    if dtype is torch.float8_e4m3fn:
+        tensors = {}
+        for key, value in bare.items():
+            values, scale = _quantize_fp8(value)
+            tensors[key] = values
+            tensors[key + _SCALE_SUFFIX] = scale
+    else:
+        tensors = {k: v.to(dtype).contiguous() for k, v in bare.items()}
+    if not plans.plans:
+        raise ValueError("bundle without plans; pass the run's plan table")
+    metadata = {'format': FORMAT, 'num_layers': str(num_layers), 'num_heads': str(num_heads), 'head_dim': str(head_dim), 'dtype': names[dtype], 'tile_conditions': str(bool(tile_conditions)).lower(), 'source': source, 'source_weights': source_weights, 'step': str(step), 'second_order_rank': str(second_order_rank), 'count_term': '1' if count_term else '0', 'plans': json.dumps({name: p.to_json() for name, p in sorted(plans.plans.items())})}
+    metadata.update(target_metadata)
+    metadata.update(ref_metadata)
+    if keep_ratio is not None:
+        metadata['keep_ratio'] = repr(float(keep_ratio))
+    save_file(tensors, path, metadata=metadata)
+
+def read_metadata(path: str) -> dict[str, str]:
+    """The file's string metadata, without reading a single tensor.
+
+    Raises:
+        ValueError: If the file is not a bundle of this format.
+    """
+    with safe_open(path, framework='pt', device='cpu') as f:
+        metadata = dict(f.metadata() or {})
+    if metadata.get('format') != FORMAT:
+        raise ValueError(f'{path}: not a {FORMAT} bundle (format {metadata.get('format')!r})')
+    return metadata
+
+def load(path: str, device: torch.device | str='cpu') -> Bundle:
+    """Loads a bundle, strictly: every stored tensor must land on a parameter.
+
+    Args:
+        path: A `.safetensors` file written by `save()`.
+        device: Where to put the predictor.
+
+    Returns:
+        The bundle.
+
+    Raises:
+        ValueError: If the file is not a bundle of this format, or its
+            tensors do not match the predictor the metadata describes.
+    """
+    metadata = read_metadata(path)
+    with safe_open(path, framework='pt', device='cpu') as f:
+        tensors = {k: f.get_tensor(k) for k in f.keys()}
+    stored = metadata.get('dtype', _LEGACY_DTYPE)
+    if stored not in DTYPES:
+        raise ValueError(f'{path}: unknown storage dtype {stored!r}')
+    model = veda_predictor.TileScorePredictor(int(metadata['num_layers']), int(metadata['num_heads']), int(metadata['head_dim']), second_order_rank=int(metadata.get('second_order_rank', 0)), count_term=metadata.get('count_term', '0') == '1')
+    resident = DTYPES[stored]
+    if stored == 'float8_e4m3fn':
+        resident = torch.bfloat16
+        scales = {k[:-len(_SCALE_SUFFIX)]: v for k, v in tensors.items() if k.endswith(_SCALE_SUFFIX)}
+        values = {k: v for k, v in tensors.items() if not k.endswith(_SCALE_SUFFIX)}
+        missing = sorted(set(values) - set(scales))
+        if missing:
+            raise ValueError(f'{path}: fp8 tensors without a {_SCALE_SUFFIX} scale: {missing}')
+        tensors = {k: _dequantize_fp8(v, scales[k], resident) for k, v in values.items()}
+    model = model.to(resident)
+    shape = f'{metadata['num_layers']} layers x {metadata['num_heads']} heads x {metadata['head_dim']}'
+    try:
+        model.load_state_dict(tensors, strict=True)
+    except RuntimeError as error:
+        raise ValueError(f'{path}: predictor weights do not match the {shape} the metadata declares: {error}') from error
+    plans = veda_plan.PlanTable([veda_plan.TilePlan.from_json(p) for p in json.loads(metadata['plans']).values()])
+    target_budget = _read_budget(metadata, 'target', legacy_ratio='keep_ratio')
+    if target_budget is None:
+        raise ValueError(f'{path}: bundle has no target budget')
+    ref_budget = _read_budget(metadata, 'ref')
+    tile_conditions = metadata.get('tile_conditions', 'false') == 'true'
+    if tile_conditions and ref_budget is None:
+        raise ValueError(f'{path}: tiled references need a ref budget')
+    return Bundle(predictor=model.to(device).eval(), plans=plans, target_budget=target_budget, ref_budget=ref_budget, tile_conditions=tile_conditions, keep_ratio=target_budget.ratio, metadata=metadata)
+
+def random_bundle(num_layers: int, num_heads: int, head_dim: int, geometries: Sequence[h3_geometry.Geometry], keep_ratio: float, seed: int=0, device: torch.device | str='cpu') -> Bundle:
+    """A bundle with a randomly initialized predictor, for benchmarks.
+
+    What a Veda step costs is fixed by the budget (the kept fraction of
+    blocks), the plan's tile shapes and the predictor's shape, not by the
+    scores: top-k keeps the same number of blocks whatever it ranks. So a
+    random predictor times the same as a trained one; its masks are just
+    arbitrary.
+
+    The plan of each geometry is uniform over the least-padding tile shape
+    of its video grid. A searched plan mixes up to a few shapes per layer
+    (miowtion.veda.search), so its padding, and hence its cost, can differ
+    slightly from this bootstrap plan.
+
+    The predictor is resident in bf16, as a loaded fp8 or bf16 bundle is.
+    """
+    with torch.random.fork_rng(devices=[]):
+        torch.manual_seed(seed)
+        predictor = veda_predictor.TileScorePredictor(num_layers, num_heads, head_dim)
+    plans = veda_plan.PlanTable([veda_plan.TilePlan.uniform(g, tiling.least_padding_shape(g.video_grid), num_layers, num_heads) for g in geometries])
+    target_budget = veda_mask.Budget(ratio=keep_ratio)
+    return Bundle(predictor=predictor.to(device, torch.bfloat16).eval(), plans=plans, target_budget=target_budget, ref_budget=None, tile_conditions=False, keep_ratio=keep_ratio, metadata={'source': 'random', 'seed': str(seed)})

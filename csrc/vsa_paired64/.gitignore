@@ -1,0 +1,44 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+
+# CMake and native build outputs
+out/
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+*.cmake.user
+compile_commands.json
+*.o
+*.a
+*.so
+
+# Local NPU profiling results
+msprof_attention_results/
+
+# Local environments and editor state
+.venv/
+venv/
+env/
+.idea/
+.vscode/
+*.swp
+*~
+
+# OS metadata
+.DS_Store
+Thumbs.db

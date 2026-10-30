@@ -1,0 +1,116 @@
+{
+  "status": "historical_before_unified_repository_validation",
+  "definition": "Full latency / candidate latency on the same device and within the same experiment; >1 is faster",
+  "layers": [
+    0,
+    24,
+    49
+  ],
+  "npu": "Ascend 910B3 single card",
+  "gpu": "RTX PRO 6000 Blackwell Server Edition single card",
+  "note": "Different scopes must not be compared as one ranking. INT8 and distributed speedups are not measured in this table. VSA/Veda Ascend historical inputs were shared synthetic QKV with a fixed nonzero gate; NVIDIA Veda/Spark and Ascend Spark used real-weight projected synthetic activations. Cross-device ratios are reference points, not identical-QKV measurements.",
+  "sources": [
+    {
+      "file": "summary.json",
+      "source_series": "miowtion-vsa-three-resolution",
+      "sha256": "323e3456d0d754a7d5d36cc30000f995999d5b5af553a286de56bda2ed06faf5"
+    },
+    {
+      "file": "summary.json",
+      "source_series": "spark-h3-pro6000",
+      "sha256": "b24ff03cdf24b962c2164e8b5c2d50b70f561bc764619564c0999313f4711ad0"
+    },
+    {
+      "file": "summary.json",
+      "source_series": "strict-ten-followup",
+      "sha256": "5cabe391aa2e50bddc98f18bd6d0c668588575fff5cd49e164ae8cd43095dd4e"
+    },
+    {
+      "file": "final-summary.json",
+      "source_series": "vdn-speed-match",
+      "sha256": "27247decaba54a3db11fbded8ba4126b7bec07ef980ec25babb66662df4cad7a"
+    }
+  ],
+  "records": [
+    {
+      "scope": "qkv_ready_attention_dispatch",
+      "width": 672,
+      "height": 384,
+      "frames": 124,
+      "npu_vsa": 1.1358185585968752,
+      "npu_veda": 1.3396161990501352,
+      "gpu_veda": 0.8380031006193603,
+      "gpu_spark": 0.8750264109497086,
+      "npu_spark": null,
+      "sparsity_nominal": 0.9
+    },
+    {
+      "scope": "complete_vdn_attention_module_including_projections",
+      "width": 672,
+      "height": 384,
+      "frames": 124,
+      "npu_vdn128": 0.4883802359480249,
+      "gpu_vdn128": 0.6083189089476058
+    },
+    {
+      "scope": "qkv_ready_attention_dispatch",
+      "width": 672,
+      "height": 384,
+      "frames": 345,
+      "npu_vsa": 1.5903557105442485,
+      "npu_veda": 2.516841474873446,
+      "gpu_veda": 2.4721594339798436,
+      "gpu_spark": 1.894492298436544,
+      "npu_spark": null,
+      "sparsity_nominal": 0.9
+    },
+    {
+      "scope": "complete_vdn_attention_module_including_projections",
+      "width": 672,
+      "height": 384,
+      "frames": 345,
+      "npu_vdn128": 0.8540475934574704,
+      "gpu_vdn128": 1.0418177174199756
+    },
+    {
+      "scope": "qkv_ready_attention_dispatch",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "npu_vsa": 2.2204147525637117,
+      "npu_veda": 4.096039906658804,
+      "gpu_veda": 4.449151699034919,
+      "gpu_spark": 2.6519300989798906,
+      "npu_spark": 2.4935561270471047,
+      "sparsity_nominal": 0.9
+    },
+    {
+      "scope": "complete_vdn_attention_module_including_projections",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "npu_vdn128": 1.0112234876854405,
+      "gpu_vdn128": 1.138384161462838
+    },
+    {
+      "scope": "qkv_ready_attention_dispatch",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "npu_vsa": 3.396301397992652,
+      "npu_veda": 6.644684046595436,
+      "gpu_veda": 6.733850504940079,
+      "gpu_spark": 4.358394227536273,
+      "npu_spark": 4.120572561551078,
+      "sparsity_nominal": 0.9
+    },
+    {
+      "scope": "complete_vdn_attention_module_including_projections",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "npu_vdn128": 2.351072069343363,
+      "gpu_vdn128": 2.626384491642565
+    }
+  ]
+}

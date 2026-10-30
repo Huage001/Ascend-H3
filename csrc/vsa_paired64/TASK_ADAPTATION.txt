@@ -1,0 +1,2 @@
+Reference https://gitcode.com/rxtfeng/block_sparse_attention @ dfb00fed829e652cc1abf92a0ab03eca39e8eed0
+Task extension: forward-only BF16, exact per-KV64 valid-length masks, selectable Cube KV64/KV128, online-softmax stack size, separate torch namespace sol_h3_bsa_ext. No system package modification.

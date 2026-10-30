@@ -1,0 +1,95 @@
+[
+  {
+    "method": "full",
+    "precision": "bf16",
+    "finite": true,
+    "rank_head_slice": [
+      28,
+      42
+    ],
+    "relative_l2_full_vs_shard": 0.00048127773334272206,
+    "bitexact": false
+  },
+  {
+    "method": "vsa",
+    "precision": "bf16",
+    "finite": true,
+    "rank_head_slice": [
+      28,
+      42
+    ],
+    "relative_l2_full_vs_shard": 0.0,
+    "bitexact": true
+  },
+  {
+    "method": "spark",
+    "precision": "bf16",
+    "finite": true,
+    "rank_head_slice": [
+      28,
+      42
+    ],
+    "relative_l2_full_vs_shard": 0.0,
+    "bitexact": true
+  },
+  {
+    "method": "veda",
+    "precision": "bf16",
+    "finite": true,
+    "rank_head_slice": [
+      28,
+      42
+    ],
+    "relative_l2_full_vs_shard": 0.0,
+    "bitexact": true
+  },
+  {
+    "method": "full",
+    "precision": "int8",
+    "finite": true,
+    "rank_head_slice": [
+      28,
+      42
+    ],
+    "relative_l2_full_vs_shard": 0.00039758512866683304,
+    "bitexact": false
+  },
+  {
+    "method": "vsa",
+    "precision": "int8",
+    "finite": true,
+    "rank_head_slice": [
+      28,
+      42
+    ],
+    "relative_l2_full_vs_shard": 4.495189553921364e-09,
+    "bitexact": false
+  },
+  {
+    "method": "spark",
+    "precision": "int8",
+    "finite": true,
+    "rank_head_slice": [
+      28,
+      42
+    ],
+    "relative_l2_full_vs_shard": 0.0,
+    "bitexact": true
+  },
+  {
+    "method": "veda",
+    "precision": "int8",
+    "finite": true,
+    "rank_head_slice": [
+      28,
+      42
+    ],
+    "relative_l2_full_vs_shard": 0.0,
+    "bitexact": true
+  },
+  {
+    "method": "vdn",
+    "factor_relative_l2_fp64": 1.4466992581674276e-07,
+    "dynamic_scan_bitexact": true
+  }
+]

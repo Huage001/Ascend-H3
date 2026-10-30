@@ -1,0 +1,13 @@
+diff --git a/vllm_omni/core/sched/output.py b/vllm_omni/core/sched/output.py
+index 7a5b910..a10594e 100644
+--- a/vllm_omni/core/sched/output.py
++++ b/vllm_omni/core/sched/output.py
+@@ -85,7 +85,7 @@ class OmniNewRequestData(NewRequestData):
+         )
+ 
+ 
+-@dataclass
++@dataclass(kw_only=True)
+ class OmniCachedRequestData(CachedRequestData):
+     """Cached request data for omni models with embeddings support.
+ 

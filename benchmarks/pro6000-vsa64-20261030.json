@@ -1,0 +1,362 @@
+[
+  {
+    "status": "complete",
+    "width": 1344,
+    "height": 768,
+    "frames": 124,
+    "layer": 24,
+    "heads": 56,
+    "dim": 128,
+    "dtype": "bf16",
+    "scope": "qkv_and_gate_ready_official_attention_dispatch_including_pack_route_compression_restore",
+    "gate": "constant nonzero .125, prepared outside timing",
+    "nominal_sparsity": 0.9,
+    "input_hidden_sha256": "1de9abd9002d2b7e0c191063740157006f13e8c453ddf98bb0e8a15934432208",
+    "samples_ms": {
+      "full": [
+        101.70056112110615,
+        101.92909091711044,
+        101.6751118004322,
+        101.85013711452484,
+        102.02182363718748,
+        101.89378540962934,
+        101.75063740462065,
+        101.86581965535879,
+        102.06422116607428,
+        101.90209746360779
+      ],
+      "vsa64": [
+        45.60252930969,
+        45.60701176524162,
+        45.63996847718954,
+        45.59650458395481,
+        45.583007857203484,
+        45.61883211135864,
+        45.60189042240381,
+        45.58207932859659,
+        45.57028226554394,
+        45.60307413339615
+      ]
+    },
+    "median_ms": {
+      "full": 101.87980253249407,
+      "vsa64": 45.602209866046906
+    },
+    "speedup": 2.234097927090779,
+    "full_backend": "CUDNN_ATTENTION",
+    "full_screen": {
+      "fa4": 112.06203885376453,
+      "FLASH_ATTENTION": 113.43782674521208,
+      "CUDNN_ATTENTION": 101.68202128261328
+    },
+    "full_screen_errors": {},
+    "native_sparse_calls": 15,
+    "finite": true,
+    "postflight_bitexact": true,
+    "official_revision": "d4f144581d6882d5bceb288ca13d767c054ca041",
+    "kernel_receipt": {
+      "mode": "installed_package_matches_original_h3_environment",
+      "all_python_sources_compared": true,
+      "pinned_source_sha256": {
+        "__init__.py": "d19200b0b4c2295816c3794fb8316aefd668c0bce5809635c676c857a92a8f77",
+        "block_sparse_attn.py": "6755ce4d63d38fe25d8c6d5902cb8818b5437170fdf8ad906e8f2cdb237211e9",
+        "triton_kernels/block_sparse_attn_triton.py": "ab14470d2fc1670221923ae6d9a8ebbd695687cbcb278ecf1cc2b717ad7a9ddb",
+        "triton_kernels/index.py": "a6d033cb296efb39fd11ee449a3e356a606180fc9288b3bfb58181c65f424cc7",
+        "vsa_utils.py": "d6d91a00b6ebcacbaed0a2ee42dcfe4279e23994a3ba2751939c96d3a24b08cb"
+      },
+      "source_sha256": {
+        "__init__.py": "d19200b0b4c2295816c3794fb8316aefd668c0bce5809635c676c857a92a8f77",
+        "block_sparse_attn.py": "6755ce4d63d38fe25d8c6d5902cb8818b5437170fdf8ad906e8f2cdb237211e9",
+        "block_sparse_attn_256.py": "9a6961586e4bd3b65d8a19d5198ef33f393f009fc2ca82fce161ca8f74be1960",
+        "block_sparse_attn_cute_fwd.py": "8a72fe2921965b12f0de8c8abe4dbb925474e25e23c63f49e33cd54442f06d7d",
+        "block_sparse_attn_sm100a.py": "671e9693b21c327325b6c1367094fc4869db4a6f992a812326f9626527372926",
+        "block_sparse_attn_varlen.py": "cf42f2f95b82d1be5387d450b7cc98d251465c37fbb26a729a9b9bee28029712",
+        "comm_ops.py": "1da575c958e934418cfdb4b482eb89a3809ba9ac8dd5c9612945d775acc1c2ce",
+        "ops.py": "240d38d3a84539d29e202cbd6b73c2bff8d78062ef4faf090488fe39b8dbab41",
+        "triton_kernels/attn_qat_train.py": "09d90a4e3bae1a98caedd36ab71f8c7f72d896a8edc62e1e47e32440e645fa4c",
+        "triton_kernels/block_sparse_attn_triton.py": "ab14470d2fc1670221923ae6d9a8ebbd695687cbcb278ecf1cc2b717ad7a9ddb",
+        "triton_kernels/fused_attention.py": "8c275813a44cd938752f4edd270981908b145bb2715ccc697889a43f8d62fb0c",
+        "triton_kernels/fused_compress_topk.py": "0d9f203cbd8961b8bca2c50435f0c570ad1bf09ab453c76fd2e4b9933f01b9a9",
+        "triton_kernels/index.py": "a6d033cb296efb39fd11ee449a3e356a606180fc9288b3bfb58181c65f424cc7",
+        "triton_kernels/nvfp4_utils.py": "d3ee1574a9b0d937bed58f9227a52b7a74c6e82b4edfc8cca1d61937dd4f4676",
+        "triton_kernels/quant_utils.py": "9bf123b175e11d667740182dc88712d2785a8798f1dd0228311d0f833c331c1f",
+        "triton_kernels/sla_triton.py": "9319bafe3b73f5b49fc27802951e7f31fa8da2d8b498658b041ddfb5567b394c",
+        "triton_kernels/st_attn_triton.py": "7da2ed8992a03dba9460e62a609a967a84d5a9b91836c36d7a871bdc8a964c71",
+        "turbodiffusion_ops.py": "e3c31c8af847a24ebb245b99d0df44bb6c3a37c9da1513ea674fdbc8b555fade",
+        "version.py": "4e19c2b85dd7eebb1049de4f01e6bf8df600ef466684bbe415c2c1c413f06676",
+        "vmoba.py": "d4c6516b78d37d5b7be873f54b4ed03cb5b1fa0d4a61723ec805a849ad2dd9ea",
+        "vsa_utils.py": "d6d91a00b6ebcacbaed0a2ee42dcfe4279e23994a3ba2751939c96d3a24b08cb"
+      }
+    }
+  },
+  {
+    "status": "complete",
+    "width": 1344,
+    "height": 768,
+    "frames": 345,
+    "layer": 24,
+    "heads": 56,
+    "dim": 128,
+    "dtype": "bf16",
+    "scope": "qkv_and_gate_ready_official_attention_dispatch_including_pack_route_compression_restore",
+    "gate": "constant nonzero .125, prepared outside timing",
+    "nominal_sparsity": 0.9,
+    "input_hidden_sha256": "66938791db8a79881c5cceeda17035e491432acf65616d808775869562d9852a",
+    "samples_ms": {
+      "full": [
+        823.3115701004863,
+        823.4453424811363,
+        823.559807613492,
+        819.3955402821302,
+        824.4780404493213,
+        820.6066470593214,
+        825.3412405028939,
+        825.3030767664313,
+        821.3294008746743,
+        826.1406878009439
+      ],
+      "vsa64": [
+        234.39939599484205,
+        234.40047819167376,
+        234.3774139881134,
+        234.4186408445239,
+        234.4796909019351,
+        234.37912575900555,
+        234.40961353480816,
+        234.3930620700121,
+        234.38689578324556,
+        234.41591951996088
+      ]
+    },
+    "median_ms": {
+      "full": 823.5025750473142,
+      "vsa64": 234.3999370932579
+    },
+    "speedup": 3.513237184529094,
+    "full_backend": "CUDNN_ATTENTION",
+    "full_screen": {
+      "fa4": 841.5407566353679,
+      "FLASH_ATTENTION": 849.298806861043,
+      "CUDNN_ATTENTION": 815.8968677744269
+    },
+    "full_screen_errors": {},
+    "native_sparse_calls": 15,
+    "finite": true,
+    "postflight_bitexact": true,
+    "official_revision": "d4f144581d6882d5bceb288ca13d767c054ca041",
+    "kernel_receipt": {
+      "mode": "installed_package_matches_original_h3_environment",
+      "all_python_sources_compared": true,
+      "pinned_source_sha256": {
+        "__init__.py": "d19200b0b4c2295816c3794fb8316aefd668c0bce5809635c676c857a92a8f77",
+        "block_sparse_attn.py": "6755ce4d63d38fe25d8c6d5902cb8818b5437170fdf8ad906e8f2cdb237211e9",
+        "triton_kernels/block_sparse_attn_triton.py": "ab14470d2fc1670221923ae6d9a8ebbd695687cbcb278ecf1cc2b717ad7a9ddb",
+        "triton_kernels/index.py": "a6d033cb296efb39fd11ee449a3e356a606180fc9288b3bfb58181c65f424cc7",
+        "vsa_utils.py": "d6d91a00b6ebcacbaed0a2ee42dcfe4279e23994a3ba2751939c96d3a24b08cb"
+      },
+      "source_sha256": {
+        "__init__.py": "d19200b0b4c2295816c3794fb8316aefd668c0bce5809635c676c857a92a8f77",
+        "block_sparse_attn.py": "6755ce4d63d38fe25d8c6d5902cb8818b5437170fdf8ad906e8f2cdb237211e9",
+        "block_sparse_attn_256.py": "9a6961586e4bd3b65d8a19d5198ef33f393f009fc2ca82fce161ca8f74be1960",
+        "block_sparse_attn_cute_fwd.py": "8a72fe2921965b12f0de8c8abe4dbb925474e25e23c63f49e33cd54442f06d7d",
+        "block_sparse_attn_sm100a.py": "671e9693b21c327325b6c1367094fc4869db4a6f992a812326f9626527372926",
+        "block_sparse_attn_varlen.py": "cf42f2f95b82d1be5387d450b7cc98d251465c37fbb26a729a9b9bee28029712",
+        "comm_ops.py": "1da575c958e934418cfdb4b482eb89a3809ba9ac8dd5c9612945d775acc1c2ce",
+        "ops.py": "240d38d3a84539d29e202cbd6b73c2bff8d78062ef4faf090488fe39b8dbab41",
+        "triton_kernels/attn_qat_train.py": "09d90a4e3bae1a98caedd36ab71f8c7f72d896a8edc62e1e47e32440e645fa4c",
+        "triton_kernels/block_sparse_attn_triton.py": "ab14470d2fc1670221923ae6d9a8ebbd695687cbcb278ecf1cc2b717ad7a9ddb",
+        "triton_kernels/fused_attention.py": "8c275813a44cd938752f4edd270981908b145bb2715ccc697889a43f8d62fb0c",
+        "triton_kernels/fused_compress_topk.py": "0d9f203cbd8961b8bca2c50435f0c570ad1bf09ab453c76fd2e4b9933f01b9a9",
+        "triton_kernels/index.py": "a6d033cb296efb39fd11ee449a3e356a606180fc9288b3bfb58181c65f424cc7",
+        "triton_kernels/nvfp4_utils.py": "d3ee1574a9b0d937bed58f9227a52b7a74c6e82b4edfc8cca1d61937dd4f4676",
+        "triton_kernels/quant_utils.py": "9bf123b175e11d667740182dc88712d2785a8798f1dd0228311d0f833c331c1f",
+        "triton_kernels/sla_triton.py": "9319bafe3b73f5b49fc27802951e7f31fa8da2d8b498658b041ddfb5567b394c",
+        "triton_kernels/st_attn_triton.py": "7da2ed8992a03dba9460e62a609a967a84d5a9b91836c36d7a871bdc8a964c71",
+        "turbodiffusion_ops.py": "e3c31c8af847a24ebb245b99d0df44bb6c3a37c9da1513ea674fdbc8b555fade",
+        "version.py": "4e19c2b85dd7eebb1049de4f01e6bf8df600ef466684bbe415c2c1c413f06676",
+        "vmoba.py": "d4c6516b78d37d5b7be873f54b4ed03cb5b1fa0d4a61723ec805a849ad2dd9ea",
+        "vsa_utils.py": "d6d91a00b6ebcacbaed0a2ee42dcfe4279e23994a3ba2751939c96d3a24b08cb"
+      }
+    }
+  },
+  {
+    "status": "complete",
+    "width": 672,
+    "height": 384,
+    "frames": 124,
+    "layer": 24,
+    "heads": 56,
+    "dim": 128,
+    "dtype": "bf16",
+    "scope": "qkv_and_gate_ready_official_attention_dispatch_including_pack_route_compression_restore",
+    "gate": "constant nonzero .125, prepared outside timing",
+    "nominal_sparsity": 0.9,
+    "input_hidden_sha256": "e124348c1fb0bc499b07a4fcfd2963e5974026bd04ea60ff5e4e5d0dbf84134f",
+    "samples_ms": {
+      "full": [
+        8.009743876755238,
+        7.927088066935539,
+        7.951566018164158,
+        7.996074855327606,
+        7.872188463807106,
+        7.917552255094051,
+        7.9224565997719765,
+        7.922896184027195,
+        7.865883409976959,
+        7.966158911585808
+      ],
+      "vsa64": [
+        8.199353702366352,
+        8.193864487111568,
+        8.19617323577404,
+        8.235701359808445,
+        8.193748071789742,
+        8.189614862203598,
+        8.192057721316814,
+        8.198645897209644,
+        8.184781298041344,
+        8.221167139708996
+      ]
+    },
+    "median_ms": {
+      "full": 7.924992125481367,
+      "vsa64": 8.195018861442804
+    },
+    "speedup": 0.9670498945119088,
+    "full_backend": "CUDNN_ATTENTION",
+    "full_screen": {
+      "fa4": 8.49273893982172,
+      "FLASH_ATTENTION": 8.610205724835396,
+      "CUDNN_ATTENTION": 7.859240286052227
+    },
+    "full_screen_errors": {},
+    "native_sparse_calls": 15,
+    "finite": true,
+    "postflight_bitexact": true,
+    "official_revision": "d4f144581d6882d5bceb288ca13d767c054ca041",
+    "kernel_receipt": {
+      "mode": "installed_package_matches_original_h3_environment",
+      "all_python_sources_compared": true,
+      "pinned_source_sha256": {
+        "__init__.py": "d19200b0b4c2295816c3794fb8316aefd668c0bce5809635c676c857a92a8f77",
+        "block_sparse_attn.py": "6755ce4d63d38fe25d8c6d5902cb8818b5437170fdf8ad906e8f2cdb237211e9",
+        "triton_kernels/block_sparse_attn_triton.py": "ab14470d2fc1670221923ae6d9a8ebbd695687cbcb278ecf1cc2b717ad7a9ddb",
+        "triton_kernels/index.py": "a6d033cb296efb39fd11ee449a3e356a606180fc9288b3bfb58181c65f424cc7",
+        "vsa_utils.py": "d6d91a00b6ebcacbaed0a2ee42dcfe4279e23994a3ba2751939c96d3a24b08cb"
+      },
+      "source_sha256": {
+        "__init__.py": "d19200b0b4c2295816c3794fb8316aefd668c0bce5809635c676c857a92a8f77",
+        "block_sparse_attn.py": "6755ce4d63d38fe25d8c6d5902cb8818b5437170fdf8ad906e8f2cdb237211e9",
+        "block_sparse_attn_256.py": "9a6961586e4bd3b65d8a19d5198ef33f393f009fc2ca82fce161ca8f74be1960",
+        "block_sparse_attn_cute_fwd.py": "8a72fe2921965b12f0de8c8abe4dbb925474e25e23c63f49e33cd54442f06d7d",
+        "block_sparse_attn_sm100a.py": "671e9693b21c327325b6c1367094fc4869db4a6f992a812326f9626527372926",
+        "block_sparse_attn_varlen.py": "cf42f2f95b82d1be5387d450b7cc98d251465c37fbb26a729a9b9bee28029712",
+        "comm_ops.py": "1da575c958e934418cfdb4b482eb89a3809ba9ac8dd5c9612945d775acc1c2ce",
+        "ops.py": "240d38d3a84539d29e202cbd6b73c2bff8d78062ef4faf090488fe39b8dbab41",
+        "triton_kernels/attn_qat_train.py": "09d90a4e3bae1a98caedd36ab71f8c7f72d896a8edc62e1e47e32440e645fa4c",
+        "triton_kernels/block_sparse_attn_triton.py": "ab14470d2fc1670221923ae6d9a8ebbd695687cbcb278ecf1cc2b717ad7a9ddb",
+        "triton_kernels/fused_attention.py": "8c275813a44cd938752f4edd270981908b145bb2715ccc697889a43f8d62fb0c",
+        "triton_kernels/fused_compress_topk.py": "0d9f203cbd8961b8bca2c50435f0c570ad1bf09ab453c76fd2e4b9933f01b9a9",
+        "triton_kernels/index.py": "a6d033cb296efb39fd11ee449a3e356a606180fc9288b3bfb58181c65f424cc7",
+        "triton_kernels/nvfp4_utils.py": "d3ee1574a9b0d937bed58f9227a52b7a74c6e82b4edfc8cca1d61937dd4f4676",
+        "triton_kernels/quant_utils.py": "9bf123b175e11d667740182dc88712d2785a8798f1dd0228311d0f833c331c1f",
+        "triton_kernels/sla_triton.py": "9319bafe3b73f5b49fc27802951e7f31fa8da2d8b498658b041ddfb5567b394c",
+        "triton_kernels/st_attn_triton.py": "7da2ed8992a03dba9460e62a609a967a84d5a9b91836c36d7a871bdc8a964c71",
+        "turbodiffusion_ops.py": "e3c31c8af847a24ebb245b99d0df44bb6c3a37c9da1513ea674fdbc8b555fade",
+        "version.py": "4e19c2b85dd7eebb1049de4f01e6bf8df600ef466684bbe415c2c1c413f06676",
+        "vmoba.py": "d4c6516b78d37d5b7be873f54b4ed03cb5b1fa0d4a61723ec805a849ad2dd9ea",
+        "vsa_utils.py": "d6d91a00b6ebcacbaed0a2ee42dcfe4279e23994a3ba2751939c96d3a24b08cb"
+      }
+    }
+  },
+  {
+    "status": "complete",
+    "width": 672,
+    "height": 384,
+    "frames": 345,
+    "layer": 24,
+    "heads": 56,
+    "dim": 128,
+    "dtype": "bf16",
+    "scope": "qkv_and_gate_ready_official_attention_dispatch_including_pack_route_compression_restore",
+    "gate": "constant nonzero .125, prepared outside timing",
+    "nominal_sparsity": 0.9,
+    "input_hidden_sha256": "110be588cd6c6153a3659c514af2b559332fd5af7010beeacf4c829776947652",
+    "samples_ms": {
+      "full": [
+        53.0213275924325,
+        53.08086238801479,
+        52.717157639563084,
+        53.00429277122021,
+        53.70221845805645,
+        53.88523731380701,
+        53.655996918678284,
+        53.72295435518026,
+        53.068323992192745,
+        53.55614610016346
+      ],
+      "vsa64": [
+        34.08523555845022,
+        34.33834761381149,
+        34.345224499702454,
+        34.33482255786657,
+        34.16601102799177,
+        34.34988297522068,
+        34.07954704016447,
+        34.34465639293194,
+        34.39187444746494,
+        34.35139078646898
+      ]
+    },
+    "median_ms": {
+      "full": 53.31850424408913,
+      "vsa64": 34.341502003371716
+    },
+    "speedup": 1.5525967454438718,
+    "full_backend": "CUDNN_ATTENTION",
+    "full_screen": {
+      "fa4": 58.44204593449831,
+      "FLASH_ATTENTION": 58.336302638053894,
+      "CUDNN_ATTENTION": 53.168282844126225
+    },
+    "full_screen_errors": {},
+    "native_sparse_calls": 15,
+    "finite": true,
+    "postflight_bitexact": true,
+    "official_revision": "d4f144581d6882d5bceb288ca13d767c054ca041",
+    "kernel_receipt": {
+      "mode": "installed_package_matches_original_h3_environment",
+      "all_python_sources_compared": true,
+      "pinned_source_sha256": {
+        "__init__.py": "d19200b0b4c2295816c3794fb8316aefd668c0bce5809635c676c857a92a8f77",
+        "block_sparse_attn.py": "6755ce4d63d38fe25d8c6d5902cb8818b5437170fdf8ad906e8f2cdb237211e9",
+        "triton_kernels/block_sparse_attn_triton.py": "ab14470d2fc1670221923ae6d9a8ebbd695687cbcb278ecf1cc2b717ad7a9ddb",
+        "triton_kernels/index.py": "a6d033cb296efb39fd11ee449a3e356a606180fc9288b3bfb58181c65f424cc7",
+        "vsa_utils.py": "d6d91a00b6ebcacbaed0a2ee42dcfe4279e23994a3ba2751939c96d3a24b08cb"
+      },
+      "source_sha256": {
+        "__init__.py": "d19200b0b4c2295816c3794fb8316aefd668c0bce5809635c676c857a92a8f77",
+        "block_sparse_attn.py": "6755ce4d63d38fe25d8c6d5902cb8818b5437170fdf8ad906e8f2cdb237211e9",
+        "block_sparse_attn_256.py": "9a6961586e4bd3b65d8a19d5198ef33f393f009fc2ca82fce161ca8f74be1960",
+        "block_sparse_attn_cute_fwd.py": "8a72fe2921965b12f0de8c8abe4dbb925474e25e23c63f49e33cd54442f06d7d",
+        "block_sparse_attn_sm100a.py": "671e9693b21c327325b6c1367094fc4869db4a6f992a812326f9626527372926",
+        "block_sparse_attn_varlen.py": "cf42f2f95b82d1be5387d450b7cc98d251465c37fbb26a729a9b9bee28029712",
+        "comm_ops.py": "1da575c958e934418cfdb4b482eb89a3809ba9ac8dd5c9612945d775acc1c2ce",
+        "ops.py": "240d38d3a84539d29e202cbd6b73c2bff8d78062ef4faf090488fe39b8dbab41",
+        "triton_kernels/attn_qat_train.py": "09d90a4e3bae1a98caedd36ab71f8c7f72d896a8edc62e1e47e32440e645fa4c",
+        "triton_kernels/block_sparse_attn_triton.py": "ab14470d2fc1670221923ae6d9a8ebbd695687cbcb278ecf1cc2b717ad7a9ddb",
+        "triton_kernels/fused_attention.py": "8c275813a44cd938752f4edd270981908b145bb2715ccc697889a43f8d62fb0c",
+        "triton_kernels/fused_compress_topk.py": "0d9f203cbd8961b8bca2c50435f0c570ad1bf09ab453c76fd2e4b9933f01b9a9",
+        "triton_kernels/index.py": "a6d033cb296efb39fd11ee449a3e356a606180fc9288b3bfb58181c65f424cc7",
+        "triton_kernels/nvfp4_utils.py": "d3ee1574a9b0d937bed58f9227a52b7a74c6e82b4edfc8cca1d61937dd4f4676",
+        "triton_kernels/quant_utils.py": "9bf123b175e11d667740182dc88712d2785a8798f1dd0228311d0f833c331c1f",
+        "triton_kernels/sla_triton.py": "9319bafe3b73f5b49fc27802951e7f31fa8da2d8b498658b041ddfb5567b394c",
+        "triton_kernels/st_attn_triton.py": "7da2ed8992a03dba9460e62a609a967a84d5a9b91836c36d7a871bdc8a964c71",
+        "turbodiffusion_ops.py": "e3c31c8af847a24ebb245b99d0df44bb6c3a37c9da1513ea674fdbc8b555fade",
+        "version.py": "4e19c2b85dd7eebb1049de4f01e6bf8df600ef466684bbe415c2c1c413f06676",
+        "vmoba.py": "d4c6516b78d37d5b7be873f54b4ed03cb5b1fa0d4a61723ec805a849ad2dd9ea",
+        "vsa_utils.py": "d6d91a00b6ebcacbaed0a2ee42dcfe4279e23994a3ba2751939c96d3a24b08cb"
+      }
+    }
+  }
+]

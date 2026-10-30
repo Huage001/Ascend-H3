@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ascend-h3"
+version = "0.1.0"
+description = "Unified MiniMax H3 inference with optimized Ascend sparse attention"
+requires-python = ">=3.12"
+dependencies = ["packaging>=24", "safetensors>=0.5"]
+
+[project.scripts]
+h3-ascend = "h3_ascend.cli:main"
+ascend-h3 = "h3_ascend.cli:main"
+
+[project.entry-points."vllm_omni.general_plugins"]
+h3_ascend = "h3_ascend.integrations.vllm_omni:register"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = ["src/h3_ascend/_vendor", "csrc"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
