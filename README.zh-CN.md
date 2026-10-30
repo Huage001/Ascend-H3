@@ -219,14 +219,15 @@ https://github.com/user-attachments/assets/590be000-8cbd-458e-9198-afb2a2bdcaa4
 VSA INT8 TP4 的四种视频规格现已全部通过完整生成和解码，
 [审计矩阵](benchmarks/vsa-int8-tp4-matrix.json)记录各规格帧数与视频校验值。
 
-Veda INT8 TP4、672×384、124 帧、Turbo8、seed 42、名义稀疏度 90%：
+Veda BF16、单卡昇腾 910B3、1344×768、345 帧，使用默认 LightX2V 四步 LoRA、
+官方预测器和名义 90% 稀疏度，seed 42；四次 DiT 更新均输出有限值，每步经过全部 50 层。
 
-https://github.com/user-attachments/assets/93ff95b6-615c-4fc0-bf84-bb7dabe6b08a
+https://github.com/user-attachments/assets/c2e08051-3753-495b-bb69-7ed8b7208b2a
 
-[带音频 MP4](examples/videos/veda-int8-tp4-672124.mp4) ·
-[样例参数](examples/videos/veda-int8-tp4-672124.json)。
-Veda INT8 TP4 的四种规格均已完整生成和解码，见
-[审计矩阵](benchmarks/veda-int8-tp4-matrix.json)。
+[样例参数与视频校验和](examples/videos/veda4-bf16-single-1344345.json)。
+已确认 345 帧和音轨，并抽样检查画面；这不构成与 Full 的画质等价证明。
+此前使用 Turbo8 的 Veda INT8 TP4 四种规格验证，保留在
+[历史审计矩阵](benchmarks/veda-int8-tp4-matrix.json)中。
 
 此前严格 Spark 实验已生成 1344×768 的 124/345 帧视频，与优化前昇腾
 参考实现的每个解码后 uint8 像素一致。这证明的是昇腾实现之间的一致性，

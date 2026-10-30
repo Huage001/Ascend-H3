@@ -242,14 +242,17 @@ All four workloads have now passed complete VSA INT8 TP4 inference and
 decode; [the audited matrix](benchmarks/vsa-int8-tp4-matrix.json) records
 exact frame counts and video hashes.
 
-Veda INT8 TP4, 672×384, 124 frames, Turbo8, seed 42, nominal 90% sparsity:
+Veda BF16, single Ascend 910B3, 1344×768 / 345 frames, default LightX2V
+four-step LoRA, official predictor, nominal 90% sparsity, seed 42.
+All four DiT outputs were finite, with all 50 blocks per update.
 
-https://github.com/user-attachments/assets/93ff95b6-615c-4fc0-bf84-bb7dabe6b08a
+https://github.com/user-attachments/assets/c2e08051-3753-495b-bb69-7ed8b7208b2a
 
-[MP4 with audio](examples/videos/veda-int8-tp4-672124.mp4) ·
-[sample contract](examples/videos/veda-int8-tp4-672124.json).
-All four Veda INT8 TP4 workloads passed complete generation and decode;
-see [the audited matrix](benchmarks/veda-int8-tp4-matrix.json).
+[Sample contract and video checksum](examples/videos/veda4-bf16-single-1344345.json).
+The video has 345 frames and audio; sampled frames were visually inspected.
+This does not establish perceptual equivalence with Full attention.
+Earlier Turbo8 Veda INT8 TP4 qualification remains in
+[the historical audited matrix](benchmarks/veda-int8-tp4-matrix.json).
 
 Previous strict Spark experiments generated 1344×768 videos at 124 and 345
 frames with every decoded uint8 pixel matching the previous Ascend reference.
