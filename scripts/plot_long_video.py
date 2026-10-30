@@ -118,7 +118,7 @@ def render(data, output):
         colors, ("Attention module", "FFN", "Other DiT work incl. unhidden Offload"))],
         loc="lower left", bbox_to_anchor=(.05, .052), ncol=3, frameon=False, fontsize=9)
     fig.text(.055, .039, "Headline times: median uninstrumented request → completed MP4. "
-             "Speedup denominator: same-device, same-precision Full, 4 steps. Q = same-method BF16 / INT8.", fontsize=8, color="#626257")
+             "Reference: same-device, same-precision Full, 4 steps. Q = same-method BF16 / INT8.", fontsize=8, color="#626257")
     fig.text(.055, .028, f"Bars: separate DiT profiling, normalized over actual forwards × 50 blocks; no E2E extrapolation. "
              f"Offload policy: {policy}.", fontsize=8, color="#626257")
     fig.text(.055, .015, "VDN requires its official eight-step student and is documented separately; it is not a four-step candidate.", fontsize=8, color="#626257")

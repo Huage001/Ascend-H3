@@ -202,9 +202,10 @@ seed 42, **one formal complete request per row**:
 | BF16 | Veda + LightX2V | 225.29 s | 2.88× | — |
 | BF16 | Spark-H3 + LightX2V | 276.45 s | 2.35× | — |
 | INT8 | Full + LightX2V | 603.84 s | 1.00× | 1.07× |
+| INT8 | VSA · FastH3 | 261.56 s | 2.31× | — |
 | INT8 | Veda + LightX2V | 203.77 s | 2.96× | 1.11× |
 
-VSA, the remaining INT8 rows, the 124-frame matrix and PRO 6000 results are
+VSA BF16, Spark-H3 INT8, the 124-frame matrix and PRO 6000 results are
 still pending. [Raw high-resolution records and independent profiles](benchmarks/single-card-four-step-highres.json).
 
 [Measurement and figure protocol](docs/benchmark-protocol.md).
