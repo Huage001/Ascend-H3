@@ -172,30 +172,34 @@ VSA 使用完整官方 FastH3 4-step 学生。固定八步的 VDN 单独说明�
 Attention/FFN 分项来自单独的性能分析运行，不能代替端到端实测。历史算子数据
 保留在原始记录中，不作为这里的视频生成加速比。
 
-首组已测单卡数据：672×384 / 124 帧，INT8，四步，相同 Offload，seed 42，
+加速比只报告 **1344×768、124/345 帧**两组；672×384 保留推理和功能验证支持。
+
+已测单卡昇腾 910B3、345 帧，四步，相同 Offload，seed 42，
 **每行一次正式完整请求**：
 
-| 方法 | 完整视频 + 音频耗时 | 相对 INT8 Full4 加速比 |
-| --- | ---: | ---: |
-| Full + LightX2V | 20.03 秒 | 1.00× |
-| VSA + 官方 FastH3 | 22.18 秒 | 0.90× |
+| 精度 | 方法 | 完整视频 + 音频耗时 | 相对同精度 Full4 加速比 | BF16 / INT8 量化收益 |
+| --- | --- | ---: | ---: | ---: |
+| BF16 | Full + LightX2V | 648.97 秒 | 1.00× | — |
+| BF16 | Veda + LightX2V | 225.29 秒 | 2.88× | — |
+| BF16 | Spark-H3 + LightX2V | 276.45 秒 | 2.35× | — |
+| INT8 | Full + LightX2V | 603.84 秒 | 1.00× | 1.07× |
+| INT8 | Veda + LightX2V | 203.77 秒 | 2.96× | 1.11× |
 
-短视频的结果不能代替高分辨率长视频结果。
-[原始耗时和独立分项测量](benchmarks/single-card-four-step-partial.json)。
+VSA、其余 INT8 行、124 帧矩阵和 PRO 6000 结果仍待完成。
+[高分辨率原始记录和独立分项测量](benchmarks/single-card-four-step-highres.json)。
 
 详见[端到端计时、Offload 和图表口径](docs/benchmark-protocol.md)。
 
 ## 效果与验证范围
 
-以下示例由本仓库完整链路生成：Full、原生 INT8、TP2、672×384、124 帧、
-Turbo8、seed 42，包含音频。两个 rank 均完成八次 DiT 前向，每步执行全部
-50 个 block，输出有限，QKV 权重确认为 INT8。
+默认 LightX2V 四步，Full、原生 INT8、单卡昇腾 910B3，672×384 / 124 帧、seed 42。
+LoRA 在量化和推理前合并；四次 DiT 前向输出有限，每步经过全部 50 层，QKV 权重为 INT8。
 
-https://github.com/user-attachments/assets/fd9cf427-e6b4-4a6d-a7a5-ad72204cca86
+https://github.com/user-attachments/assets/8f1a4fc0-35a7-4fbd-a861-95fe3ca2cfb9
 
-[带音频 MP4](examples/videos/full-int8-tp2-672124.mp4) ·
-[样例参数与校验值](examples/videos/full-int8-tp2-672124.json)。
-这只是单个定性样例；记录审计会引入同步，不能用作性能测量，也不能据此宣称感知等价。
+[含音轨 MP4](examples/videos/full4-int8-single-672124.mp4) ·
+[权重来源、采样规则与校验和](examples/videos/full4-int8-single-672124.json)。
+这是一例定性展示，不宣称普遍的画质等价。
 
 VSA INT8、原生 TP4、672×384、124 帧、四步 VSA 学生模型也已完整成片：
 四个 rank 均完成四次 DiT 前向，每一步检查到全部 50 个非零 gate。

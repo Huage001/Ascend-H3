@@ -1,6 +1,8 @@
 # Single-card end-to-end benchmark / 单卡端到端测试
 
-All four workloads in `configs/workloads.json` use native 124 or 345 frames,
+Performance reporting covers **1344×768 at 124 and 345 native frames**.
+The 672×384 cases remain supported but are excluded from the reported speedups.
+All workloads in `configs/workloads.json` use native 124 or 345 frames,
 batch one, seed 42 and the same prompt. Frame interpolation and Refine are off.
 Only the selected card must be free of other compute processes. Unknown or
 unverifiable processes invalidate a measurement. Never terminate other users'

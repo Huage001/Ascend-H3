@@ -190,31 +190,36 @@ Attention/FFN breakdowns come from a separate profiling run; they never replace
 measured end-to-end time. Historical operator timings remain in raw benchmark
 files for provenance and are not headline video speedups.
 
-First measured single-card rows, 672×384 / 124 frames, INT8, four steps,
-matched Offload, seed 42, **one formal request each**:
+Speedups are reported only at **1344×768, 124/345 frames**. The 672×384
+workloads remain supported for inference and functional validation.
 
-| Method | Complete video + audio | Speedup vs INT8 Full4 |
-| --- | ---: | ---: |
-| Full + LightX2V | 20.03 s | 1.00× |
-| VSA + official FastH3 | 22.18 s | 0.90× |
+Measured 345-frame single-card Ascend 910B3 rows, four steps, matched Offload,
+seed 42, **one formal complete request per row**:
 
-These short-video rows do not predict high-resolution long-video performance.
-[Raw measurements and separate profiles](benchmarks/single-card-four-step-partial.json).
+| Precision | Method | Complete video + audio | Speedup vs same-precision Full4 | BF16 / INT8 gain |
+| --- | --- | ---: | ---: | ---: |
+| BF16 | Full + LightX2V | 648.97 s | 1.00× | — |
+| BF16 | Veda + LightX2V | 225.29 s | 2.88× | — |
+| BF16 | Spark-H3 + LightX2V | 276.45 s | 2.35× | — |
+| INT8 | Full + LightX2V | 603.84 s | 1.00× | 1.07× |
+| INT8 | Veda + LightX2V | 203.77 s | 2.96× | 1.11× |
+
+VSA, the remaining INT8 rows, the 124-frame matrix and PRO 6000 results are
+still pending. [Raw high-resolution records and independent profiles](benchmarks/single-card-four-step-highres.json).
 
 [Measurement and figure protocol](docs/benchmark-protocol.md).
 
 ## Quality and validation
 
-Full INT8, native TP2, 672×384, 124 frames, Turbo8, seed 42 — generated through
-this integration with video and audio. Both ranks completed eight DiT forwards,
-with all 50 blocks per step, finite outputs and INT8 QKV weights.
+Full LightX2V four-step, native INT8, single Ascend 910B3, 672×384 / 124
+frames, seed 42. The LoRA merged before quantization and inference. All four
+DiT updates were finite, with all 50 blocks and INT8 QKV weights.
 
-https://github.com/user-attachments/assets/fd9cf427-e6b4-4a6d-a7a5-ad72204cca86
+https://github.com/user-attachments/assets/8f1a4fc0-35a7-4fbd-a861-95fe3ca2cfb9
 
-[MP4 with audio](examples/videos/full-int8-tp2-672124.mp4) ·
-[sample contract and checksum](examples/videos/full-int8-tp2-672124.json).
-This is one qualitative sample; audit synchronization makes it unsuitable as
-a performance measurement. It does not establish perceptual equivalence.
+[MP4 with audio](examples/videos/full4-int8-single-672124.mp4) ·
+[source, schedule and checksum](examples/videos/full4-int8-single-672124.json).
+This is a qualitative sample, not a claim of universal perceptual equivalence.
 
 VSA INT8, native TP4, 672×384, 124 frames, four-step trained VSA student:
 all four ranks completed four DiT forwards with 50 nonzero gates each step.
