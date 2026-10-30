@@ -182,8 +182,8 @@ identical quality, and the table makes no 50-to-four-step distillation claim.
 
 Memory-constrained cases are measured with **Offload**, not listed as OOM.
 For each cross-device pair, PRO 6000 and Ascend 910B3 must use the same explicit
-resident/prefetch policy, including encoder and decoder residency. An Offload
-marker and policy identifier accompany every affected row. BF16 and INT8
+resident/prefetch policy, including encoder and decoder residency. The shared Offload
+policy is stated below the combined comparison table. BF16 and INT8
 measurements identify their actual quantized modules and fallback layers.
 The 1344×768, 345-frame figure compares both devices and both precisions.
 Attention/FFN breakdowns come from a separate profiling run; they never replace
@@ -195,34 +195,28 @@ workloads remain supported for inference and functional validation.
 
 <!-- BEGIN HIGHRES RESULTS -->
 
-Ascend 910B3 · 1344×768 · single card · four steps · seed 42 · **one formal complete request per row**:
+1344×768 · single card · four steps · seed 42 · **one formal complete request per measured device/case**:
 
-| Frames | Precision | Method | Complete video + audio | vs same-precision Full4 | BF16 / INT8 | Memory |
-| ---: | --- | --- | ---: | ---: | ---: | --- |
-| 124 | BF16 | Full + LightX2V | 121.04 s | 1.00× | — | Offload |
-| 124 | BF16 | VSA · FastH3 | 83.72 s | 1.45× | — | Offload |
-| 124 | BF16 | Veda + LightX2V | 69.86 s | 1.73× | — | Offload |
-| 124 | BF16 | Spark-H3 + LightX2V | 78.15 s | 1.55× | — | Offload |
-| 124 | INT8 | Full + LightX2V | 111.90 s | 1.00× | 1.08× | Offload |
-| 124 | INT8 | VSA · FastH3 | 74.24 s | 1.51× | 1.13× | Offload |
-| 124 | INT8 | Veda + LightX2V | 61.78 s | 1.81× | 1.13× | Offload |
-| 124 | INT8 | Spark-H3 + LightX2V | 71.41 s | 1.57× | 1.09× | Offload |
-| 345 | BF16 | Full + LightX2V | 648.97 s | 1.00× | — | Offload |
-| 345 | BF16 | VSA · FastH3 | 285.69 s | 2.27× | — | Offload |
-| 345 | BF16 | Veda + LightX2V | 225.29 s | 2.88× | — | Offload |
-| 345 | BF16 | Spark-H3 + LightX2V | 276.45 s | 2.35× | — | Offload |
-| 345 | INT8 | Full + LightX2V | 603.84 s | 1.00× | 1.07× | Offload |
-| 345 | INT8 | VSA · FastH3 | 261.56 s | 2.31× | 1.09× | Offload |
-| 345 | INT8 | Veda + LightX2V | 203.77 s | 2.96× | 1.11× | Offload |
-| 345 | INT8 | Spark-H3 + LightX2V | 247.17 s | 2.44× | 1.12× | Offload |
+| Frames | Precision | Method | Ascend 910B3 time | Ascend speedup | PRO 6000 time | PRO 6000 speedup |
+| ---: | --- | --- | ---: | ---: | ---: | ---: |
+| 124 | BF16 | Full + LightX2V | 121.04 s | 1.00× | — | — |
+| 124 | BF16 | VSA · FastH3 | 83.72 s | 1.45× | — | — |
+| 124 | BF16 | Veda + LightX2V | 69.86 s | 1.73× | — | — |
+| 124 | BF16 | Spark-H3 + LightX2V | 78.15 s | 1.55× | — | — |
+| 124 | INT8 | Full + LightX2V | 111.90 s | 1.00× | — | — |
+| 124 | INT8 | VSA · FastH3 | 74.24 s | 1.51× | — | — |
+| 124 | INT8 | Veda + LightX2V | 61.78 s | 1.81× | — | — |
+| 124 | INT8 | Spark-H3 + LightX2V | 71.41 s | 1.57× | — | — |
+| 345 | BF16 | Full + LightX2V | 648.97 s | 1.00× | 250.88 s | 1.00× |
+| 345 | BF16 | VSA · FastH3 | 285.69 s | 2.27× | — | — |
+| 345 | BF16 | Veda + LightX2V | 225.29 s | **2.88×** | 103.06 s | 2.43× |
+| 345 | BF16 | Spark-H3 + LightX2V | 276.45 s | **2.35×** | 115.23 s | 2.18× |
+| 345 | INT8 | Full + LightX2V | 603.84 s | 1.00× | — | — |
+| 345 | INT8 | VSA · FastH3 | 261.56 s | 2.31× | — | — |
+| 345 | INT8 | Veda + LightX2V | 203.77 s | 2.96× | — | — |
+| 345 | INT8 | Spark-H3 + LightX2V | 247.17 s | 2.44× | — | — |
 
-RTX PRO 6000 · 1344×768 · single card · four steps · seed 42 · **one formal complete request per row**:
-
-| Frames | Precision | Method | Complete video + audio | vs same-precision Full4 | BF16 / INT8 | Memory |
-| ---: | --- | --- | ---: | ---: | ---: | --- |
-| 345 | BF16 | Full + LightX2V | 250.88 s | 1.00× | — | Offload |
-| 345 | BF16 | Veda + LightX2V | 103.06 s | 2.43× | — | Offload |
-| 345 | BF16 | Spark-H3 + LightX2V | 115.23 s | 2.18× | — | Offload |
+All records use matched **Offload** (`omni-layer-prefetch1-vae-resident-v1`). Each speedup is relative to Full four-step on the same hardware and precision. The higher speedup in each completed pair is bold; ties and incomplete pairs are unmarked.
 
 Fully validated: Ascend 16/16 cases; PRO 6000 3/16 cases. Remaining cases are in progress; warmups and failed attempts are excluded.
 

@@ -176,34 +176,28 @@ Attention/FFN 分项来自单独的性能分析运行，不能代替端到端实
 
 <!-- BEGIN HIGHRES RESULTS -->
 
-Ascend 910B3 · 1344×768 · 单卡 · 四步 · seed 42，**每行一次正式完整请求**：
+1344×768 · 单卡 · 四步 · seed 42，**每个已测硬件/设定一次正式完整请求**：
 
-| 帧数 | 精度 | 方法 | 完整视频 + 音频 | 相对同精度 Full4 | BF16 / INT8 | 内存策略 |
-| ---: | --- | --- | ---: | ---: | ---: | --- |
-| 124 | BF16 | Full + LightX2V | 121.04 秒 | 1.00× | — | Offload |
-| 124 | BF16 | VSA · FastH3 | 83.72 秒 | 1.45× | — | Offload |
-| 124 | BF16 | Veda + LightX2V | 69.86 秒 | 1.73× | — | Offload |
-| 124 | BF16 | Spark-H3 + LightX2V | 78.15 秒 | 1.55× | — | Offload |
-| 124 | INT8 | Full + LightX2V | 111.90 秒 | 1.00× | 1.08× | Offload |
-| 124 | INT8 | VSA · FastH3 | 74.24 秒 | 1.51× | 1.13× | Offload |
-| 124 | INT8 | Veda + LightX2V | 61.78 秒 | 1.81× | 1.13× | Offload |
-| 124 | INT8 | Spark-H3 + LightX2V | 71.41 秒 | 1.57× | 1.09× | Offload |
-| 345 | BF16 | Full + LightX2V | 648.97 秒 | 1.00× | — | Offload |
-| 345 | BF16 | VSA · FastH3 | 285.69 秒 | 2.27× | — | Offload |
-| 345 | BF16 | Veda + LightX2V | 225.29 秒 | 2.88× | — | Offload |
-| 345 | BF16 | Spark-H3 + LightX2V | 276.45 秒 | 2.35× | — | Offload |
-| 345 | INT8 | Full + LightX2V | 603.84 秒 | 1.00× | 1.07× | Offload |
-| 345 | INT8 | VSA · FastH3 | 261.56 秒 | 2.31× | 1.09× | Offload |
-| 345 | INT8 | Veda + LightX2V | 203.77 秒 | 2.96× | 1.11× | Offload |
-| 345 | INT8 | Spark-H3 + LightX2V | 247.17 秒 | 2.44× | 1.12× | Offload |
+| 帧数 | 精度 | 方法 | 昇腾 910B3 耗时 | 昇腾加速比 | PRO 6000 耗时 | PRO 6000 加速比 |
+| ---: | --- | --- | ---: | ---: | ---: | ---: |
+| 124 | BF16 | Full + LightX2V | 121.04 秒 | 1.00× | — | — |
+| 124 | BF16 | VSA · FastH3 | 83.72 秒 | 1.45× | — | — |
+| 124 | BF16 | Veda + LightX2V | 69.86 秒 | 1.73× | — | — |
+| 124 | BF16 | Spark-H3 + LightX2V | 78.15 秒 | 1.55× | — | — |
+| 124 | INT8 | Full + LightX2V | 111.90 秒 | 1.00× | — | — |
+| 124 | INT8 | VSA · FastH3 | 74.24 秒 | 1.51× | — | — |
+| 124 | INT8 | Veda + LightX2V | 61.78 秒 | 1.81× | — | — |
+| 124 | INT8 | Spark-H3 + LightX2V | 71.41 秒 | 1.57× | — | — |
+| 345 | BF16 | Full + LightX2V | 648.97 秒 | 1.00× | 250.88 秒 | 1.00× |
+| 345 | BF16 | VSA · FastH3 | 285.69 秒 | 2.27× | — | — |
+| 345 | BF16 | Veda + LightX2V | 225.29 秒 | **2.88×** | 103.06 秒 | 2.43× |
+| 345 | BF16 | Spark-H3 + LightX2V | 276.45 秒 | **2.35×** | 115.23 秒 | 2.18× |
+| 345 | INT8 | Full + LightX2V | 603.84 秒 | 1.00× | — | — |
+| 345 | INT8 | VSA · FastH3 | 261.56 秒 | 2.31× | — | — |
+| 345 | INT8 | Veda + LightX2V | 203.77 秒 | 2.96× | — | — |
+| 345 | INT8 | Spark-H3 + LightX2V | 247.17 秒 | 2.44× | — | — |
 
-RTX PRO 6000 · 1344×768 · 单卡 · 四步 · seed 42，**每行一次正式完整请求**：
-
-| 帧数 | 精度 | 方法 | 完整视频 + 音频 | 相对同精度 Full4 | BF16 / INT8 | 内存策略 |
-| ---: | --- | --- | ---: | ---: | ---: | --- |
-| 345 | BF16 | Full + LightX2V | 250.88 秒 | 1.00× | — | Offload |
-| 345 | BF16 | Veda + LightX2V | 103.06 秒 | 2.43× | — | Offload |
-| 345 | BF16 | Spark-H3 + LightX2V | 115.23 秒 | 2.18× | — | Offload |
+所有结果统一使用 **Offload**（`omni-layer-prefetch1-vae-resident-v1`）。加速比均相对各自硬件、同精度的 Full 四步；加粗标记同一行中更高的加速比，相同值或尚未齐全的对照不加粗。
 
 已完整验收：昇腾 16/16 组，PRO 6000 3/16 组。 其余组合仍在补齐，不使用预热或失败记录作为测量结果。
 
