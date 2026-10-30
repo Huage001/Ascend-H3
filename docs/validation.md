@@ -13,6 +13,7 @@ This document records evidence, not intended support inferred from CLI flags.
 | Original Turbo → public converter → earlier adapter | All 726 tensors and complete file SHA256 identical |
 | Four workloads through actual native Omni request preprocessing | Passed, including 37/102 latent frames |
 | Full INT8 TP2, 672×384 / 124 frames, eight complete DiT forwards | Both ranks finite; 50 blocks each step; all 50 QKV weights INT8 |
+| Full INT8 TP2 complete 672×384 / 124-frame video + audio | Passed native inference, decode, exact dimensions/frame count and visual inspection; sample included |
 | BF16 Full, VSA, Spark and Veda finite outputs at 672×384/124-frame token geometry | Passed native smoke |
 | Global heads 28–41 versus a local 14-head shard | Passed native smoke for BF16 Full/VSA/Spark/Veda |
 | INT8 W8A8 projection output entering Full/VSA/Spark/Veda | Passed native smoke |

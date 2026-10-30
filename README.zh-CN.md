@@ -185,6 +185,16 @@ PRO6000 VSA 一列为 2026-10-30 新测：官方 Triton tile64、代表层 24、
 
 ## 效果与验证范围
 
+以下示例由本仓库完整链路生成：Full、原生 INT8、TP2、672×384、124 帧、
+Turbo8、seed 42，包含音频。两个 rank 均完成八次 DiT 前向，每步执行全部
+50 个 block，输出有限，QKV 权重确认为 INT8。
+
+![Full INT8 TP2 示例](examples/videos/full-int8-tp2-672124.gif)
+
+[带音频 MP4](examples/videos/full-int8-tp2-672124.mp4) ·
+[样例参数与校验值](examples/videos/full-int8-tp2-672124.json)。
+这只是单个定性样例；记录审计会引入同步，不能用作性能测量，也不能据此宣称感知等价。
+
 此前严格 Spark 实验已生成 1344×768 的 124/345 帧视频，与优化前昇腾
 参考实现的每个解码后 uint8 像素一致。这证明的是昇腾实现之间的一致性，
 不等于与 CUDA 或 Full 输出一致，框架整合后还需要重新验收。

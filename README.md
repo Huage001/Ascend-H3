@@ -193,6 +193,17 @@ are reference points rather than identical-QKV comparisons.
 
 ## Quality and validation
 
+Full INT8, native TP2, 672×384, 124 frames, Turbo8, seed 42 — generated through
+this integration with video and audio. Both ranks completed eight DiT forwards,
+with all 50 blocks per step, finite outputs and INT8 QKV weights.
+
+![Full INT8 TP2 example](examples/videos/full-int8-tp2-672124.gif)
+
+[MP4 with audio](examples/videos/full-int8-tp2-672124.mp4) ·
+[sample contract and checksum](examples/videos/full-int8-tp2-672124.json).
+This is one qualitative sample; audit synchronization makes it unsuitable as
+a performance measurement. It does not establish perceptual equivalence.
+
 Previous strict Spark experiments generated 1344×768 videos at 124 and 345
 frames with every decoded uint8 pixel matching the previous Ascend reference.
 That is an Ascend-to-Ascend implementation check, not equality with CUDA or

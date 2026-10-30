@@ -1,0 +1,32 @@
+{
+  "method": "full",
+  "precision": "native transformer INT8; BF16 attention",
+  "tensor_parallel_size": 2,
+  "device": "Ascend 910B",
+  "request": {
+    "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+    "width": 672,
+    "height": 384,
+    "aspect_ratio": "16:9",
+    "num_frames": 124,
+    "fps": 24,
+    "num_inference_steps": 8,
+    "seed": 42,
+    "enable_frame_interpolation": "false",
+    "return_stage_metrics": "true",
+    "extra_params": "{\"task\": \"t2va\"}"
+  },
+  "video": {
+    "width": 672,
+    "height": 384,
+    "frames": 124,
+    "fps": 24,
+    "has_audio": true
+  },
+  "actual_dit_forwards_per_rank": 8,
+  "all_50_blocks_once_per_step": true,
+  "all_dit_outputs_finite": true,
+  "qkv_projection_weight_dtype": "int8",
+  "sha256": "8ed94163af841858f5a441ecf559e9068494c660795ec9c712735800642347d0",
+  "note": "Diagnostic audit enabled; this sample is not a timing benchmark or quality-equivalence proof."
+}
