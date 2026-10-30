@@ -9,14 +9,14 @@ from urllib.request import Request, urlopen
 from h3_ascend.paths import source_root
 
 
-def request_fields(case, prompt, steps=8, seed=42):
+def request_fields(case, prompt, steps=8, seed=42, guidance_scale=None):
     workloads = json.loads((source_root() / "configs/workloads.json").read_text())
     shape = workloads[case]
     if not prompt.strip():
         raise ValueError("The prompt must not be empty")
     if steps < 1:
         raise ValueError("steps must be positive")
-    return {
+    fields = {
         "prompt": prompt,
         "width": shape["width"],
         "height": shape["height"],
@@ -24,12 +24,14 @@ def request_fields(case, prompt, steps=8, seed=42):
         "num_frames": shape["frames"],
         "fps": shape["fps"],
         "num_inference_steps": steps,
-        "guidance_scale": 1.0,
         "seed": seed,
         "enable_frame_interpolation": "false",
         "return_stage_metrics": "true",
         "extra_params": json.dumps({"task": "t2va"}),
     }
+    if guidance_scale is not None:
+        fields["guidance_scale"] = guidance_scale
+    return fields
 
 
 def multipart(fields):
@@ -44,7 +46,9 @@ def multipart(fields):
 
 
 def generate(args):
-    fields = request_fields(args.case, args.prompt_file.read_text(), args.steps, args.seed)
+    fields = request_fields(
+        args.case, args.prompt_file.read_text(), args.steps, args.seed, args.guidance_scale
+    )
     body, content_type = multipart(fields)
     request = Request(
         args.url.rstrip("/") + "/v1/videos/sync",

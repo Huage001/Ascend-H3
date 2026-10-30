@@ -140,7 +140,8 @@ done
 ```
 
 匹配的四步 Sol-H3 学生模型使用 `--steps 4`；VDN stage-DMD 使用八步。
-非蒸馏 Full 使用对应原生模型的采样规则。本项目不额外增加 Refine 阶段。
+非蒸馏 Full 使用对应原生模型的采样规则。`--guidance-scale` 为可选参数，
+省略时保留模型原生 CFG 策略。本项目不额外增加 Refine 阶段。
 客户端同时保存 MP4 和包含请求、阶段耗时的 JSON 记录。
 
 ## 性能数据
@@ -203,6 +204,8 @@ VSA INT8、原生 TP4、672×384、124 帧、四步 VSA 学生模型也已完整
 [带音频 MP4](examples/videos/vsa-int8-tp4-672124.mp4) ·
 [样例参数](examples/videos/vsa-int8-tp4-672124.json)。
 该样例用于定性验收，不是 Full 与 VSA 的画质等价评估。
+VSA INT8 TP4 的四种视频规格现已全部通过完整生成和解码，
+[审计矩阵](benchmarks/vsa-int8-tp4-matrix.json)记录各规格帧数与视频校验值。
 
 此前严格 Spark 实验已生成 1344×768 的 124/345 帧视频，与优化前昇腾
 参考实现的每个解码后 uint8 像素一致。这证明的是昇腾实现之间的一致性，

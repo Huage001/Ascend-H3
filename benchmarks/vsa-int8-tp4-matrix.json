@@ -1,0 +1,236 @@
+{
+  "method": "vsa",
+  "precision": "int8",
+  "tensor_parallel_size": 4,
+  "all_cases_passed": true,
+  "external_processes_detected": false,
+  "audit_enabled": true,
+  "timing_suitable_for_benchmark": false,
+  "quality_scope": "Exact geometry/frame count and finite output validation; no universal quality-equivalence claim",
+  "cases": [
+    {
+      "case": "672-124",
+      "width": 672,
+      "height": 384,
+      "frames": 124,
+      "fps": "24/1",
+      "has_audio": true,
+      "sha256": "716ade05748a9de70c5bb997dadfdce902edf40596a03142688abd934946d4ee",
+      "steps_per_rank": 4,
+      "all_50_blocks_once_per_step": true,
+      "all_dit_outputs_finite": true,
+      "all_50_qkv_weights_int8": true,
+      "nonzero_vsa_gates_per_rank_per_step": 50,
+      "output_shapes_per_rank": [
+        [
+          [
+            9324,
+            96
+          ],
+          [
+            414,
+            32
+          ]
+        ],
+        [
+          [
+            9324,
+            96
+          ],
+          [
+            414,
+            32
+          ]
+        ],
+        [
+          [
+            9324,
+            96
+          ],
+          [
+            414,
+            32
+          ]
+        ],
+        [
+          [
+            9324,
+            96
+          ],
+          [
+            414,
+            32
+          ]
+        ]
+      ]
+    },
+    {
+      "case": "672-345",
+      "width": 672,
+      "height": 384,
+      "frames": 345,
+      "fps": "24/1",
+      "has_audio": true,
+      "sha256": "1877b7b1289dd281bb830b6217928431a8af35f018e7c674809240dd8f9ab429",
+      "steps_per_rank": 4,
+      "all_50_blocks_once_per_step": true,
+      "all_dit_outputs_finite": true,
+      "all_50_qkv_weights_int8": true,
+      "nonzero_vsa_gates_per_rank_per_step": 50,
+      "output_shapes_per_rank": [
+        [
+          [
+            25704,
+            96
+          ],
+          [
+            1150,
+            32
+          ]
+        ],
+        [
+          [
+            25704,
+            96
+          ],
+          [
+            1150,
+            32
+          ]
+        ],
+        [
+          [
+            25704,
+            96
+          ],
+          [
+            1150,
+            32
+          ]
+        ],
+        [
+          [
+            25704,
+            96
+          ],
+          [
+            1150,
+            32
+          ]
+        ]
+      ]
+    },
+    {
+      "case": "1344-124",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "fps": "24/1",
+      "has_audio": true,
+      "sha256": "56ef49fe049dd54edb2a14be79f2be1c8468837fa203f3fa07c792e04748260b",
+      "steps_per_rank": 4,
+      "all_50_blocks_once_per_step": true,
+      "all_dit_outputs_finite": true,
+      "all_50_qkv_weights_int8": true,
+      "nonzero_vsa_gates_per_rank_per_step": 50,
+      "output_shapes_per_rank": [
+        [
+          [
+            37296,
+            96
+          ],
+          [
+            414,
+            32
+          ]
+        ],
+        [
+          [
+            37296,
+            96
+          ],
+          [
+            414,
+            32
+          ]
+        ],
+        [
+          [
+            37296,
+            96
+          ],
+          [
+            414,
+            32
+          ]
+        ],
+        [
+          [
+            37296,
+            96
+          ],
+          [
+            414,
+            32
+          ]
+        ]
+      ]
+    },
+    {
+      "case": "1344-345",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "fps": "24/1",
+      "has_audio": true,
+      "sha256": "54bedbe4c0eb1f3e8815bdddf7f581325f254bfc4453c16101fa33579de2552f",
+      "steps_per_rank": 4,
+      "all_50_blocks_once_per_step": true,
+      "all_dit_outputs_finite": true,
+      "all_50_qkv_weights_int8": true,
+      "nonzero_vsa_gates_per_rank_per_step": 50,
+      "output_shapes_per_rank": [
+        [
+          [
+            102816,
+            96
+          ],
+          [
+            1150,
+            32
+          ]
+        ],
+        [
+          [
+            102816,
+            96
+          ],
+          [
+            1150,
+            32
+          ]
+        ],
+        [
+          [
+            102816,
+            96
+          ],
+          [
+            1150,
+            32
+          ]
+        ],
+        [
+          [
+            102816,
+            96
+          ],
+          [
+            1150,
+            32
+          ]
+        ]
+      ]
+    }
+  ]
+}

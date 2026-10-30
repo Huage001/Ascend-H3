@@ -13,9 +13,11 @@ The private Ascend qualification environment has Python 3.12.14, Torch
 2.10.0+cpu, Torch-NPU 2.10.0.post2 and CANN 9.2.0. The operators were also
 built and smoke-tested with CANN 9.0.1, but the selected modern framework
 needs the newer runtime device-mapping API. The selected vLLM-Ascend revision declares
-Torch-NPU 2.10.0.post4 and Triton-Ascend 3.2.2; resolving and validating that
-version boundary is still in progress. Do not interpret the source revision
-list as a tested installation recipe until qualification completes.
+Torch-NPU 2.10.0.post4 and Triton-Ascend 3.2.2. The current video tests use
+2.10.0.post2, constrained explicitly instead of silently upgrading it.
+vLLM-Ascend is installed as `0.32.0rc1` from the pinned source above;
+this is a qualified H3 subset of that framework, not qualification of all
+model families or of every Torch-NPU patch release.
 
 Apply the explicit Omni compatibility patches after checking out the
 revision above:

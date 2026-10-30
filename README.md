@@ -147,7 +147,8 @@ done
 
 Use `--steps 4` for the matching four-step Sol-H3 student. VDN stage-DMD
 requires eight steps. Use the base model's native schedule for non-distilled
-Full inference. No extra refinement stage is added by this package.
+Full inference; `--guidance-scale` is optional and otherwise leaves the
+model's native guidance policy in control. No extra refinement stage is added by this package.
 The client writes the video plus a JSON request/timing receipt.
 
 ## Performance evidence
@@ -213,6 +214,9 @@ The complete pipeline produced the expected video and audio.
 [MP4 with audio](examples/videos/vsa-int8-tp4-672124.mp4) ·
 [sample contract](examples/videos/vsa-int8-tp4-672124.json).
 This is a qualitative smoke test, not a Full-versus-VSA quality evaluation.
+All four workloads have now passed complete VSA INT8 TP4 inference and
+decode; [the audited matrix](benchmarks/vsa-int8-tp4-matrix.json) records
+exact frame counts and video hashes.
 
 Previous strict Spark experiments generated 1344×768 videos at 124 and 345
 frames with every decoded uint8 pixel matching the previous Ascend reference.

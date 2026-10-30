@@ -121,6 +121,7 @@ def main():
     r.add_argument("--output", type=Path, required=True)
     r.add_argument("--steps", type=int, default=8)
     r.add_argument("--seed", type=int, default=42)
+    r.add_argument("--guidance-scale", type=float, help="Omit to retain the model's native policy")
     legacy = sub.add_parser(
         "prepare-lora", help="Prepare an H3 adapter for load-time fusion"
     )

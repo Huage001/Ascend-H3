@@ -32,6 +32,11 @@ class Contracts(unittest.TestCase):
         with self.assertRaises(ValueError):
             HeadShard(42, 28)
 
+    def test_guidance_retains_model_policy_unless_explicit(self):
+        self.assertNotIn("guidance_scale", request_fields("672-124", "A park."))
+        fields = request_fields("672-124", "A park.", guidance_scale=1.0)
+        self.assertEqual(fields["guidance_scale"], 1.0)
+
     def test_layout_rejects_bad_prefix(self):
         with self.assertRaises(ValueError):
             VideoLayout((37, 12, 21), 7, prefix_segments=(3, 2))
