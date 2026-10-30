@@ -40,7 +40,9 @@ def command(a):
     cmd = [
         sys.executable,
         "-m",
-        "vllm_omni.entrypoints.cli.main",
+        ("h3_ascend.integrations.cuda_launch"
+         if os.getenv("H3_ASCEND_CUDA_REFERENCE") == "1"
+         else "vllm_omni.entrypoints.cli.main"),
         "serve",
         a.model,
         "--omni",

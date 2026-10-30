@@ -203,10 +203,11 @@ Ascend 910B3 · 1344×768 · single card · four steps · seed 42 · **one forma
 | 124 | BF16 | VSA · FastH3 | 83.72 s | 1.45× | — | Offload |
 | 124 | BF16 | Veda + LightX2V | 69.86 s | 1.73× | — | Offload |
 | 345 | BF16 | Full + LightX2V | 648.97 s | 1.00× | — | Offload |
+| 345 | BF16 | VSA · FastH3 | 285.69 s | 2.27× | — | Offload |
 | 345 | BF16 | Veda + LightX2V | 225.29 s | 2.88× | — | Offload |
 | 345 | BF16 | Spark-H3 + LightX2V | 276.45 s | 2.35× | — | Offload |
 | 345 | INT8 | Full + LightX2V | 603.84 s | 1.00× | 1.07× | Offload |
-| 345 | INT8 | VSA · FastH3 | 261.56 s | 2.31× | — | Offload |
+| 345 | INT8 | VSA · FastH3 | 261.56 s | 2.31× | 1.09× | Offload |
 | 345 | INT8 | Veda + LightX2V | 203.77 s | 2.96× | 1.11× | Offload |
 
 Only fully validated records are listed; remaining combinations and PRO 6000 comparisons are in progress.
@@ -214,6 +215,8 @@ Only fully validated records are listed; remaining combinations and PRO 6000 com
 [Raw high-resolution records and independent profiles](benchmarks/single-card-four-step-highres.json).
 
 <!-- END HIGHRES RESULTS -->
+
+
 
 [Measurement and figure protocol](docs/benchmark-protocol.md).
 

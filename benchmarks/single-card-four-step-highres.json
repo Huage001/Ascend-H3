@@ -265,6 +265,71 @@
     },
     {
       "hardware": "Ascend 910B3",
+      "method": "vsa",
+      "precision": "bf16",
+      "baseline": false,
+      "case": "1344-345",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 1,
+      "actual_steps": 4,
+      "validated": true,
+      "contention_detected": false,
+      "offload": true,
+      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+      "e2e_seconds": [
+        285.6859630085528
+      ],
+      "profile": {
+        "actual_forwards": 4,
+        "dit_wall_seconds": 217.37235435750335,
+        "attention_seconds": 170.31498944091803,
+        "ffn_seconds": 42.418446746826156,
+        "categories_seconds": {
+          "qkv_projection": 20.211486038208022,
+          "attention_dispatch": 130.6935151977539,
+          "output_projection": 7.206999847412112,
+          "attention": 170.31498944091803,
+          "ffn": 42.418446746826156
+        },
+        "request": {
+          "request": {
+            "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+            "width": 1344,
+            "height": 768,
+            "aspect_ratio": "16:9",
+            "num_frames": 345,
+            "fps": 24,
+            "num_inference_steps": 4,
+            "seed": 42,
+            "enable_frame_interpolation": "false",
+            "return_stage_metrics": "true",
+            "extra_params": "{\"task\": \"t2va\"}"
+          },
+          "headers": {
+            "date": "Fri, 30 Oct 2026 14:44:12 GMT",
+            "server": "uvicorn",
+            "x-request-id": "video_sync-b135c7fc25b21556",
+            "x-model": "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
+            "x-inference-time-s": "286.636",
+            "x-stage-durations": "{\"queue_wait_ms\":1.0829446837306023,\"stage_0_gen_ms\":284125.8101463318}",
+            "x-peak-memory-mb": "52996.000",
+            "content-length": "34489296",
+            "content-type": "video/mp4",
+            "vary": "Origin",
+            "connection": "close"
+          },
+          "client_wall_seconds": 286.6932416651398
+        }
+      },
+      "median_seconds": 285.6859630085528,
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/vsa-bf16-single-1344-345-student",
+      "speedup_vs_same_precision_full4": 2.271636421100176,
+      "bf16_to_int8_gain": null
+    },
+    {
+      "hardware": "Ascend 910B3",
       "method": "veda",
       "precision": "bf16",
       "baseline": false,
@@ -521,7 +586,7 @@
       "median_seconds": 261.5573412515223,
       "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/vsa-int8-single-1344-345-student",
       "speedup_vs_same_precision_full4": 2.308647621115161,
-      "bf16_to_int8_gain": null
+      "bf16_to_int8_gain": 1.0922498357017156
     },
     {
       "hardware": "Ascend 910B3",

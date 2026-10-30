@@ -1,0 +1,23 @@
+{
+  "hardware": "RTX PRO 6000 Blackwell Server Edition",
+  "packages": {
+    "torch": "2.13.0+cu130",
+    "vllm": "0.32.0",
+    "vllm-omni": "0.32.0",
+    "diffusers": "0.40.0",
+    "transformers": "5.19.0",
+    "nvidia-cutlass-dsl": "4.8.1",
+    "nvidia-cutlass-dsl-libs-cu13": "4.8.1",
+    "flash-attn-4": "4.0.0b32",
+    "triton": "3.7.1",
+    "cache-dit": "1.5.0"
+  },
+  "driver": "595.71.05",
+  "pinned_omni_revision": "45603043133fda3fe486d8e558c226d3391940f0",
+  "patched_pipeline_sha256": "9ec96d4c62aa91ba6f99abd924dffb61ca2bc88835a283b0e2904120ac9b10a5",
+  "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+  "host_allocator_config": "pinned_max_round_threshold_mb:64",
+  "allocator_note": "Large pinned CPU masters use requested size instead of power-of-two rounding. Residency/prefetch, weight values and timed computations are unchanged.",
+  "validation_status": "Native model loading and matched Offload initialization passed; complete video measurements in progress.",
+  "cuda_runtime": "13.0"
+}

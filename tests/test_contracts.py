@@ -5,6 +5,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from h3_ascend.cli import command
 from h3_ascend.client import multipart, request_fields
@@ -13,6 +14,19 @@ from h3_ascend.profiles import launch_adapter, step_count
 
 
 class Contracts(unittest.TestCase):
+    def test_cuda_reference_preloads_official_fa4_before_omni(self):
+        with patch.dict("os.environ", {"H3_ASCEND_CUDA_REFERENCE": "1"}):
+            for method in ("full", "vsa", "veda", "spark"):
+                args = argparse.Namespace(method=method, parallel="tp", devices=1,
+                    model="model", host="127.0.0.1", port=8000, precision="bf16",
+                    lora="checkpoint")
+                argv = command(args)
+                self.assertEqual(argv[2], "h3_ascend.integrations.cuda_launch")
+                if method == "vsa":
+                    config = json.loads(argv[argv.index("--diffusion-attention-config") + 1])
+                    self.assertEqual(config["default"]["fastvideo_vsa_provider"], "triton")
+                    self.assertEqual(config["default"]["fastvideo_vsa_precision"], "bf16")
+
     def test_student_contracts(self):
         for method in ("full", "veda", "spark"):
             self.assertEqual(step_count(method), 4)

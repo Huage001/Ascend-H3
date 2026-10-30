@@ -34,6 +34,8 @@ The third places a selected, unquantized text encoder on CPU during online
 DiT quantized loading, preventing its initial BF16 allocation from consuming
 the accelerator before offload hooks exist. It preserves the encoder's
 runtime target device and leaves quantized encoder loading unchanged.
+The fourth preserves prepared community adapter schedules and the explicitly
+selected serving flow shifts during static fusion.
 
 The upstream Ascend Dockerfile additionally pins
 `flash-linear-attention-npu-a2==26.9.1+dev5cc6990` from its official release,
@@ -92,3 +94,30 @@ video environment was assembled using the equivalent individual steps.
 It does not install the Ascend driver/toolkit, models or a C++ runtime.
 An existing checkout at a different revision is rejected rather than reset.
 The FLA wheel is checked against its fixed SHA256 before installation.
+
+## Current matched NVIDIA reference
+
+The four-step end-to-end comparison uses a separate Torch 2.13 / CUDA 13.0,
+vLLM 0.32 and the same pinned Omni source, not the historical Torch 2.12
+attention-only timing environment. Exact package versions and the patched
+pipeline digest are recorded in
+[`reference-environment-pro6000.json`](../benchmarks/reference-environment-pro6000.json).
+
+On this Torch 2.13 CUDA reference, set the host allocator before starting Python:
+
+```bash
+export PYTORCH_ALLOC_CONF=pinned_max_round_threshold_mb:64
+```
+
+The default pinned host allocator rounds a roughly 1.29 GB DiT block master
+to 2 GB. Allocating large masters at their requested size keeps the complete
+CPU backing store within the reference container's 120 GiB host-memory limit.
+This retains the same pinned CPU masters, current block, next-block prefetch,
+and encoder/VAE placement; it changes neither weights nor attention kernels.
+The setting is specific to the reference Torch version, not an Ascend requirement.
+
+The explicit CUDA reference launcher initializes Miowtion's official pinned
+SM120 FA4 provider before Omni can import `flash_attn.cute`. The provider's
+source and dependency hashes remain checked; import-order handling does not
+replace or modify its compute kernels. Complete CUDA video qualification is
+still in progress.

@@ -30,8 +30,8 @@ def register(method):
     from dense_backend import _load_fa4
 
     fa4, _, _ = _load_fa4(os.environ["MIOWTION_ROOT"])
-    if fa4._modules() is None:
-        raise RuntimeError("Pinned Miowtion FA4 provider could not initialize")
+    if fa4._modules() is None or not fa4.fa4_sm8x.installed():
+        raise RuntimeError(f"Pinned Miowtion FA4 provider failed: {fa4.unavailable_reason()}")
     if method in ("full", "veda", "spark"):
         register_diffusion_backend(
             E.TORCH_SDPA, "h3_ascend.integrations.cuda_reference.CUDAReferenceBackend"
