@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from h3_ascend.cli import command
+from h3_ascend.cli import command, main
 from h3_ascend.client import multipart, request_fields
 from h3_ascend.context import HeadShard, VideoLayout
 from h3_ascend.profiles import launch_adapter, step_count
@@ -39,6 +39,17 @@ class Contracts(unittest.TestCase):
         for method in ("vsa", "vdn"):
             with self.assertRaises(ValueError):
                 step_count(method, False)
+
+    def test_v2_request_pins_trained_steps_and_guidance(self):
+        argv = ["h3-ascend", "generate", "--method", "vsa", "--case", "1344-345",
+                "--prompt-file", "prompt.txt", "--output", "v2.mp4"]
+        with patch("sys.argv", argv), patch("h3_ascend.client.generate") as generate:
+            main()
+            args = generate.call_args.args[0]
+            self.assertEqual((args.steps, args.guidance_scale), (8, 1.0))
+        for options in (["--steps", "4"], ["--guidance-scale", "2"]):
+            with patch("sys.argv", argv + options), self.assertRaises(ValueError):
+                main()
 
     def test_native_frame_requests(self):
         for case, size, frames in [

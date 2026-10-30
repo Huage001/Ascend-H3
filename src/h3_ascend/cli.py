@@ -191,6 +191,10 @@ def main():
             a.steps = step_count(a.method, a.few_step_lora)
         if a.method == "vsa" and a.steps != 8:
             raise ValueError("FastH3 V2 requires eight forwards with its trained sigma schedule")
+        if a.method == "vsa":
+            if a.guidance_scale not in (None, 1.0):
+                raise ValueError("FastH3 V2 requires guidance_scale=1")
+            a.guidance_scale = 1.0
         generate(a)
 
 
