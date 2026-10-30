@@ -32,6 +32,7 @@ This document records evidence, not intended support inferred from CLI flags.
 | Veda and Spark BF16 single-card 1344×768 / 345 frames | Complete four-step MP4s and independent profiling requests passed |
 | Ascend high-resolution single-card four-step performance matrix | All 16 combinations passed: Full/VSA/Veda/Spark × BF16/INT8 × 124/345 frames at 1344×768; matched Offload, one formal complete request and an independent profile per row |
 | PRO 6000 Full, Veda and Spark BF16, 1344×768 / 345 frames | Complete four-step MP4s and independent profiling requests passed; remaining reference combinations are in progress |
+| PRO 6000 Full INT8, 1344×768 / 345 frames | Complete four-step video/audio, native Triton W8A8, all 50 INT8 QKV weights, finite outputs, formal request and independent profile passed |
 | Cross-device original DiT tensors | All 535 tensors match in shape, dtype and SHA256 after lossless native repacking |
 | New framework server, single-card full video matrix | In progress |
 | New framework server, INT8 full video matrix | In progress |

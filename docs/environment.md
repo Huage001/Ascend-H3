@@ -128,9 +128,9 @@ This retains native dynamic symmetric W8A8 and BF16 projection outputs;
 it does not substitute FP8. Three real GPU checks, including H3 QKV and
 the 96,768-output projection, matched quantized FP32 GEMM/dequantization
 references bitwise in their tested BF16 outputs. See the
-[primitive receipt](../benchmarks/cuda-int8-triton-smoke.json). Complete INT8
-video qualification remains pending; these checks are not comparisons with
-the unquantized BF16 model.
+[primitive receipt](../benchmarks/cuda-int8-triton-smoke.json). Full INT8 1344×768 / 345-frame video, audio, formal timing and independent
+profiling have also passed; the remaining INT8 combinations are in progress.
+The primitive checks are not comparisons with the unquantized BF16 model.
 
 The explicit CUDA reference launcher initializes Miowtion's official pinned
 SM120 FA4 provider before Omni can import `flash_attn.cute`. The provider's

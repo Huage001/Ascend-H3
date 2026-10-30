@@ -1273,6 +1273,71 @@
       "raw_directory": "/root/autodl-tmp/analysis/songhua-ascend-h3-release-20261030/e2e/spark-bf16-single-1344-345-student",
       "speedup_vs_same_precision_full4": 2.1772747873601976,
       "bf16_to_int8_gain": null
+    },
+    {
+      "hardware": "RTX PRO 6000",
+      "method": "full",
+      "precision": "int8",
+      "baseline": false,
+      "case": "1344-345",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 1,
+      "actual_steps": 4,
+      "validated": true,
+      "contention_detected": false,
+      "offload": true,
+      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+      "e2e_seconds": [
+        243.85801353678107
+      ],
+      "profile": {
+        "actual_forwards": 4,
+        "dit_wall_seconds": 210.9567117234692,
+        "attention_seconds": 184.9918703613281,
+        "ffn_seconds": 24.488276115417474,
+        "categories_seconds": {
+          "qkv_projection": 7.637047447204591,
+          "attention_dispatch": 173.68508508300786,
+          "output_projection": 2.8217745323181167,
+          "attention": 184.9918703613281,
+          "ffn": 24.488276115417474
+        },
+        "request": {
+          "request": {
+            "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+            "width": 1344,
+            "height": 768,
+            "aspect_ratio": "16:9",
+            "num_frames": 345,
+            "fps": 24,
+            "num_inference_steps": 4,
+            "seed": 42,
+            "enable_frame_interpolation": "false",
+            "return_stage_metrics": "true",
+            "extra_params": "{\"task\": \"t2va\"}"
+          },
+          "headers": {
+            "date": "Fri, 30 Oct 2026 17:11:50 GMT",
+            "server": "uvicorn",
+            "x-request-id": "video_sync-836c90228c9d74e9",
+            "x-model": "/root/autodl-tmp/analysis/songhua-ascend-h3-release-20261030/models/MiniMax-H3/FL2VA",
+            "x-inference-time-s": "244.044",
+            "x-stage-durations": "{\"queue_wait_ms\":0.4503997042775154,\"stage_0_gen_ms\":241453.6828994751}",
+            "x-peak-memory-mb": "32958.000",
+            "content-length": "36959478",
+            "content-type": "video/mp4",
+            "vary": "Origin",
+            "connection": "close"
+          },
+          "client_wall_seconds": 244.12196000106633
+        }
+      },
+      "median_seconds": 243.85801353678107,
+      "raw_directory": "/root/autodl-tmp/analysis/songhua-ascend-h3-release-20261030/e2e/full-int8-single-1344-345-student-1793379345861537990",
+      "speedup_vs_same_precision_full4": 1.0,
+      "bf16_to_int8_gain": 1.0288120343176923
     }
   ]
 }

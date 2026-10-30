@@ -19,7 +19,7 @@
   "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
   "host_allocator_config": "pinned_max_round_threshold_mb:64",
   "allocator_note": "Large pinned CPU masters use requested size instead of power-of-two rounding. Residency/prefetch, weight values and timed computations are unchanged.",
-  "validation_status": "Full, Veda and Spark BF16 single-card1344x768/345frames four-step video, audio, formal request and independent profiling passed; remaining matrix in progress.",
+  "validation_status": "Full, Veda and Spark BF16, and Full INT8 single-card1344x768/345frames four-step video, audio, formal request and independent profiling passed; remaining matrix in progress.",
   "cuda_runtime": "13.0",
   "int8_kernel": "native vLLM TritonInt8ScaledMMLinearKernel",
   "int8_dispatch_environment": {
@@ -27,5 +27,16 @@
   },
   "int8_dispatch_reason": "The vLLM0.32 CUTLASS dispatcher rejects INT8 on SM120. Use the existing native Triton dynamic symmetric W8A8 fallback; do not substitute FP8.",
   "int8_primitive_gpu_validation": "Passed three shapes, including H3 QKV and the 96768-output projection, against quantized FP32 GEMM/dequantization references; all tested BF16 outputs were bitwise equal. This is not BF16-model equivalence or complete INT8 video qualification.",
-  "int8_gpu_receipt": "cuda-int8-triton-smoke.json"
+  "int8_gpu_receipt": "cuda-int8-triton-smoke.json",
+  "int8_full_video_validation": {
+    "method": "full",
+    "width": 1344,
+    "height": 768,
+    "frames": 345,
+    "steps": 4,
+    "end_to_end_seconds": 243.85801353678107,
+    "formal_requests": 1,
+    "independent_profile_forwards": 4,
+    "source": "single-card-four-step-highres.json"
+  }
 }
