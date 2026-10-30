@@ -204,6 +204,16 @@ with all 50 blocks per step, finite outputs and INT8 QKV weights.
 This is one qualitative sample; audit synchronization makes it unsuitable as
 a performance measurement. It does not establish perceptual equivalence.
 
+VSA INT8, native TP4, 672×384, 124 frames, four-step trained VSA student:
+all four ranks completed four DiT forwards with 50 nonzero gates each step.
+The complete pipeline produced the expected video and audio.
+
+![VSA INT8 TP4 example](examples/videos/vsa-int8-tp4-672124.gif)
+
+[MP4 with audio](examples/videos/vsa-int8-tp4-672124.mp4) ·
+[sample contract](examples/videos/vsa-int8-tp4-672124.json).
+This is a qualitative smoke test, not a Full-versus-VSA quality evaluation.
+
 Previous strict Spark experiments generated 1344×768 videos at 124 and 345
 frames with every decoded uint8 pixel matching the previous Ascend reference.
 That is an Ascend-to-Ascend implementation check, not equality with CUDA or

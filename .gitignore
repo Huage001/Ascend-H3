@@ -15,5 +15,6 @@ models/
 *.pth
 *.mp4
 !examples/videos/full-int8-tp2-672124.mp4
+!examples/videos/vsa-int8-tp4-672124.mp4
 *.wav
 .env

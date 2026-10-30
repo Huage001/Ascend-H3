@@ -14,6 +14,7 @@ This document records evidence, not intended support inferred from CLI flags.
 | Four workloads through actual native Omni request preprocessing | Passed, including 37/102 latent frames |
 | Full INT8 TP2, 672×384 / 124 frames, eight complete DiT forwards | Both ranks finite; 50 blocks each step; all 50 QKV weights INT8 |
 | Full INT8 TP2 complete 672×384 / 124-frame video + audio | Passed native inference, decode, exact dimensions/frame count and visual inspection; sample included |
+| VSA INT8 TP4 complete 672×384 / 124-frame video + audio | Passed; four steps per rank; 50 nonzero active gates each step; finite DiT outputs |
 | BF16 Full, VSA, Spark and Veda finite outputs at 672×384/124-frame token geometry | Passed native smoke |
 | Global heads 28–41 versus a local 14-head shard | Passed native smoke for BF16 Full/VSA/Spark/Veda |
 | INT8 W8A8 projection output entering Full/VSA/Spark/Veda | Passed native smoke |
@@ -44,3 +45,9 @@ full-versus-shard relative L2 is at most 4.82e-4 in this check. BF16 VSA,
 Spark and Veda shard outputs were bitwise identical; INT8-derived VSA differed
 by relative L2 4.50e-9. These are shard comparisons, not BF16-versus-INT8
 quantization-error measurements.
+
+Gate auditing runs at the child projection before execution: ordinary layerwise
+offload clears the parent block's device weights afterward. Inspecting all
+weights at the end of the DiT would miscount valid gates as unloaded zeros.
+A CPU regression reproduced this clear/restore behavior and checked all 50
+gates across two forwards.

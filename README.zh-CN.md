@@ -195,6 +195,15 @@ Turbo8、seed 42，包含音频。两个 rank 均完成八次 DiT 前向，每�
 [样例参数与校验值](examples/videos/full-int8-tp2-672124.json)。
 这只是单个定性样例；记录审计会引入同步，不能用作性能测量，也不能据此宣称感知等价。
 
+VSA INT8、原生 TP4、672×384、124 帧、四步 VSA 学生模型也已完整成片：
+四个 rank 均完成四次 DiT 前向，每一步检查到全部 50 个非零 gate。
+
+![VSA INT8 TP4 示例](examples/videos/vsa-int8-tp4-672124.gif)
+
+[带音频 MP4](examples/videos/vsa-int8-tp4-672124.mp4) ·
+[样例参数](examples/videos/vsa-int8-tp4-672124.json)。
+该样例用于定性验收，不是 Full 与 VSA 的画质等价评估。
+
 此前严格 Spark 实验已生成 1344×768 的 124/345 帧视频，与优化前昇腾
 参考实现的每个解码后 uint8 像素一致。这证明的是昇腾实现之间的一致性，
 不等于与 CUDA 或 Full 输出一致，框架整合后还需要重新验收。
