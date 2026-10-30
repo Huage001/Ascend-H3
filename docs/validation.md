@@ -60,9 +60,14 @@ Only the short 672×384 example has received visual sample inspection so far.
 Frame-by-frame inspection of the VSA INT8 short sample found a brief
 luminance dip near frames 82–84 (zero-based), around 3.4 seconds.
 This is recorded as an observed quality limitation, independent of the
-passed finite-output, gate, frame-count and geometry checks. A same-seed
-BF16 run is prioritized to investigate quantization versus student/runtime
-behavior; no cause is assigned from this sample alone.
+passed finite-output, gate, frame-count and geometry checks. A same-seed BF16
+run reproduced the dip at the same position. Maximum adjacent downscaled
+luminance changes are 18.19/255 (BF16) and 21.63/255 (INT8), both at the
+84→85 transition. This descriptive metric is not a quality score. The
+artifact is not exclusive to INT8; decoder versus generated-latent causality
+remains unresolved. The earlier Ascend CANN, Triton and paired VSA references
+also showed discontinuities around multiples of the VAE's 17-frame clips;
+a fixed-latent decoder A/B is still required to assign a root cause.
 
 The complete Veda INT8 TP4 matrix is recorded in
 `benchmarks/veda-int8-tp4-matrix.json`, including all four video hashes.

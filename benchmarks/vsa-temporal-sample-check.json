@@ -1,0 +1,88 @@
+{
+  "scope": "Same prompt/seed/shape/TP4/student; descriptive luminance measurements, not a calibrated quality score or a causal attribution",
+  "samples": [
+    {
+      "precision": "bf16",
+      "largest_adjacent_mean_luma_changes": [
+        {
+          "change": 18.19487847222223,
+          "frame_index_zero_based": 85
+        },
+        {
+          "change": 11.773871527777771,
+          "frame_index_zero_based": 82
+        },
+        {
+          "change": 6.29296875,
+          "frame_index_zero_based": 83
+        },
+        {
+          "change": 5.889322916666671,
+          "frame_index_zero_based": 81
+        },
+        {
+          "change": 3.5759548611111143,
+          "frame_index_zero_based": 107
+        },
+        {
+          "change": 3.1462673611111143,
+          "frame_index_zero_based": 105
+        },
+        {
+          "change": 3.145399305555557,
+          "frame_index_zero_based": 116
+        },
+        {
+          "change": 2.983506944444443,
+          "frame_index_zero_based": 115
+        }
+      ],
+      "median_adjacent_pixel_difference": 8.38064236111111
+    },
+    {
+      "precision": "int8",
+      "largest_adjacent_mean_luma_changes": [
+        {
+          "change": 21.63324652777777,
+          "frame_index_zero_based": 85
+        },
+        {
+          "change": 16.138020833333343,
+          "frame_index_zero_based": 82
+        },
+        {
+          "change": 7.548177083333329,
+          "frame_index_zero_based": 83
+        },
+        {
+          "change": 5.840711805555557,
+          "frame_index_zero_based": 81
+        },
+        {
+          "change": 3.8511284722222285,
+          "frame_index_zero_based": 107
+        },
+        {
+          "change": 2.9574652777777857,
+          "frame_index_zero_based": 104
+        },
+        {
+          "change": 2.934461805555557,
+          "frame_index_zero_based": 105
+        },
+        {
+          "change": 2.8572048611111143,
+          "frame_index_zero_based": 116
+        }
+      ],
+      "median_adjacent_pixel_difference": 8.206597222222221
+    }
+  ],
+  "method": "vsa",
+  "case": "672-124",
+  "tensor_parallel_size": 4,
+  "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+  "seed": 42,
+  "steps": 4,
+  "conclusion": "Both BF16 and INT8 have a brief luminance dip around frames 82-84 and a rebound at frame 85; this is not exclusive to INT8. Decoder versus generated-latent causality is unresolved."
+}
