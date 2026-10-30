@@ -3,7 +3,7 @@
   "precision": "int8",
   "tensor_parallel_size": 2,
   "case": "672-124",
-  "scope": "DiT only; final video decode not yet qualified",
+  "scope": "Complete native model inference and video/audio decode; supersedes the earlier DiT-only attempt",
   "ranks": [
     {
       "steps": 8,
@@ -38,6 +38,14 @@
       ]
     }
   ],
-  "vae_decode_passed": false,
-  "decoder_failure": "CANN tbe missing because the harness overwrote PYTHONPATH; path fix under retest"
+  "vae_decode_passed": true,
+  "video": {
+    "width": 672,
+    "height": 384,
+    "frames": 124,
+    "fps": 24,
+    "has_audio": true
+  },
+  "example": "examples/videos/full-int8-tp2-672124.json",
+  "audit_timing_is_not_a_benchmark": true
 }

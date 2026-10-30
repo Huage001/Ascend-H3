@@ -45,8 +45,12 @@ On Ascend, build vLLM with `VLLM_TARGET_DEVICE=empty` using the upstream
 `tools/use_existing_torch.py --prefix` helper. This keeps the Ascend Torch
 version instead of installing the CUDA Torch requirement from the standard
 vLLM build. Initialize vLLM-Ascend's fixed Catlass submodule before compiling
-native extensions. The source-only `COMPILE_CUSTOM_KERNELS=0` option alone
-does not qualify runtime inference.
+native extensions. The setup script defaults to `COMPILE_CUSTOM_KERNELS=0` for the framework.
+H3 uses Torch-NPU primitives plus this repository's separately built attention
+extensions. Full INT8 TP2 video inference and VAE decoding have passed in
+this mode; see the method-specific qualification matrix before selecting a
+sparse path. `H3_FULL_FRAMEWORK_BUILD=1` additionally builds the framework's
+operator collection, including kernels for unrelated model families.
 
 Install all framework changes in an independent environment. Do not upgrade
 another experiment's shared environment in place. Source the selected CANN
@@ -65,3 +69,24 @@ The private CANN 9.2.0 toolkit and 910B operator packages were obtained from
 [Huawei's official package mirror](https://mirrors.huaweicloud.com/ascend/repos/conda/linux-aarch64/)
 and verified against its SHA256 metadata before offline installation.
 The installation does not change the host driver or shared CANN directories.
+
+## Reproduce the source installation
+
+Start from a dedicated Python 3.12 Ascend environment with the Torch stack
+above. The script checks that stack, constrains dependency resolution to the
+existing accelerator packages, checks out exact framework revisions, applies
+the three reviewed patches and installs the project and fixed FLA wheel:
+
+```bash
+source /path/to/Ascend/cann/set_env.sh
+bash scripts/install_stack.sh /path/to/private/framework-sources
+export H3_ASCEND_CACHE=/path/to/writable/ascend-h3-cache
+h3-ascend build --method all --soc Ascend910B3
+```
+
+The installation script has syntax and source-revision checks. A clean-room
+installation of this consolidated script is not yet qualified; the running
+video environment was assembled using the equivalent individual steps.
+It does not install the Ascend driver/toolkit, models or a C++ runtime.
+An existing checkout at a different revision is rejected rather than reset.
+The FLA wheel is checked against its fixed SHA256 before installation.

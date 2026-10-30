@@ -20,6 +20,7 @@ def install():
     def forward(self, *args, **kwargs):
         if not hasattr(self, "_h3_audit_counts"):
             self._h3_audit_counts = [0] * len(self.blocks)
+            self._h3_audit_gates = [None] * len(self.blocks)
             self._h3_audit_handles = []
             for i, block in enumerate(self.blocks):
 
@@ -27,11 +28,20 @@ def install():
                     self._h3_audit_counts[index] += 1
 
                 self._h3_audit_handles.append(block.register_forward_hook(count))
+                gate = getattr(block.attn, "to_gate_compress", None)
+                if gate is not None:
+
+                    def check_gate(module, inputs, index=i):
+                        # Parent block offload hooks materialize the projection
+                        # before this child runs, then clear it after the block.
+                        self._h3_audit_gates[index] = bool(torch.count_nonzero(module.weight))
+
+                    self._h3_audit_handles.append(gate.register_forward_pre_hook(check_gate))
         before = list(self._h3_audit_counts)
+        self._h3_audit_gates = [None] * len(self.blocks)
         result = original(self, *args, **kwargs)
         tensors = [value for value in result if isinstance(value, torch.Tensor)]
         finite = bool(tensors) and all(bool(torch.isfinite(value).all()) for value in tensors)
-        gates = [getattr(block.attn, "to_gate_compress", None) for block in self.blocks]
         row = {
             "pid": os.getpid(),
             "method": os.environ["H3_ASCEND_METHOD"],
@@ -44,9 +54,8 @@ def install():
                 else "nonstandard weight storage"
                 for block in self.blocks
             ],
-            "nonzero_vsa_gates": sum(
-                bool(torch.count_nonzero(gate.weight)) for gate in gates if gate is not None
-            ),
+            "nonzero_vsa_gates": sum(value is True for value in self._h3_audit_gates),
+            "vsa_gate_checks": self._h3_audit_gates,
         }
         root = Path(directory)
         root.mkdir(parents=True, exist_ok=True)

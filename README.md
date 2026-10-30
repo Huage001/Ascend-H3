@@ -35,7 +35,7 @@ framework releases. Then install this repository from source:
 git clone https://github.com/Huage001/Ascend-H3.git
 cd Ascend-H3
 source /path/to/Ascend/cann/set_env.sh
-python -m pip install -e .
+bash scripts/install_stack.sh /path/to/private/framework-sources
 export H3_ASCEND_CACHE=/path/to/writable/ascend-h3-cache
 h3-ascend build --method all --soc Ascend910B3
 ```

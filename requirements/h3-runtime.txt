@@ -1,0 +1,32 @@
+# H3 subset of the pinned Omni common requirements. Install after an Ascend
+# Torch/Torch-NPU/Triton environment; do not resolve CUDA Torch over that stack.
+transformers==5.19.0
+diffusers==0.40.0
+safetensors==0.8.0
+accelerate==1.12.0
+kernels==0.16.1
+cache-dit==1.5.0
+av>=14.0.0
+omegaconf>=2.3.0
+soundfile>=0.13.1
+soxr>=0.5.0.post1
+torchsde>=0.2.6
+imageio[ffmpeg]>=2.37.2
+x-transformers>=2.12.2
+einops>=0.8.1
+prettytable>=3.8.0
+aenum==3.1.16
+janus>=1.0.0
+msgpack>=1.0.0
+gguf>=0.10.0
+pydantic>=2.12.0
+pydantic-settings>=2.0.0
+numpy==2.2.6
+scipy==1.13.1
+psutil==6.0.0
+attrs==26.1.0
+decorator
+pandas
+pyyaml
+regex
+typing_extensions>=4.13
