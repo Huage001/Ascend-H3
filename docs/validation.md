@@ -15,6 +15,7 @@ This document records evidence, not intended support inferred from CLI flags.
 | Full INT8 TP2, 672×384 / 124 frames, eight complete DiT forwards | Both ranks finite; 50 blocks each step; all 50 QKV weights INT8 |
 | Full INT8 TP2 complete 672×384 / 124-frame video + audio | Passed native inference, decode, exact dimensions/frame count and visual inspection; sample included |
 | VSA INT8 TP4 complete video + audio, all four workloads | Passed; exact dimensions/frames; four steps per rank; 50 nonzero active gates each step; finite DiT outputs |
+| Veda INT8 TP4 complete video + audio, 672×384 at 124/345 frames | Passed; exact geometry/frames, finite outputs and 50 blocks each of eight steps on all ranks; short sample visually inspected |
 | BF16 Full, VSA, Spark and Veda finite outputs at 672×384/124-frame token geometry | Passed native smoke |
 | Global heads 28–41 versus a local 14-head shard | Passed native smoke for BF16 Full/VSA/Spark/Veda |
 | INT8 W8A8 projection output entering Full/VSA/Spark/Veda | Passed native smoke |

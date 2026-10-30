@@ -218,6 +218,13 @@ All four workloads have now passed complete VSA INT8 TP4 inference and
 decode; [the audited matrix](benchmarks/vsa-int8-tp4-matrix.json) records
 exact frame counts and video hashes.
 
+Veda INT8 TP4, 672×384, 124 frames, Turbo8, seed 42, nominal 90% sparsity:
+
+![Veda INT8 TP4 example](examples/videos/veda-int8-tp4-672124.gif)
+
+[MP4 with audio](examples/videos/veda-int8-tp4-672124.mp4) ·
+[sample contract](examples/videos/veda-int8-tp4-672124.json).
+
 Previous strict Spark experiments generated 1344×768 videos at 124 and 345
 frames with every decoded uint8 pixel matching the previous Ascend reference.
 That is an Ascend-to-Ascend implementation check, not equality with CUDA or

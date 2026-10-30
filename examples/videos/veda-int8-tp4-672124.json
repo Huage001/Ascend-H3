@@ -1,0 +1,33 @@
+{
+  "method": "veda",
+  "nominal_sparsity": 0.9,
+  "precision": "native transformer INT8; BF16 attention; FP32 Veda predictor",
+  "tensor_parallel_size": 4,
+  "device": "Ascend 910B",
+  "request": {
+    "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+    "width": 672,
+    "height": 384,
+    "aspect_ratio": "16:9",
+    "num_frames": 124,
+    "fps": 24,
+    "num_inference_steps": 8,
+    "seed": 42,
+    "enable_frame_interpolation": "false",
+    "return_stage_metrics": "true",
+    "extra_params": "{\"task\": \"t2va\"}"
+  },
+  "video": {
+    "width": 672,
+    "height": 384,
+    "frames": 124,
+    "fps": 24,
+    "has_audio": true
+  },
+  "actual_dit_forwards_per_rank": 8,
+  "all_50_blocks_once_per_step": true,
+  "all_dit_outputs_finite": true,
+  "qkv_projection_weight_dtype": "int8",
+  "sha256": "623edb80ede6fd0a7f14307f10bbfc0b70a13ffc28e13ea4cbeabd0712d884c5",
+  "note": "Diagnostic audit enabled; qualitative sample, not a timing benchmark or quality-equivalence proof."
+}

@@ -207,6 +207,13 @@ VSA INT8、原生 TP4、672×384、124 帧、四步 VSA 学生模型也已完整
 VSA INT8 TP4 的四种视频规格现已全部通过完整生成和解码，
 [审计矩阵](benchmarks/vsa-int8-tp4-matrix.json)记录各规格帧数与视频校验值。
 
+Veda INT8 TP4、672×384、124 帧、Turbo8、seed 42、名义稀疏度 90%：
+
+![Veda INT8 TP4 示例](examples/videos/veda-int8-tp4-672124.gif)
+
+[带音频 MP4](examples/videos/veda-int8-tp4-672124.mp4) ·
+[样例参数](examples/videos/veda-int8-tp4-672124.json)。
+
 此前严格 Spark 实验已生成 1344×768 的 124/345 帧视频，与优化前昇腾
 参考实现的每个解码后 uint8 像素一致。这证明的是昇腾实现之间的一致性，
 不等于与 CUDA 或 Full 输出一致，框架整合后还需要重新验收。
