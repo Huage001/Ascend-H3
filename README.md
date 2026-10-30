@@ -234,8 +234,11 @@ Previous strict Spark experiments generated 1344×768 videos at 124 and 345
 frames with every decoded uint8 pixel matching the previous Ascend reference.
 That is an Ascend-to-Ascend implementation check, not equality with CUDA or
 Full attention. It must be requalified after framework integration.
-Previous VDN tests produced plausible short clips; numerical inversion is
-approximate. No universal perceptual-equivalence claim is made.
+Previous VDN tests produced plausible short clips. Numerical inversion is
+approximate; the automatic BF16 temporal-convolution path also has a different
+feature-rounding boundary from the upstream FP32 tap loop. See
+[architecture](docs/architecture.md) for the FP32 temporal option.
+No universal perceptual-equivalence claim is made.
 
 The initial integration targets batch-one T2VA without reference videos.
 See [architecture](docs/architecture.md), [validation status](docs/validation.md)

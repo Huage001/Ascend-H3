@@ -26,6 +26,10 @@ Without `H3_ASCEND_METHOD`, importing the package changes no backend.
   inverse and captured bidirectional scans replace expensive host launches.
   The default retains all 128 state coordinates. Newton inversion is
   numerically approximate and is not advertised as bitwise Cholesky.
+  The automatic temporal-convolution policy also uses a BF16 Conv2D output
+  for most geometries before FP32 activation/normalization, introducing an
+  earlier rounding boundary than the upstream FP32 temporal-tap loop.
+  The short 672×384 case keeps the FP32 tap calculation in a compiled graph.
 
 ## Quantization boundary
 
@@ -60,3 +64,9 @@ keyed by source hash, Torch/NPU ABI, SoC and CANN installation. Build receipts
 record source and library hashes. Use an editable source installation so
 `configs/` and `csrc/` remain available. A wheel-only installation is not
 currently supported.
+
+For VDN, `H3_ASCEND_VDN_TEMPORAL=ge` selects the FP32 temporal-tap graph
+for every geometry; `auto` is the optimized default described above. This
+option does not replace Newton inversion with Cholesky. The historical VDN
+ratios use the automatic policy and should not be presented as a bitwise
+implementation of the upstream feature and inverse computations.
