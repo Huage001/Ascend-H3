@@ -203,6 +203,8 @@ VSA INT8、原生 TP4、672×384、124 帧、四步 VSA 学生模型也已完整
 
 [带音频 MP4](examples/videos/vsa-int8-tp4-672124.mp4) ·
 [样例参数](examples/videos/vsa-int8-tp4-672124.json)。
+逐帧检查发现该 VSA INT8 样例在约 3.4 秒处有短暂亮度回落，
+原因待 BF16 对照排查。生成检查通过不代表没有闪烁或画质等价。
 该样例用于定性验收，不是 Full 与 VSA 的画质等价评估。
 VSA INT8 TP4 的四种视频规格现已全部通过完整生成和解码，
 [审计矩阵](benchmarks/vsa-int8-tp4-matrix.json)记录各规格帧数与视频校验值。

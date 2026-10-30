@@ -56,3 +56,10 @@ gates across two forwards.
 The complete VSA INT8 TP4 matrix is recorded in
 `benchmarks/vsa-int8-tp4-matrix.json`; all four videos have audio.
 Only the short 672×384 example has received visual sample inspection so far.
+
+Frame-by-frame inspection of the VSA INT8 short sample found a brief
+luminance dip near frames 82–84 (zero-based), around 3.4 seconds.
+This is recorded as an observed quality limitation, independent of the
+passed finite-output, gate, frame-count and geometry checks. A same-seed
+BF16 run is prioritized to investigate quantization versus student/runtime
+behavior; no cause is assigned from this sample alone.

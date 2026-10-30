@@ -213,6 +213,9 @@ The complete pipeline produced the expected video and audio.
 
 [MP4 with audio](examples/videos/vsa-int8-tp4-672124.mp4) ·
 [sample contract](examples/videos/vsa-int8-tp4-672124.json).
+Frame-by-frame inspection found a brief brightness dip around 3.4 seconds
+in this VSA INT8 sample. Its cause is pending the BF16 comparison.
+Generation checks passing do not establish flicker-free or equivalent quality.
 This is a qualitative smoke test, not a Full-versus-VSA quality evaluation.
 All four workloads have now passed complete VSA INT8 TP4 inference and
 decode; [the audited matrix](benchmarks/vsa-int8-tp4-matrix.json) records

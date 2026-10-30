@@ -29,5 +29,6 @@
   "qkv_projection_weight_dtype": "int8",
   "nonzero_vsa_gates_per_step_per_rank": 50,
   "sha256": "716ade05748a9de70c5bb997dadfdce902edf40596a03142688abd934946d4ee",
-  "note": "Diagnostic audit enabled; qualitative sample, not a timing benchmark or equivalence proof."
+  "note": "Diagnostic audit enabled; qualitative sample, not a timing benchmark or equivalence proof.",
+  "observed_quality_issue": "Brief luminance dip around zero-based frames 82-84 (about 3.4 seconds); cause pending BF16 comparison"
 }
