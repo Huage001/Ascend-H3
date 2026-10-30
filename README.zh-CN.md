@@ -215,6 +215,8 @@ Veda INT8 TP4、672×384、124 帧、Turbo8、seed 42、名义稀疏度 90%：
 
 [带音频 MP4](examples/videos/veda-int8-tp4-672124.mp4) ·
 [样例参数](examples/videos/veda-int8-tp4-672124.json)。
+Veda INT8 TP4 的四种规格均已完整生成和解码，见
+[审计矩阵](benchmarks/veda-int8-tp4-matrix.json)。
 
 此前严格 Spark 实验已生成 1344×768 的 124/345 帧视频，与优化前昇腾
 参考实现的每个解码后 uint8 像素一致。这证明的是昇腾实现之间的一致性，

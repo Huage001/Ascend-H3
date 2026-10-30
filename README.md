@@ -227,6 +227,8 @@ Veda INT8 TP4, 672×384, 124 frames, Turbo8, seed 42, nominal 90% sparsity:
 
 [MP4 with audio](examples/videos/veda-int8-tp4-672124.mp4) ·
 [sample contract](examples/videos/veda-int8-tp4-672124.json).
+All four Veda INT8 TP4 workloads passed complete generation and decode;
+see [the audited matrix](benchmarks/veda-int8-tp4-matrix.json).
 
 Previous strict Spark experiments generated 1344×768 videos at 124 and 345
 frames with every decoded uint8 pixel matching the previous Ascend reference.
