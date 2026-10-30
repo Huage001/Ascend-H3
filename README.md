@@ -213,12 +213,12 @@ workloads remain supported for inference and functional validation.
 | 345 | BF16 | Spark-H3 + LightX2V | 276.45 s | **2.35×** | 115.23 s | 2.18× |
 | 345 | INT8 | Full + LightX2V | 603.84 s | 1.00× | 243.86 s | 1.00× |
 | 345 | INT8 | VSA · FastH3 | 261.56 s | **2.31×** | 132.66 s | 1.84× |
-| 345 | INT8 | Veda + LightX2V | 203.77 s | 2.96× | — | — |
+| 345 | INT8 | Veda + LightX2V | 203.77 s | **2.96×** | 95.43 s | 2.56× |
 | 345 | INT8 | Spark-H3 + LightX2V | 247.17 s | 2.44× | — | — |
 
 All records use matched **Offload** (`omni-layer-prefetch1-vae-resident-v1`). Each speedup is relative to Full four-step on the same hardware and precision. The higher speedup in each completed pair is bold; ties and incomplete pairs are unmarked.
 
-Fully validated: Ascend 16/16 cases; PRO 6000 5/16 cases. Remaining cases are in progress; warmups and failed attempts are excluded.
+Fully validated: Ascend 16/16 cases; PRO 6000 6/16 cases. Remaining cases are in progress; warmups and failed attempts are excluded.
 
 [Raw high-resolution records and independent profiles](benchmarks/single-card-four-step-highres.json).
 

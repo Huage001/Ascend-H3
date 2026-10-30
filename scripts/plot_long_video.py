@@ -37,8 +37,8 @@ def validate(data):
         spans = (profile["attention_seconds"], profile["ffn_seconds"])
         if any(not math.isfinite(x) or x < 0 for x in spans):
             raise ValueError(f"Invalid profiling spans: {key}")
-        if profile["actual_forwards"] < 1:
-            raise ValueError(f"Measured profile forwards required: {key}")
+        if profile["actual_forwards"] != expected:
+            raise ValueError(f"The independent profile must retain all four updates: {key}")
         if not math.isfinite(profile["dit_wall_seconds"]) or sum(spans) > profile["dit_wall_seconds"]:
             raise ValueError(f"Overlapping or invalid top-level profiling spans: {key}")
         if not row["offload"]:
@@ -59,6 +59,8 @@ def render(data, output):
     from matplotlib.patches import Patch
 
     rows, policy = validate(data)
+    sample_counts = sorted({len(row["e2e_seconds"]) for row in rows.values()})
+    sample_note = "N=" + "/".join(map(str, sample_counts)) + " formal requests per cell"
     colors = ("#a63d2a", "#3e8296", "#ee9650")
     plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10,
                          "svg.fonttype": "none", "pdf.fonttype": 42})
@@ -80,7 +82,9 @@ def render(data, output):
         top.text(.56, .40, f"{fastest / 60:.2f} min", fontsize=29, color="#126f66",
                  fontfamily="DejaVu Serif")
         top.text(0, .08, "Full · BF16 · 4 steps", color="#64645e", fontsize=9)
-        top.text(.56, .08, f"Best time · {baseline / fastest:.2f}× vs BF16 Full4", color="#126f66", fontsize=9)
+        best_label = LABELS[[m for m, _ in METHODS].index(best["method"])]
+        top.text(.56, .08, f"{best_label} · {best['precision'].upper()}", color="#126f66", fontsize=9)
+        top.text(.56, -.17, f"{baseline / fastest:.2f}× vs BF16 Full4", color="#126f66", fontsize=9)
         xmax = max(r["profile"]["dit_wall_seconds"] / r["profile"]["actual_forwards"] for r in candidates) * 1000 / 50
         for row_index, precision in enumerate(("bf16", "int8"), 1):
             ax = fig.add_subplot(grids[row_index, col], facecolor="#fffdf8")
@@ -117,8 +121,9 @@ def render(data, output):
     fig.legend(handles=[Patch(color=c, label=label) for c, label in zip(
         colors, ("Attention module", "FFN", "Other DiT work incl. unhidden Offload"))],
         loc="lower left", bbox_to_anchor=(.05, .052), ncol=3, frameon=False, fontsize=9)
-    fig.text(.055, .039, "Headline times: median uninstrumented request → completed MP4. "
-             "Reference: same-device, same-precision Full, 4 steps. Q = same-method BF16 / INT8.", fontsize=8, color="#626257")
+    fig.text(.055, .039, "Headline times: median uninstrumented request → completed MP4; "
+             f"{sample_note}. Reference: same-device, same-precision Full4. "
+             "Q = same-method BF16 / INT8.", fontsize=8, color="#626257")
     fig.text(.055, .028, f"Bars: separate DiT profiling, normalized over actual forwards × 50 blocks; no E2E extrapolation. "
              f"Offload policy: {policy}.", fontsize=8, color="#626257")
     fig.text(.055, .015, "VDN requires its official eight-step student and is documented separately; it is not a four-step candidate.", fontsize=8, color="#626257")
