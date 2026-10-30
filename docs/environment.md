@@ -116,10 +116,27 @@ This retains the same pinned CPU masters, current block, next-block prefetch,
 and encoder/VAE placement; it changes neither weights nor attention kernels.
 The setting is specific to the reference Torch version, not an Ascend requirement.
 
+For native W8A8 INT8 on this SM120 card, vLLM 0.32's default CUTLASS
+dispatcher reports `Int8 not supported on SM120`. Select vLLM's existing
+Triton INT8 fallback before starting Python:
+
+```bash
+export VLLM_DISABLED_KERNELS=CutlassInt8ScaledMMLinearKernel
+```
+
+This retains native dynamic symmetric W8A8 and BF16 projection outputs;
+it does not substitute FP8. Three real GPU checks, including H3 QKV and
+the 96,768-output projection, matched quantized FP32 GEMM/dequantization
+references bitwise in their tested BF16 outputs. See the
+[primitive receipt](../benchmarks/cuda-int8-triton-smoke.json). Complete INT8
+video qualification remains pending; these checks are not comparisons with
+the unquantized BF16 model.
+
 The explicit CUDA reference launcher initializes Miowtion's official pinned
 SM120 FA4 provider before Omni can import `flash_attn.cute`. The provider's
 source and dependency hashes remain checked; import-order handling does not
-replace or modify its compute kernels. Full BF16 single-card 1344×768 / 345-frame video qualification has passed.
+replace or modify its compute kernels. Full, Veda and Spark BF16 single-card
+1344×768 / 345-frame video qualification has passed.
 The remaining CUDA matrix is still in progress. The official Triton VSA
 provider is `fastvideo-kernel==0.3.4`, matching the pinned Omni `[vsa]` extra;
 its tile64 GPU check also passed. The token refiner remains dense, and VSA

@@ -1,0 +1,40 @@
+{
+  "time": 1793378797.3564906,
+  "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+  "kernel": "TritonInt8ScaledMMLinearKernel",
+  "quantization": "native vLLM dynamic symmetric W8A8; BF16 output",
+  "disabled_kernels": "CutlassInt8ScaledMMLinearKernel",
+  "cases": [
+    {
+      "shape": [
+        128,
+        128,
+        256
+      ],
+      "relative_l2_vs_quantized_fp32_reference": 0.0,
+      "bitwise_equal": true,
+      "output_dtype": "torch.bfloat16"
+    },
+    {
+      "shape": [
+        128,
+        5376,
+        21504
+      ],
+      "relative_l2_vs_quantized_fp32_reference": 0.0,
+      "bitwise_equal": true,
+      "output_dtype": "torch.bfloat16"
+    },
+    {
+      "shape": [
+        1,
+        5376,
+        96768
+      ],
+      "relative_l2_vs_quantized_fp32_reference": 0.0,
+      "bitwise_equal": true,
+      "output_dtype": "torch.bfloat16"
+    }
+  ],
+  "external_processes_detected": false
+}
