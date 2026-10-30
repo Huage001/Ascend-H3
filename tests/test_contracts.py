@@ -9,9 +9,21 @@ from pathlib import Path
 from h3_ascend.cli import command
 from h3_ascend.client import multipart, request_fields
 from h3_ascend.context import HeadShard, VideoLayout
+from h3_ascend.profiles import launch_adapter, step_count
 
 
 class Contracts(unittest.TestCase):
+    def test_student_contracts(self):
+        for method in ("full", "veda", "spark"):
+            self.assertEqual(step_count(method), 4)
+            self.assertEqual(step_count(method, False), 50)
+            self.assertEqual(launch_adapter(method, False, None), None)
+        self.assertEqual(step_count("vsa"), 4)
+        self.assertEqual(step_count("vdn"), 8)
+        for method in ("vsa", "vdn"):
+            with self.assertRaises(ValueError):
+                step_count(method, False)
+
     def test_native_frame_requests(self):
         for case, size, frames in [
             ("672-124", (672, 384), 124),
@@ -62,7 +74,7 @@ class Contracts(unittest.TestCase):
                 self.assertNotIn("resident_layers", offload["layer_options"]["dit"])
             else:
                 offload = json.loads(argv[argv.index("--diffusion-offload-config") + 1])
-                self.assertEqual(offload["layer_options"]["dit"]["resident_layers"], 16)
+                self.assertNotIn("resident_layers", offload["layer_options"]["dit"])
             self.assertIn("text_encoder", offload["components"])
 
     def test_prompt_cannot_escape_multipart_field(self):

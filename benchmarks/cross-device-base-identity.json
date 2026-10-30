@@ -1,0 +1,7 @@
+{
+  "npu_tensors": 535,
+  "cuda_tensors": 535,
+  "different_keys": [],
+  "missing_on_npu": [],
+  "same_weights": true
+}

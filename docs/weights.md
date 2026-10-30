@@ -16,26 +16,36 @@ hf download MiniMaxAI/MiniMax-H3 --include 'model_index.json' 'FL2VA/*' \
   --local-dir /models/MiniMax-H3
 ```
 
-## Eight-step Full / Veda / Spark teacher
+## Default four-step Full / Veda / Spark
 
-Download the original [Turbo LoRA](https://huggingface.co/larryvrh/MiniMax-H3-Turbo-Lora),
-then use the official Diffusers H3 converter and an explicit eight-step manifest:
+The launcher defaults to the pinned official
+[LightX2V Minimax-h3-Turbo](https://huggingface.co/lightx2v/Minimax-h3-Turbo)
+`minimax_h3_fl2v_turbo_4step_v1.0_768p_bf16.safetensors`, revision
+`30f485ed874aa44c8183348ad361c5eabad318da`, SHA256
+`1bdabc2e9fce20b1db563b96bcf6e46adcad4c1964f423676436bf266cc7416c`.
+The contract is four steps, video shift 6, audio shift 3, alpha=rank=128.
+Download is automatic, or provide `serve --few-step-source FILE`.
+The source's PEFT default-namespace keys are normalized and alpha/rank is
+folded into the adapter once. Weights merge before TP and INT8 quantization.
 
 ```bash
-hf download larryvrh/MiniMax-H3-Turbo-Lora minimax_h3_turbo_v4_step600_ema.safetensors \
-  --local-dir /models/turbo-source
-h3-ascend prepare-lora \
-  --source /models/turbo-source/minimax_h3_turbo_v4_step600_ema.safetensors \
-  --source-format raw-h3 --output /models/H3-Turbo-LoRA \
-  --steps 8 --video-shift 12 --audio-shift 3
+hf download lightx2v/Minimax-h3-Turbo \
+  minimax_h3_fl2v_turbo_4step_v1.0_768p_bf16.safetensors \
+  --revision 30f485ed874aa44c8183348ad361c5eabad318da --local-dir /models/lightx2v
+# Original model: disable the default student at both endpoints.
+h3-ascend serve --method full --model /models/MiniMax-H3 --no-few-step-lora
+h3-ascend generate --method full --no-few-step-lora --case 1344-345 \
+  --prompt-file prompt.txt --output original-50step.mp4
 ```
 
-`raw-h3` converts and writes a self-contained scaled adapter. The default
-`diffusers-scaled` links an existing converted file and must not be used for
-raw input. Both fuse before TP slicing and online INT8 quantization.
-原始权重使用 `raw-h3`；已经转换并折入缩放的旧文件使用默认格式，避免重复缩放。
-With Diffusers 0.40.0, all 726 converted tensors matched the earlier handoff
-bit for bit; the complete converted file SHA256 also matches.
+General community adapters use `prepare-lora --source FILE --output DIR`.
+Use `diffusers-scaled` for already-scaled matrices, `raw-h3` for official
+Diffusers H3 conversion, or `peft` for default-namespace matrices with declared
+alpha metadata. Partial Q/K/V adapters are supported. Omit `--steps` for style
+adapters; a separately distilled student can pin `--steps`, `--video-shift`,
+`--audio-shift`. Do not combine two different distilled schedules.
+A legacy eight-step Turbo adapter remains an explicit optional input; it is
+not substituted for the default LightX2V four-step source.
 
 ## Four-step VSA
 

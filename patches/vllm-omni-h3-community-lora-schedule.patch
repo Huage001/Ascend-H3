@@ -1,0 +1,21 @@
+--- a/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py
++++ b/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py
+@@ -1155,6 +1155,9 @@
+             # ever fills or reads.
+             self.transformer.enable_vsa_gates()
+         if self._fasth3 is not None:
++            shifts = getattr(self._fasth3, "serving_flow_shifts", None)
++            if shifts is not None:
++                self.default_video_shift, self.default_audio_shift = shifts
+             self._fasth3.check_serving_contract(
+                 partition=self.partition,
+                 od_config=od_config,
+@@ -1465,7 +1465,7 @@
+         derived from the step count, together with the count the rest of the
+         request speaks in.
+         """
+-        if self._fasth3 is not None:
++        if self._fasth3 is not None and self._fasth3.base_schedule is not None:
+             # A fused student carries its own positions; the checkpoint
+             # underneath it is the many-step teacher, whose schedule does not
+             # apply. Its five points bound four transformer forwards, and

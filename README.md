@@ -8,8 +8,7 @@ INT8 transformer quantization and native tensor parallel attention heads.
 
 **Integration validation is in progress.** The source operators have compiled
 successfully; this branch is not yet a qualified release of every
-method × precision × workload × parallel configuration. Historical speed
-measurements below are explicitly separate from validation of this repository.
+method × precision × workload × parallel configuration. The single-card end-to-end matrix is being remeasured against four-step Full H3.
 
 ## Workloads
 
@@ -49,11 +48,11 @@ require these custom CANN extensions. Keep the editable checkout available.
 
 | Method | Required model assets | Computation |
 | --- | --- | --- |
-| `full` | Native MiniMax H3 model; optionally a matching Turbo LoRA | Dense attention |
+| `full` | H3 base; LightX2V 4-step by default, or a community LoRA | Dense attention |
 | `vsa` | H3 base + Sol-H3 VSA student LoRA with trained compression gates | Logical KV64, selected KV blocks paired into KV128 on chip |
-| `veda` | H3 base + matching Turbo LoRA + Veda predictor | Dynamic per-head Veda block routes, nominal 90% sparsity |
+| `veda` | H3 base + LightX2V 4-step + official trained Veda predictor | Dynamic per-head Veda block routes, nominal 90% sparsity |
 | `vdn` | H3 base + official VDN stage-DMD checkpoint directory | Local softmax plus 128-dimensional learned DeltaNet branch |
-| `spark` | H3 base + matching Turbo LoRA | Spark-H3 hierarchical partition and joint exact/proxy softmax, nominal 90% exact-branch sparsity |
+| `spark` | H3 base + LightX2V 4-step | Spark-H3 hierarchical partition and joint exact/proxy softmax, nominal 90% exact-branch sparsity |
 
 Download models under their original licenses. Weights are not redistributed.
 Different distilled students have different schedules and learned rules;
@@ -61,19 +60,29 @@ swapping attention on arbitrary weights does not guarantee matching quality.
 VSA requires nonzero trained gates. VDN requires its learned branch weights.
 Download and preparation commands are in [model assets](docs/weights.md).
 
-For the previously exported **already-scaled, 363-target Diffusers Turbo8**
-adapter (including AdaLN), create an explicit manifest first:
+Full, Veda and Spark enable the pinned **LightX2V four-step LoRA** by default.
+Use `--no-few-step-lora` to run the original many-step model. A prepared
+community `--lora /models/style` is fused together with LightX2V before loading
+finishes; disable the default student when explicitly selecting another
+community student. Veda always needs its official trained predictor.
+VSA accepts only its complete official FastH3 VSA student, including gates and
+student weight updates; VDN accepts only its complete official stage-DMD
+checkpoint. Neither accepts an additional community LoRA or student-disable flag.
 
 ```bash
-h3-ascend prepare-lora --source /models/turbo8-diffusers.safetensors \
-  --output /models/H3-Turbo-LoRA --steps 8 --video-shift 12 --audio-shift 3
+# Optional: provide the exact pinned LightX2V source locally instead of downloading.
+h3-ascend serve --method full --model /models/MiniMax-H3 --devices 1 \
+  --few-step-source /models/minimax_h3_fl2v_turbo_4step_v1.0_768p_bf16.safetensors
+# Optional original 50-step model; the reporting baseline is Full four-step.
+h3-ascend serve --method full --model /models/MiniMax-H3 --devices 1 --no-few-step-lora
+# General already-scaled Diffusers community LoRA, with no forced step schedule.
+h3-ascend prepare-lora --source /models/style.safetensors --output /models/style
 ```
 
-This records the artifact hash and schedule and links its weight file. It
-does not apply alpha scaling a second time. Marked adapters fuse during normal
-checkpoint loading, before head sharding and INT8 quantization, with ordinary
-layerwise offload. Keep the linked weight file available. Raw LightX2V
-artifacts use the native loader and must not be marked as already-scaled.
+The official PEFT source is normalized once using its declared alpha/rank;
+prepared files are hash-checked. All selected adapters merge before TP slicing
+and INT8 quantization. There are no request-time LoRA matrix multiplications.
+See [model preparation](docs/weights.md) for source formats and fixed schedules.
 
 ## Start a server
 
@@ -91,12 +100,12 @@ Other backends use the same server API:
 h3-ascend serve --method vsa --model /models/MiniMax-H3 \
   --lora /models/Sol-H3-VSA-LoRA --precision bf16 --devices 1
 h3-ascend serve --method veda --model /models/MiniMax-H3 \
-  --lora /models/H3-Turbo-LoRA --predictor /models/veda/predictor.safetensors \
+  --predictor /models/veda/predictor.safetensors \
   --precision bf16 --devices 1
 h3-ascend serve --method vdn --model /models/MiniMax-H3 \
   --lora /models/VDN/stage-dmd-step-250 --precision bf16 --devices 1
 h3-ascend serve --method spark --model /models/MiniMax-H3 \
-  --lora /models/H3-Turbo-LoRA --precision bf16 --devices 1
+  --precision bf16 --devices 1
 ```
 
 Run one server at a time on the selected devices. Add `--dry-run` to inspect
@@ -121,17 +130,19 @@ For **four-card inference**, use native tensor parallel head sharding:
 ```bash
 export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
 h3-ascend serve --method spark --model /models/MiniMax-H3 \
-  --lora /models/H3-Turbo-LoRA --precision int8 --devices 4 --parallel tp
+  --precision int8 --devices 4 --parallel tp
 ```
 
 `--devices` supports 1, 2, 4, 7 and 8, which divide 56 heads. Veda retains
 global predictor head IDs after sharding. Seven-card DiT TP uses one text
 encoder rank because its 64 query / 8 KV heads cannot be divided by seven.
-VSA, VDN and explicitly marked legacy
-adapters use ordinary layerwise offload for load-time weight fusion. Other
-paths use distributed layerwise offload with 16 resident DiT layers. The text
-encoder is also selected for layerwise offload. Optional `--parallel ulysses`
-is exposed for non-VDN paths; native TP is the default requested strategy.
+All methods use **Offload: one active block plus one asynchronously prefetched
+block**, for both DiT and text encoder, with pinned CPU weight masters. VAEs
+remain resident. The benchmark policy is
+`omni-layer-prefetch1-vae-resident-v1`; NVIDIA reference measurements must use
+the same pinned Omni implementation and policy. This is an explicit memory
+policy, not a different resident-layer count for each algorithm. Optional
+`--parallel ulysses` is exposed for non-VDN paths; TP remains the default.
 
 ## Generate the four cases
 
@@ -141,60 +152,56 @@ Create a UTF-8 prompt file, start a server, then use its matching step count:
 printf '%s\n' 'A cyclist rides through a green park, cinematic tracking shot.' > prompt.txt
 for CASE in 672-124 672-345 1344-124 1344-345; do
   h3-ascend generate --case "$CASE" --prompt-file prompt.txt \
-    --steps 8 --seed 42 --output "outputs/${CASE}.mp4"
+    --method full --seed 42 --output "outputs/${CASE}.mp4"
 done
 ```
 
-Use `--steps 4` for the matching four-step Sol-H3 student. VDN stage-DMD
-requires eight steps. Use the base model's native schedule for non-distilled
-Full inference; `--guidance-scale` is optional and otherwise leaves the
-model's native guidance policy in control. No extra refinement stage is added by this package.
-The client writes the video plus a JSON request/timing receipt.
+Pass the server's `--method` to the client: defaults are four steps for
+Full/Veda/Spark/VSA, eight for VDN. For the optional original many-step model, use
+`generate --method full --no-few-step-lora` (50 steps), matching the server.
+An explicit `--steps` remains available for a separately prepared community
+student. `--guidance-scale` is optional; omission preserves native policy.
+No Refine stage is added. The client saves the MP4 and a JSON timing receipt.
 
-## Performance evidence
+## End-to-end performance
 
-Speedup means **Full time / candidate time**, with both measured on the same
-device. Values below are historical single-card measurements of representative
-layers 0/24/49, BF16 activations, nominal 90% sparse exact branches. They are
-not end-to-end video speedups or measurements of the new unified integration.
+The single-card matrix is in progress. Only the measured rows below are
+qualified; missing entries remain pending. Every attention speedup uses **Full + LightX2V, four steps** on
+the same hardware and at the same precision, resolution and frame count.
+Quantization gain is reported separately as the same method's BF16 / INT8
+end-to-end time. The earlier 50-step reference run was cancelled at the user's
+request and is not used in the new comparison.
 
-VSA retains its trained compressed branch; Spark retains its official
-anchor-conditioned proxies and log-mass correction for unselected blocks.
-The nominal sparsity refers to the exact token branch, not all computation.
+LoRA fusion, model loading and JIT warmup finish before timing. The timer
+includes fresh prompt encoding, all four denoising updates, video/audio
+decoding, MP4 encoding and delivery. Full/Veda/Spark use the pinned LightX2V
+four-step student; VSA uses its complete official FastH3 four-step student.
+VDN requires its official eight-step configuration and is documented separately,
+not mixed into the four-step figure. These students are not claimed to produce
+identical quality, and the table makes no 50-to-four-step distillation claim.
 
-Attention dispatch includes routing, permutation, sparse computation and output
-restoration, with QKV already available; it excludes QKV/output projections:
+Memory-constrained cases are measured with **Offload**, not listed as OOM.
+For each cross-device pair, PRO 6000 and Ascend 910B3 must use the same explicit
+resident/prefetch policy, including encoder and decoder residency. An Offload
+marker and policy identifier accompany every affected row. BF16 and INT8
+measurements identify their actual quantized modules and fallback layers.
+The 1344×768, 345-frame figure compares both devices and both precisions.
+Attention/FFN breakdowns come from a separate profiling run; they never replace
+measured end-to-end time. Historical operator timings remain in raw benchmark
+files for provenance and are not headline video speedups.
 
-| Workload | Ascend VSA | Ascend Veda | Ascend Spark | PRO6000 VSA | PRO6000 Veda | PRO6000 Spark |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 672×384, 124 | 1.14× | 1.34× | — | 0.97× | 0.84× | 0.88× |
-| 672×384, 345 | 1.59× | 2.52× | — | 1.55× | 2.47× | 1.89× |
-| 1344×768, 124 | 2.22× | 4.10× | 2.49× | 2.23× | 4.45× | 2.65× |
-| 1344×768, 345 | 3.40× | 6.64× | 4.12× | 3.51× | 6.73× | 4.36× |
+First measured single-card rows, 672×384 / 124 frames, INT8, four steps,
+matched Offload, seed 42, **one formal request each**:
 
-VDN has learned projections and a second branch. Its separate measurements
-include the **complete attention module**, including QKV/output projections:
-
-| Workload | Ascend VDN128 / Full | PRO6000 official VDN128 / Full |
+| Method | Complete video + audio | Speedup vs INT8 Full4 |
 | --- | ---: | ---: |
-| 672×384, 124 | 0.49× | 0.61× |
-| 672×384, 345 | 0.85× | 1.04× |
-| 1344×768, 124 | 1.01× | 1.14× |
-| 1344×768, 345 | 2.35× | 2.63× |
+| Full + LightX2V | 20.03 s | 1.00× |
+| VSA + official FastH3 | 22.18 s | 0.90× |
 
-Do not rank VDN against the dispatch-only table. A speedup below 1 means
-slower than Full. Ascend and NVIDIA use their own optimized Full baselines;
-equal ratios do not imply equal absolute latency. See
-[machine-readable historical evidence](benchmarks/historical-results.json).
-Missing entries remain unmeasured, including unified INT8/multi-card speedups.
+These short-video rows do not predict high-resolution long-video performance.
+[Raw measurements and separate profiles](benchmarks/single-card-four-step-partial.json).
 
-The PRO6000 VSA column was measured on 2026-10-30 with official Triton
-tile64, layer 24, ten interleaved repetitions and a precomputed nonzero
-compression gate. Its raw records are in
-[the VSA reference](benchmarks/pro6000-vsa64-20261030.json). The older Ascend
-VSA/Veda experiments used synthetic QKV; NVIDIA Veda/Spark and Ascend Spark
-used real-weight projected synthetic activations. These cross-device ratios
-are reference points rather than identical-QKV comparisons.
+[Measurement and figure protocol](docs/benchmark-protocol.md).
 
 ## Quality and validation
 

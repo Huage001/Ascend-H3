@@ -20,6 +20,18 @@ def register():
     if method not in ("full", "vsa", "veda", "vdn", "spark"):
         raise ValueError(f"unknown H3_ASCEND_METHOD={method}")
     if importlib.util.find_spec("torch_npu") is None:
+        if os.getenv("H3_ASCEND_CUDA_REFERENCE") != "1":
+            return
+        from h3_ascend.audit import install as install_audit
+        from h3_ascend.integrations.cuda_reference import register as register_cuda
+        from h3_ascend.integrations.lora import install as install_lora
+        from h3_ascend.profiling import install as install_profiling
+
+        register_cuda(method)
+        install_lora()
+        install_audit()
+        install_profiling()
+        _REGISTERED = True
         return
     import torch
     import torch_npu  # noqa: F401 -- registers torch.npu before it is used
@@ -58,6 +70,9 @@ def register():
     from h3_ascend.audit import install as install_audit
 
     install_audit()
+    from h3_ascend.profiling import install as install_profiling
+
+    install_profiling()
     _REGISTERED = True
 
 

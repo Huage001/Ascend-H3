@@ -9,6 +9,7 @@ PATCHES = (
     "vllm-omni-cached-request-kwonly.patch",
     "vllm-omni-vsa-layerwise-fusion.patch",
     "vllm-omni-h3-encoder-host-load.patch",
+    "vllm-omni-h3-community-lora-schedule.patch",
 )
 
 

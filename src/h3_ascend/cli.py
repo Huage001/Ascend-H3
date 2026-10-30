@@ -21,15 +21,13 @@ def command(a):
         "vdn": "VDNH3_ATTN",
         "spark": "TORCH_SDPA",
     }[a.method]
-    # Load-time student fusion must run through the ordinary weight loader.
-    # Layerwise offload also keeps the BF16 DiT within a single 64-GB card.
+    # Identical policy for baseline and all students: current block plus one
+    # asynchronously prefetched block, independent of weight dtype/method.
+    # No method-dependent resident-layer count in comparative measurements.
     layer_options = {
         "dit": {"weight_transfer": "rank-local"},
         "text_encoder": {"weight_transfer": "rank-local"},
     }
-    legacy = bool(a.lora and (Path(a.lora) / "h3_ascend_adapter.json").is_file())
-    if a.method not in ("vsa", "vdn") and not legacy:
-        layer_options["dit"]["resident_layers"] = 16
     offload = [
         "--diffusion-offload-config",
         json.dumps(
@@ -75,13 +73,23 @@ def command(a):
         backend,
         *offload,
     ]
+    if os.getenv("H3_ASCEND_CUDA_REFERENCE") == "1" and a.method == "vsa":
+        index = cmd.index("--diffusion-attention-backend")
+        del cmd[index:index + 2]
+        cmd += ["--diffusion-attention-config", json.dumps({"default": {
+            "backend": "FASTVIDEO_VSA", "fastvideo_vsa_provider": "triton",
+            "fastvideo_vsa_precision": "bf16",
+        }})]
     if a.precision == "int8":
         cmd += [
             "--diffusion-quantization-config",
             json.dumps({"transformer": {"method": "int8"}}),
         ]
-    if a.lora:
-        cmd += ["--lora-path", a.lora]
+    from h3_ascend.profiles import launch_adapter
+
+    lora = launch_adapter(a.method, getattr(a, "few_step_lora", True), a.lora)
+    if lora:
+        cmd += ["--lora-path", lora]
     if a.method == "vsa" and not a.lora:
         raise ValueError(
             "VSA needs --lora with trained compression gates (or prepare a fused VSA checkpoint)"
@@ -106,7 +114,9 @@ def main():
     s = sub.add_parser("serve")
     s.add_argument("--method", choices=METHODS, required=True)
     s.add_argument("--model", required=True)
-    s.add_argument("--lora")
+    s.add_argument("--lora", help="Official VSA/VDN student, or a prepared community adapter")
+    s.add_argument("--few-step-lora", action=argparse.BooleanOptionalAction, default=True)
+    s.add_argument("--few-step-source", type=Path, help="Local pinned LightX2V file; otherwise download")
     s.add_argument("--precision", choices=["bf16", "int8"], default="bf16")
     s.add_argument("--devices", type=int, default=1)
     s.add_argument("--parallel", choices=["tp", "ulysses"], default="tp")
@@ -119,7 +129,9 @@ def main():
     r.add_argument("--case", choices=["672-124", "672-345", "1344-124", "1344-345"], required=True)
     r.add_argument("--prompt-file", type=Path, required=True)
     r.add_argument("--output", type=Path, required=True)
-    r.add_argument("--steps", type=int, default=8)
+    r.add_argument("--steps", type=int, help="Override the profile step count")
+    r.add_argument("--method", choices=METHODS, default="full")
+    r.add_argument("--few-step-lora", action=argparse.BooleanOptionalAction, default=True)
     r.add_argument("--seed", type=int, default=42)
     r.add_argument("--guidance-scale", type=float, help="Omit to retain the model's native policy")
     legacy = sub.add_parser(
@@ -128,9 +140,9 @@ def main():
     legacy.add_argument("--source", type=Path, required=True)
     legacy.add_argument("--output", type=Path, required=True)
     legacy.add_argument(
-        "--source-format", choices=["diffusers-scaled", "raw-h3"], default="diffusers-scaled"
+        "--source-format", choices=["diffusers-scaled", "raw-h3", "peft"], default="diffusers-scaled"
     )
-    legacy.add_argument("--steps", type=int, default=8)
+    legacy.add_argument("--steps", type=int, help="Pin a distilled schedule; omit for a general LoRA")
     legacy.add_argument("--video-shift", type=float, default=12.0)
     legacy.add_argument("--audio-shift", type=float, default=3.0)
     a = p.parse_args()
@@ -154,6 +166,16 @@ def main():
                 )
             )
             return
+        from h3_ascend.assets import validate_assets
+        from h3_ascend.profiles import launch_adapter
+
+        # Preparation/merge happens before server readiness and every timed request.
+        prepared = launch_adapter(
+            a.method, a.few_step_lora, a.lora, prepare_assets=True, source=a.few_step_source
+        )
+        if prepared:
+            cmd[cmd.index("--lora-path") + 1] = prepared
+        validate_assets(a.method, a.lora, a.predictor)
         os.environ["H3_ASCEND_METHOD"] = a.method
         if a.predictor:
             os.environ["H3_ASCEND_VEDA_PREDICTOR"] = a.predictor
@@ -163,7 +185,10 @@ def main():
         os.execv(sys.executable, cmd)
     if a.action == "generate":
         from h3_ascend.client import generate
+        from h3_ascend.profiles import step_count
 
+        if a.steps is None:
+            a.steps = step_count(a.method, a.few_step_lora)
         generate(a)
 
 

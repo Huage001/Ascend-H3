@@ -9,7 +9,7 @@ from urllib.request import Request, urlopen
 from h3_ascend.paths import source_root
 
 
-def request_fields(case, prompt, steps=8, seed=42, guidance_scale=None):
+def request_fields(case, prompt, steps=4, seed=42, guidance_scale=None):
     workloads = json.loads((source_root() / "configs/workloads.json").read_text())
     shape = workloads[case]
     if not prompt.strip():

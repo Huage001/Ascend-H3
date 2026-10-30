@@ -77,7 +77,7 @@ The installation does not change the host driver or shared CANN directories.
 Start from a dedicated Python 3.12 Ascend environment with the Torch stack
 above. The script checks that stack, constrains dependency resolution to the
 existing accelerator packages, checks out exact framework revisions, applies
-the three reviewed patches and installs the project and fixed FLA wheel:
+the four reviewed patches and installs the project and fixed FLA wheel:
 
 ```bash
 source /path/to/Ascend/cann/set_env.sh

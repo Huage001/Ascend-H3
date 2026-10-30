@@ -46,29 +46,37 @@ Full 和 VDN 不需要这里的自定义 CANN 扩展。当前使用源码可编�
 
 | 方法 | 所需权重 | 注意力机制 |
 | --- | --- | --- |
-| `full` | 原生 H3，可选匹配的 Turbo LoRA | 全注意力 |
+| `full` | H3，默认 LightX2V 4-step，也可使用社区 LoRA | 全注意力 |
 | `vsa` | H3 + 带训练后 compression gate 的 Sol-H3 VSA LoRA | 逻辑 tile64，选中的两个 KV64 在片上配对成 KV128 计算 |
-| `veda` | H3 + 对应 Turbo LoRA + Veda predictor | 每层、每个 head 动态选块，默认名义稀疏度 90% |
+| `veda` | H3 + LightX2V 4-step + 官方训练的 Veda predictor | 每层、每个 head 动态选块，默认名义稀疏度 90% |
 | `vdn` | H3 + 官方 VDN stage-DMD 权重目录 | local softmax + 保留 128 维状态的 DeltaNet 分支 |
-| `spark` | H3 + 对应 Turbo LoRA | 内容相关层次分块，原 token 与 proxy 联合 softmax，精确分支默认名义稀疏度 90% |
+| `spark` | H3 + LightX2V 4-step | 内容相关层次分块，原 token 与 proxy 联合 softmax，精确分支默认名义稀疏度 90% |
 
 模型权重需按原项目许可自行下载，不包含在本仓库中。不同蒸馏模型
 具有不同的权重和采样规则；不能认为任意权重直接换算子就能保证画质。
 VSA 必须加载训练后的非零 gate；VDN 必须加载其学习得到的分支权重。
 官方权重下载及准备命令见[模型准备](docs/weights.md)。
 
-此前导出的**已应用缩放、含 AdaLN 的 363-target Diffusers Turbo8**
-适配器，需要先创建明确的格式和采样清单：
+社区 LoRA 可先准备为加载时融合的格式（不指定 `--steps` 则不固定采样步数）：
 
 ```bash
-h3-ascend prepare-lora --source /models/turbo8-diffusers.safetensors \
-  --output /models/H3-Turbo-LoRA --steps 8 --video-shift 12 --audio-shift 3
+h3-ascend prepare-lora --source /models/style-diffusers-scaled.safetensors \
+  --output /models/style
 ```
 
-该命令记录权重哈希与采样规则，并链接原权重，不会重复应用 alpha 缩放。
-带清单的适配器在普通权重加载期间融合，再进行 head 切分和 INT8 量化，
-使用普通 layerwise offload。需要保留链接指向的权重文件。
-原始 LightX2V 文件走原生 loader，不能标记成“已应用缩放”的格式。
+已经折入 alpha/rank 的文件用默认 `diffusers-scaled`，原生 H3 命名用 `raw-h3`，
+带 alpha 元数据的 PEFT 文件用 `peft`；禁止重复缩放。官方 LightX2V 默认文件的
+准备由启动器自动完成，规范化 `.lora_A.default.weight` 等键并核验固定 SHA256。
+
+Full、Veda、Spark 默认启用固定版本 **LightX2V 4-step LoRA**。
+`--no-few-step-lora` 关闭默认少步学生；配合 Full 可运行原版多步模型（本轮报告基线为四步）。
+可用 `--few-step-source /models/minimax_h3_fl2v_turbo_4step_v1.0_768p_bf16.safetensors`
+提供本地官方文件，否则自动按固定版本下载并核验 SHA256。
+社区风格 LoRA 先用 `prepare-lora` 准备，再通过 `--lora` 与默认学生在加载时合并。
+指定另一个社区少步学生时关闭默认 LightX2V，避免叠加两个学生模型。
+Veda 始终必须带官方训练好的预测网络。VSA 只接受完整 FastH3 VSA 官方 LoRA，
+VDN 只接受官方 stage-DMD 配置，二者不叠加其他 LoRA，也不支持关闭其学生模型。
+全部 LoRA 在计时前、TP 切分及 INT8 量化前合并，推理时不额外执行 LoRA 矩阵乘。
 
 ## 启动服务
 
@@ -86,12 +94,12 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 h3-ascend serve --method vsa --model /models/MiniMax-H3 \
   --lora /models/Sol-H3-VSA-LoRA --precision bf16 --devices 1
 h3-ascend serve --method veda --model /models/MiniMax-H3 \
-  --lora /models/H3-Turbo-LoRA --predictor /models/veda/predictor.safetensors \
+  --predictor /models/veda/predictor.safetensors \
   --precision bf16 --devices 1
 h3-ascend serve --method vdn --model /models/MiniMax-H3 \
   --lora /models/VDN/stage-dmd-step-250 --precision bf16 --devices 1
 h3-ascend serve --method spark --model /models/MiniMax-H3 \
-  --lora /models/H3-Turbo-LoRA --precision bf16 --devices 1
+  --precision bf16 --devices 1
 ```
 
 同一组卡一次只启动一个服务。加入 `--dry-run` 可查看生成的原生
@@ -115,17 +123,18 @@ VDN 状态计算保留各自规定的精度，不能将其描述成“注意力�
 ```bash
 export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
 h3-ascend serve --method spark --model /models/MiniMax-H3 \
-  --lora /models/H3-Turbo-LoRA --precision int8 --devices 4 --parallel tp
+  --precision int8 --devices 4 --parallel tp
 ```
 
 `--devices` 支持 1、2、4、7、8，均可整除 56 个 head。
 Veda 在分片后仍使用原 checkpoint 的全局 head 编号。
 七卡 DiT TP 时，文本编码器使用一张卡，因为其 64 个 query head、
 8 个 KV head 不能按七份切分。
-VSA、VDN 和带明确清单的旧版适配器使用普通 layerwise offload，保留加载时
-权重融合。其余方法使用 distributed layerwise offload，常驻 16 层 DiT。
-text encoder 同样参与 layerwise offload。
-非 VDN 方法另提供 `--parallel ulysses` 选项；默认策略是用户要求的 TP。
+所有方法统一使用 **Offload：一个计算块加一个异步预取块**。DiT 和文本编码器的
+权重保存在锁页 CPU 内存中，VAE 常驻设备。策略编号为
+`omni-layer-prefetch1-vae-resident-v1`，N 卡对照必须使用同一固定版本的 Omni
+实现和相同策略，避免为不同方法设置不同的常驻层数。
+非 VDN 方法另提供 `--parallel ulysses`；默认使用 TP。
 
 ## 生成四组视频
 
@@ -135,57 +144,46 @@ text encoder 同样参与 layerwise offload。
 printf '%s\n' 'A cyclist rides through a green park, cinematic tracking shot.' > prompt.txt
 for CASE in 672-124 672-345 1344-124 1344-345; do
   h3-ascend generate --case "$CASE" --prompt-file prompt.txt \
-    --steps 8 --seed 42 --output "outputs/${CASE}.mp4"
+    --method full --seed 42 --output "outputs/${CASE}.mp4"
 done
 ```
 
-匹配的四步 Sol-H3 学生模型使用 `--steps 4`；VDN stage-DMD 使用八步。
-非蒸馏 Full 使用对应原生模型的采样规则。`--guidance-scale` 为可选参数，
-省略时保留模型原生 CFG 策略。本项目不额外增加 Refine 阶段。
-客户端同时保存 MP4 和包含请求、阶段耗时的 JSON 记录。
+客户端传入与服务端相同的 `--method`：Full/Veda/Spark/VSA 默认四步，VDN 八步。
+如需运行原版多步模型，服务端与客户端均加 `--no-few-step-lora`，客户端默认 50 步。
+独立社区学生模型可显式指定 `--steps`；`--guidance-scale` 省略时保留原生策略。
+本项目不额外添加 Refine。客户端保存完整 MP4 和请求/时延 JSON。
 
-## 性能数据
+## 端到端性能
 
-加速比统一为 **同卡 Full 耗时 / 对应方法耗时**。以下为此前独立实验的
-单卡历史数据，使用 BF16 激活、代表层 0/24/49，精确稀疏分支的名义
-稀疏度为 90%。这些数字不是整段视频的端到端加速比，也不是新仓库
-整合后的验收成绩。
+新的单卡矩阵正在实测，仅下方“已测”数据已完成，其余仍待测。最新口径为相同硬件、精度、分辨率、
+帧数下，**Full + LightX2V 四步**端到端耗时 / 对应四步注意力方案端到端耗时。
+量化收益另报同一方案的 BF16 / INT8 耗时比。此前 50 步基线已按要求停止，
+不用于本轮图表。
 
-VSA 保留训练后的压缩分支；Spark 保留官方的 anchor 条件化 proxy 和
-未选中块的 log-mass 修正。名义稀疏度指精确 token 分支，不代表全部计算量。
+模型加载、LoRA 合并、JIT 预热均在计时前完成；计时包含每次文本编码、四次去噪、
+音视频解码、MP4 编码及返回。Full、Veda、Spark 使用固定版本 LightX2V 4-step；
+VSA 使用完整官方 FastH3 4-step 学生。固定八步的 VDN 单独说明，不混入四步候选图。
+不同学生不宣称画质等价，也不将 50→4 步蒸馏的收益计入本轮加速比。
 
-下面统计 QKV 已就绪后的注意力 dispatch，包含路由、重排、注意力和
-输出还原，不含 QKV / output 投影：
+显存不足的设定使用 **Offload** 实测，不以 OOM 作为最终结果。PRO 6000 与昇腾
+910B3 的每组对照必须使用一致的驻留、预取及编码器/解码器加载策略，并在表格和
+图中注明 Offload 和策略编号。BF16、INT8 均记录实际量化模块与 BF16 回退层。
+1344×768、345 帧的图将展示两种硬件量化前后的各注意力结果。
+Attention/FFN 分项来自单独的性能分析运行，不能代替端到端实测。历史算子数据
+保留在原始记录中，不作为这里的视频生成加速比。
 
-| 视频规格 | 昇腾 VSA | 昇腾 Veda | 昇腾 Spark | PRO6000 VSA | PRO6000 Veda | PRO6000 Spark |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 672×384，124 帧 | 1.14× | 1.34× | — | 0.97× | 0.84× | 0.88× |
-| 672×384，345 帧 | 1.59× | 2.52× | — | 1.55× | 2.47× | 1.89× |
-| 1344×768，124 帧 | 2.22× | 4.10× | 2.49× | 2.23× | 4.45× | 2.65× |
-| 1344×768，345 帧 | 3.40× | 6.64× | 4.12× | 3.51× | 6.73× | 4.36× |
+首组已测单卡数据：672×384 / 124 帧，INT8，四步，相同 Offload，seed 42，
+**每行一次正式完整请求**：
 
-VDN 包含学习得到的投影和额外分支，单独使用**含 QKV / output 投影的
-完整 attention module**计时：
-
-| 视频规格 | 昇腾 VDN128 相对 Full | PRO6000 官方 VDN128 相对 Full |
+| 方法 | 完整视频 + 音频耗时 | 相对 INT8 Full4 加速比 |
 | --- | ---: | ---: |
-| 672×384，124 帧 | 0.49× | 0.61× |
-| 672×384，345 帧 | 0.85× | 1.04× |
-| 1344×768，124 帧 | 1.01× | 1.14× |
-| 1344×768，345 帧 | 2.35× | 2.63× |
+| Full + LightX2V | 20.03 秒 | 1.00× |
+| VSA + 官方 FastH3 | 22.18 秒 | 0.90× |
 
-VDN 不能与上一张表直接排名。低于 1 表示比 Full 慢。
-昇腾和 NVIDIA 分别使用各自优化后的 Full 基线，相近的加速比不代表
-绝对时延相同。精确数值和来源摘要见
-[历史记录](benchmarks/historical-results.json)。空缺值以及新仓库的
-INT8、多卡性能仍需实测，不以历史结果代替。
+短视频的结果不能代替高分辨率长视频结果。
+[原始耗时和独立分项测量](benchmarks/single-card-four-step-partial.json)。
 
-PRO6000 VSA 一列为 2026-10-30 新测：官方 Triton tile64、代表层 24、
-十轮交替计时，非零 compression gate 在计时前准备。
-[原始记录](benchmarks/pro6000-vsa64-20261030.json)随仓库保存。
-较早的昇腾 VSA/Veda 使用共享合成 QKV；NVIDIA Veda/Spark 及昇腾 Spark
-使用真实权重投影的合成激活。因此跨设备加速比作为参考，不能表述成
-逐元素相同 QKV 的严格比较。
+详见[端到端计时、Offload 和图表口径](docs/benchmark-protocol.md)。
 
 ## 效果与验证范围
 
