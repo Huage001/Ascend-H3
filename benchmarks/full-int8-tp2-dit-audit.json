@@ -1,0 +1,43 @@
+{
+  "method": "full",
+  "precision": "int8",
+  "tensor_parallel_size": 2,
+  "case": "672-124",
+  "scope": "DiT only; final video decode not yet qualified",
+  "ranks": [
+    {
+      "steps": 8,
+      "all_finite": true,
+      "all_50_blocks_once_per_step": true,
+      "all_qkv_weights_int8": true,
+      "output_shapes": [
+        [
+          9324,
+          96
+        ],
+        [
+          414,
+          32
+        ]
+      ]
+    },
+    {
+      "steps": 8,
+      "all_finite": true,
+      "all_50_blocks_once_per_step": true,
+      "all_qkv_weights_int8": true,
+      "output_shapes": [
+        [
+          9324,
+          96
+        ],
+        [
+          414,
+          32
+        ]
+      ]
+    }
+  ],
+  "vae_decode_passed": false,
+  "decoder_failure": "CANN tbe missing because the harness overwrote PYTHONPATH; path fix under retest"
+}

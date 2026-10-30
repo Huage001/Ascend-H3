@@ -52,6 +52,10 @@ Install all framework changes in an independent environment. Do not upgrade
 another experiment's shared environment in place. Source the selected CANN
 `set_env.sh` before native builds and inference; the test host's older default
 CANN installation is not suitable for the same Torch-NPU kernels.
+When adding this checkout or framework sources to `PYTHONPATH`, prepend
+paths without discarding the values installed by `set_env.sh`. CANN's
+`python/site-packages` contains `tbe`/`te`, which VAE graph initialization
+needs even when precompiled DiT attention has already run successfully.
 
 The historical NVIDIA references used Torch 2.12.0+cu130 on an RTX PRO 6000
 Blackwell Server Edition. Their official CUDA source revisions are listed in

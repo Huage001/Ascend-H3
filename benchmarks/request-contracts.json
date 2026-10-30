@@ -1,0 +1,98 @@
+[
+  {
+    "case": "672-124",
+    "native_shape": [
+      384,
+      672,
+      124,
+      37,
+      207
+    ],
+    "request": {
+      "prompt": "A cyclist rides through a park.",
+      "width": 672,
+      "height": 384,
+      "aspect_ratio": "16:9",
+      "num_frames": 124,
+      "fps": 24,
+      "num_inference_steps": 8,
+      "seed": 42,
+      "enable_frame_interpolation": "false",
+      "return_stage_metrics": "true",
+      "extra_params": "{\"task\": \"t2va\"}"
+    },
+    "passed": true
+  },
+  {
+    "case": "672-345",
+    "native_shape": [
+      384,
+      672,
+      345,
+      102,
+      575
+    ],
+    "request": {
+      "prompt": "A cyclist rides through a park.",
+      "width": 672,
+      "height": 384,
+      "aspect_ratio": "16:9",
+      "num_frames": 345,
+      "fps": 24,
+      "num_inference_steps": 8,
+      "seed": 42,
+      "enable_frame_interpolation": "false",
+      "return_stage_metrics": "true",
+      "extra_params": "{\"task\": \"t2va\"}"
+    },
+    "passed": true
+  },
+  {
+    "case": "1344-124",
+    "native_shape": [
+      768,
+      1344,
+      124,
+      37,
+      207
+    ],
+    "request": {
+      "prompt": "A cyclist rides through a park.",
+      "width": 1344,
+      "height": 768,
+      "aspect_ratio": "16:9",
+      "num_frames": 124,
+      "fps": 24,
+      "num_inference_steps": 8,
+      "seed": 42,
+      "enable_frame_interpolation": "false",
+      "return_stage_metrics": "true",
+      "extra_params": "{\"task\": \"t2va\"}"
+    },
+    "passed": true
+  },
+  {
+    "case": "1344-345",
+    "native_shape": [
+      768,
+      1344,
+      345,
+      102,
+      575
+    ],
+    "request": {
+      "prompt": "A cyclist rides through a park.",
+      "width": 1344,
+      "height": 768,
+      "aspect_ratio": "16:9",
+      "num_frames": 345,
+      "fps": 24,
+      "num_inference_steps": 8,
+      "seed": 42,
+      "enable_frame_interpolation": "false",
+      "return_stage_metrics": "true",
+      "extra_params": "{\"task\": \"t2va\"}"
+    },
+    "passed": true
+  }
+]
