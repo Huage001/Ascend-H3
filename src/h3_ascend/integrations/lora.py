@@ -13,27 +13,43 @@ MANIFEST = "h3_ascend_adapter.json"
 SCHEMA = "scaled-diffusers-h3-lora-v1"
 
 
-def prepare(source, output, steps=8, video_shift=12.0, audio_shift=3.0):
+def prepare(
+    source, output, steps=8, video_shift=12.0, audio_shift=3.0, source_format="diffusers-scaled"
+):
     source = source.resolve(strict=True)
     if steps <= 0 or min(video_shift, audio_shift) <= 0:
         raise ValueError("steps and modality shifts must be positive")
     from safetensors import safe_open
 
-    with safe_open(source, framework="pt", device="cpu") as checkpoint:
-        keys = list(checkpoint.keys())
-        if not keys or any(not key.endswith((".lora_A.weight", ".lora_B.weight")) for key in keys):
-            raise ValueError(
-                "Expected the already-scaled legacy Diffusers export, not a raw Turbo file"
-            )
+    converted = None
+    if source_format == "raw-h3":
+        from diffusers.loaders import MiniMaxH3LoraLoaderMixin
+
+        converted = MiniMaxH3LoraLoaderMixin.lora_state_dict(str(source), local_files_only=True)
+        keys = list(converted)
+    elif source_format == "diffusers-scaled":
+        with safe_open(source, framework="pt", device="cpu") as checkpoint:
+            keys = list(checkpoint.keys())
+    else:
+        raise ValueError(f"Unknown adapter source format: {source_format}")
+    if not keys or any(not key.endswith((".lora_A.weight", ".lora_B.weight")) for key in keys):
+        raise ValueError("Expected a complete, scaled Diffusers H3 adapter after conversion")
     output.mkdir(parents=True, exist_ok=False)
-    (output / "adapter_model.safetensors").symlink_to(source)
-    with source.open("rb") as stream:
+    weights = output / "adapter_model.safetensors"
+    if converted is None:
+        weights.symlink_to(source)
+    else:
+        from safetensors.torch import save_file
+
+        save_file({key: value.contiguous().clone() for key, value in converted.items()}, weights)
+    with weights.open("rb") as stream:
         digest = hashlib.file_digest(stream, "sha256").hexdigest()
     config = {
         "schema": SCHEMA,
         "weight_file": "adapter_model.safetensors",
         "sha256": digest,
         "scale_already_applied": True,
+        "source_format": source_format,
         "steps": steps,
         "video_shift": video_shift,
         "audio_shift": audio_shift,

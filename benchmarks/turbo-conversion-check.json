@@ -1,0 +1,8 @@
+{
+  "tensors": 726,
+  "all_tensors_bitexact": true,
+  "old_sha256": "a3e0879abcd07201fa79793dc5f144fbec7d33fd674e57a07962f00d4fff2c6a",
+  "converted_sha256": "a3e0879abcd07201fa79793dc5f144fbec7d33fd674e57a07962f00d4fff2c6a",
+  "diffusers_version": "0.40.0",
+  "raw_sha256": "5f3a626cd72c93a8b9318d6760c510bc5092d2ab13aaba1f932c5bab07a416d3"
+}

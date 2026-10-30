@@ -55,6 +55,7 @@ Full 和 VDN 不需要这里的自定义 CANN 扩展。当前使用源码可编�
 模型权重需按原项目许可自行下载，不包含在本仓库中。不同蒸馏模型
 具有不同的权重和采样规则；不能认为任意权重直接换算子就能保证画质。
 VSA 必须加载训练后的非零 gate；VDN 必须加载其学习得到的分支权重。
+官方权重下载及准备命令见[模型准备](docs/weights.md)。
 
 此前导出的**已应用缩放、含 AdaLN 的 363-target Diffusers Turbo8**
 适配器，需要先创建明确的格式和采样清单：
@@ -119,6 +120,8 @@ h3-ascend serve --method spark --model /models/MiniMax-H3 \
 
 `--devices` 支持 1、2、4、7、8，均可整除 56 个 head。
 Veda 在分片后仍使用原 checkpoint 的全局 head 编号。
+七卡 DiT TP 时，文本编码器使用一张卡，因为其 64 个 query head、
+8 个 KV head 不能按七份切分。
 VSA、VDN 和带明确清单的旧版适配器使用普通 layerwise offload，保留加载时
 权重融合。其余方法使用 distributed layerwise offload，常驻 16 层 DiT。
 text encoder 同样参与 layerwise offload。

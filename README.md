@@ -59,6 +59,7 @@ Download models under their original licenses. Weights are not redistributed.
 Different distilled students have different schedules and learned rules;
 swapping attention on arbitrary weights does not guarantee matching quality.
 VSA requires nonzero trained gates. VDN requires its learned branch weights.
+Download and preparation commands are in [model assets](docs/weights.md).
 
 For the previously exported **already-scaled, 363-target Diffusers Turbo8**
 adapter (including AdaLN), create an explicit manifest first:
@@ -124,7 +125,9 @@ h3-ascend serve --method spark --model /models/MiniMax-H3 \
 ```
 
 `--devices` supports 1, 2, 4, 7 and 8, which divide 56 heads. Veda retains
-global predictor head IDs after sharding. VSA, VDN and explicitly marked legacy
+global predictor head IDs after sharding. Seven-card DiT TP uses one text
+encoder rank because its 64 query / 8 KV heads cannot be divided by seven.
+VSA, VDN and explicitly marked legacy
 adapters use ordinary layerwise offload for load-time weight fusion. Other
 paths use distributed layerwise offload with 16 resident DiT layers. The text
 encoder is also selected for layerwise offload. Optional `--parallel ulysses`

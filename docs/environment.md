@@ -17,7 +17,7 @@ Torch-NPU 2.10.0.post4 and Triton-Ascend 3.2.2; resolving and validating that
 version boundary is still in progress. Do not interpret the source revision
 list as a tested installation recipe until qualification completes.
 
-Apply the two explicit Omni compatibility patches after checking out the
+Apply the explicit Omni compatibility patches after checking out the
 revision above:
 
 ```bash
@@ -28,6 +28,10 @@ The first preserves dataclass construction with the pinned vLLM scheduler.
 The second permits ordinary layerwise FastH3 fusion while still rejecting
 distributed host-weight loading that bypasses the fusion stream. The script
 checks the source revision and safely recognizes already-applied patches.
+The third places a selected, unquantized text encoder on CPU during online
+DiT quantized loading, preventing its initial BF16 allocation from consuming
+the accelerator before offload hooks exist. It preserves the encoder's
+runtime target device and leaves quantized encoder loading unchanged.
 
 The upstream Ascend Dockerfile additionally pins
 `flash-linear-attention-npu-a2==26.9.1+dev5cc6990` from its official release,

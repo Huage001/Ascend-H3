@@ -20,12 +20,15 @@ def request_fields(case, prompt, steps=8, seed=42):
         "prompt": prompt,
         "width": shape["width"],
         "height": shape["height"],
+        "aspect_ratio": "16:9",
         "num_frames": shape["frames"],
         "fps": shape["fps"],
         "num_inference_steps": steps,
+        "guidance_scale": 1.0,
         "seed": seed,
         "enable_frame_interpolation": "false",
         "return_stage_metrics": "true",
+        "extra_params": json.dumps({"task": "t2va"}),
     }
 
 

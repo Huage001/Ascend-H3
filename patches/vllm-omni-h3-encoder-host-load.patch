@@ -1,0 +1,35 @@
+diff --git a/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py b/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py
+index 17992ad..b200587 100644
+--- a/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py
++++ b/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py
+@@ -1212,13 +1212,23 @@ class MiniMaxH3Pipeline(
+                 )
+             self.text_encoder_tp_size = text_encoder_tp_size
+             self.text_encoder_group = self._build_text_encoder_group(text_encoder_tp_size)
+-            self.text_encoder = MiniMaxH3Qwen3VLEncoder(
+-                os.path.join(encoder_model_path, "text_encoder"),
+-                device=self.device,
+-                load_model=rank < text_encoder_tp_size,
+-                encoder_group=self.text_encoder_group,
+-                quant_config=_resolve_minimax_h3_text_encoder_quant_config(od_config.quantization_config),
+-            )
++            encoder_quant_config = _resolve_minimax_h3_text_encoder_quant_config(od_config.quantization_config)
++            # Online DiT quantization constructs the pipeline on NPU. A selected,
++            # unquantized text encoder must start on CPU rather than occupying
++            # ~50 GiB before its layerwise offloader has even been installed.
++            encoder_load_device = (
++                torch.device("cpu")
++                if encoder_quant_config is None and should_offload_component(od_config, TEXT_ENCODER_COMPONENT)
++                else torch.get_default_device()
++            )
++            with torch.device(encoder_load_device):
++                self.text_encoder = MiniMaxH3Qwen3VLEncoder(
++                    os.path.join(encoder_model_path, "text_encoder"),
++                    device=self.device,
++                    load_model=rank < text_encoder_tp_size,
++                    encoder_group=self.text_encoder_group,
++                    quant_config=encoder_quant_config,
++                )
+             if rank < text_encoder_tp_size:
+                 self.weights_sources.append(
+                     DiffusersPipelineLoader.ComponentSource(

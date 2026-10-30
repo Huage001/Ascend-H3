@@ -1,4 +1,4 @@
-"""Apply the two reviewed Omni compatibility fixes to the pinned checkout."""
+"""Apply the reviewed Omni compatibility fixes to the pinned checkout."""
 
 import argparse
 import subprocess
@@ -8,6 +8,7 @@ REVISION = "45603043133fda3fe486d8e558c226d3391940f0"
 PATCHES = (
     "vllm-omni-cached-request-kwonly.patch",
     "vllm-omni-vsa-layerwise-fusion.patch",
+    "vllm-omni-h3-encoder-host-load.patch",
 )
 
 

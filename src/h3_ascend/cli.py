@@ -38,6 +38,7 @@ def command(a):
     ]
     tp = a.devices if a.parallel == "tp" else 1
     usp = a.devices if a.parallel == "ulysses" else 1
+    encoder_tp = a.devices if a.devices in (1, 2, 4, 8) else 1
     cmd = [
         sys.executable,
         "-m",
@@ -63,7 +64,7 @@ def command(a):
         "--ring",
         "1",
         "--text-encoder-tp-size",
-        str(a.devices),
+        str(encoder_tp),
         "--vae-parallel-mode",
         "tile",
         "--vae-use-tiling",
@@ -121,10 +122,13 @@ def main():
     r.add_argument("--steps", type=int, default=8)
     r.add_argument("--seed", type=int, default=42)
     legacy = sub.add_parser(
-        "prepare-lora", help="Mark an already-scaled legacy H3 Diffusers adapter"
+        "prepare-lora", help="Prepare an H3 adapter for load-time fusion"
     )
     legacy.add_argument("--source", type=Path, required=True)
     legacy.add_argument("--output", type=Path, required=True)
+    legacy.add_argument(
+        "--source-format", choices=["diffusers-scaled", "raw-h3"], default="diffusers-scaled"
+    )
     legacy.add_argument("--steps", type=int, default=8)
     legacy.add_argument("--video-shift", type=float, default=12.0)
     legacy.add_argument("--audio-shift", type=float, default=3.0)
@@ -132,7 +136,7 @@ def main():
     if a.action == "prepare-lora":
         from h3_ascend.integrations.lora import prepare
 
-        prepare(a.source, a.output, a.steps, a.video_shift, a.audio_shift)
+        prepare(a.source, a.output, a.steps, a.video_shift, a.audio_shift, a.source_format)
         return
     if a.action == "build":
         from h3_ascend.build import build

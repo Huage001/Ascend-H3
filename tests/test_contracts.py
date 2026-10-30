@@ -22,6 +22,8 @@ class Contracts(unittest.TestCase):
             fields = request_fields(case, "A moving camera.")
             self.assertEqual((fields["width"], fields["height"]), size)
             self.assertEqual(fields["num_frames"], frames)
+            self.assertEqual(fields["aspect_ratio"], "16:9")
+            self.assertEqual(json.loads(fields["extra_params"])["task"], "t2va")
             self.assertNotIn("seconds", fields)
 
     def test_head_partition_is_global(self):
@@ -80,6 +82,21 @@ class Contracts(unittest.TestCase):
             argv = command(args)
             policy = json.loads(argv[argv.index("--diffusion-offload-config") + 1])
             self.assertNotIn("resident_layers", policy["layer_options"]["dit"])
+
+    def test_seven_way_dit_preserves_valid_encoder_sharding(self):
+        args = argparse.Namespace(
+            method="full",
+            parallel="tp",
+            devices=7,
+            model="model",
+            host="127.0.0.1",
+            port=8000,
+            precision="bf16",
+            lora=None,
+        )
+        argv = command(args)
+        self.assertEqual(argv[argv.index("--tensor-parallel-size") + 1], "7")
+        self.assertEqual(argv[argv.index("--text-encoder-tp-size") + 1], "1")
 
 
 if __name__ == "__main__":
