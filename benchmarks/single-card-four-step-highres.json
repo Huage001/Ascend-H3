@@ -1338,6 +1338,75 @@
       "raw_directory": "/root/autodl-tmp/analysis/songhua-ascend-h3-release-20261030/e2e/full-int8-single-1344-345-student-1793379345861537990",
       "speedup_vs_same_precision_full4": 1.0,
       "bf16_to_int8_gain": 1.0288120343176923
+    },
+    {
+      "hardware": "RTX PRO 6000",
+      "method": "vsa",
+      "precision": "int8",
+      "baseline": false,
+      "case": "1344-345",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 1,
+      "actual_steps": 4,
+      "validated": true,
+      "contention_detected": false,
+      "offload": true,
+      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+      "e2e_seconds": [
+        132.6638553738594
+      ],
+      "profile": {
+        "actual_forwards": 4,
+        "dit_wall_seconds": 99.56809991970658,
+        "attention_seconds": 73.59061611938476,
+        "ffn_seconds": 24.516530334472677,
+        "categories_seconds": {
+          "qkv_projection": 7.5194439353942855,
+          "attention_dispatch": 59.88289331054689,
+          "output_projection": 2.692668259620664,
+          "attention": 73.59061611938476,
+          "ffn": 24.516530334472677
+        },
+        "request": {
+          "request": {
+            "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+            "width": 1344,
+            "height": 768,
+            "aspect_ratio": "16:9",
+            "num_frames": 345,
+            "fps": 24,
+            "num_inference_steps": 4,
+            "seed": 42,
+            "enable_frame_interpolation": "false",
+            "return_stage_metrics": "true",
+            "extra_params": "{\"task\": \"t2va\"}"
+          },
+          "headers": {
+            "date": "Fri, 30 Oct 2026 17:27:28 GMT",
+            "server": "uvicorn",
+            "x-request-id": "video_sync-8c4e5f9f90fb260b",
+            "x-model": "/root/autodl-tmp/analysis/songhua-ascend-h3-release-20261030/models/MiniMax-H3/FL2VA",
+            "x-inference-time-s": "132.677",
+            "x-stage-durations": "{\"queue_wait_ms\":1.3203248381614685,\"stage_0_gen_ms\":130084.26475524902}",
+            "x-peak-memory-mb": "44984.000",
+            "content-length": "34944939",
+            "content-type": "video/mp4",
+            "vary": "Origin",
+            "connection": "close"
+          },
+          "client_wall_seconds": 132.75289866514504
+        }
+      },
+      "median_seconds": 132.6638553738594,
+      "raw_directory": "/root/autodl-tmp/analysis/songhua-ascend-h3-release-20261030/e2e/vsa-int8-single-1344-345-student",
+      "speedup_vs_same_precision_full4": 1.8381646820798772,
+      "bf16_to_int8_gain": null,
+      "nominal_video_sparsity": 0.9,
+      "video_keep_budget": 0.1,
+      "prefix_policy": "native text/audio global prefix remains dense",
+      "budget_note": "Block rounding and padded boundaries can change the effective fraction; this is the configured video budget."
     }
   ]
 }
