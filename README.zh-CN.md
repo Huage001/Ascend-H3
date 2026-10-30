@@ -50,7 +50,7 @@ Full 和 VDN 不需要这里的自定义 CANN 扩展。当前使用源码可编�
 | `vsa` | H3 + 带训练后 compression gate 的 Sol-H3 VSA LoRA | 逻辑 tile64，选中的两个 KV64 在片上配对成 KV128 计算 |
 | `veda` | H3 + 对应 Turbo LoRA + Veda predictor | 每层、每个 head 动态选块，默认名义稀疏度 90% |
 | `vdn` | H3 + 官方 VDN stage-DMD 权重目录 | local softmax + 保留 128 维状态的 DeltaNet 分支 |
-| `spark` | H3 + 对应 Turbo LoRA | 内容相关的层次分块与稀疏注意力，默认名义稀疏度 90% |
+| `spark` | H3 + 对应 Turbo LoRA | 内容相关层次分块，原 token 与 proxy 联合 softmax，精确分支默认名义稀疏度 90% |
 
 模型权重需按原项目许可自行下载，不包含在本仓库中。不同蒸馏模型
 具有不同的权重和采样规则；不能认为任意权重直接换算子就能保证画质。
@@ -150,6 +150,9 @@ done
 单卡历史数据，使用 BF16 激活、代表层 0/24/49，精确稀疏分支的名义
 稀疏度为 90%。这些数字不是整段视频的端到端加速比，也不是新仓库
 整合后的验收成绩。
+
+VSA 保留训练后的压缩分支；Spark 保留官方的 anchor 条件化 proxy 和
+未选中块的 log-mass 修正。名义稀疏度指精确 token 分支，不代表全部计算量。
 
 下面统计 QKV 已就绪后的注意力 dispatch，包含路由、重排、注意力和
 输出还原，不含 QKV / output 投影：

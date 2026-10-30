@@ -53,7 +53,7 @@ require these custom CANN extensions. Keep the editable checkout available.
 | `vsa` | H3 base + Sol-H3 VSA student LoRA with trained compression gates | Logical KV64, selected KV blocks paired into KV128 on chip |
 | `veda` | H3 base + matching Turbo LoRA + Veda predictor | Dynamic per-head Veda block routes, nominal 90% sparsity |
 | `vdn` | H3 base + official VDN stage-DMD checkpoint directory | Local softmax plus 128-dimensional learned DeltaNet branch |
-| `spark` | H3 base + matching Turbo LoRA | Content-dependent Spark-H3 hierarchical partition, nominal 90% sparsity |
+| `spark` | H3 base + matching Turbo LoRA | Spark-H3 hierarchical partition and joint exact/proxy softmax, nominal 90% exact-branch sparsity |
 
 Download models under their original licenses. Weights are not redistributed.
 Different distilled students have different schedules and learned rules;
@@ -157,6 +157,10 @@ Speedup means **Full time / candidate time**, with both measured on the same
 device. Values below are historical single-card measurements of representative
 layers 0/24/49, BF16 activations, nominal 90% sparse exact branches. They are
 not end-to-end video speedups or measurements of the new unified integration.
+
+VSA retains its trained compressed branch; Spark retains its official
+anchor-conditioned proxies and log-mass correction for unselected blocks.
+The nominal sparsity refers to the exact token branch, not all computation.
 
 Attention dispatch includes routing, permutation, sparse computation and output
 restoration, with QKV already available; it excludes QKV/output projections:

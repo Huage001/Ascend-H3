@@ -17,10 +17,14 @@ Without `H3_ASCEND_METHOD`, importing the package changes no backend.
   permutations, fused route/pack stages, CANN sparse softmax and inverse
   permutation. Native TP slices data heads, while predictor calls retain the
   original global head IDs. Selection is recomputed for every attention call.
-* **Spark:** content-dependent metric, hierarchical balanced token partition,
-  pooled route selection and selected-block softmax. CANN stable partitions,
-  terminal routing and a shared captured tree reduce dispatch overhead.
-  Workspaces and launch plans are reusable; content-dependent routes are not.
+* **Spark:** content-dependent metric, hierarchical balanced token partition
+  and pooled route selection. Selected blocks contribute their original K/V
+  tokens. Each unselected block contributes an anchor-conditioned K/V proxy
+  with a log-mass correction. One online softmax jointly normalizes those
+  contributions and the dense prefix. This preserves the upstream Spark
+  reweight mechanism. CANN stable partitions, terminal routing and a shared
+  captured tree reduce dispatch overhead. Workspaces and launch plans are
+  reusable; content-dependent routes are not.
 * **VDN:** upstream learned local-softmax plus full-width DeltaNet linear
   branch. Frame windows are batched into two CANN calls. A centered Newton
   inverse and captured bidirectional scans replace expensive host launches.
