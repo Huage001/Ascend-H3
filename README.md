@@ -202,7 +202,7 @@ Full INT8, native TP2, 672×384, 124 frames, Turbo8, seed 42 — generated throu
 this integration with video and audio. Both ranks completed eight DiT forwards,
 with all 50 blocks per step, finite outputs and INT8 QKV weights.
 
-![Full INT8 TP2 example](examples/videos/full-int8-tp2-672124.gif)
+https://github.com/user-attachments/assets/fd9cf427-e6b4-4a6d-a7a5-ad72204cca86
 
 [MP4 with audio](examples/videos/full-int8-tp2-672124.mp4) ·
 [sample contract and checksum](examples/videos/full-int8-tp2-672124.json).
@@ -213,7 +213,7 @@ VSA INT8, native TP4, 672×384, 124 frames, four-step trained VSA student:
 all four ranks completed four DiT forwards with 50 nonzero gates each step.
 The complete pipeline produced the expected video and audio.
 
-![VSA INT8 TP4 example](examples/videos/vsa-int8-tp4-672124.gif)
+https://github.com/user-attachments/assets/590be000-8cbd-458e-9198-afb2a2bdcaa4
 
 [MP4 with audio](examples/videos/vsa-int8-tp4-672124.mp4) ·
 [sample contract](examples/videos/vsa-int8-tp4-672124.json).
@@ -231,7 +231,7 @@ exact frame counts and video hashes.
 
 Veda INT8 TP4, 672×384, 124 frames, Turbo8, seed 42, nominal 90% sparsity:
 
-![Veda INT8 TP4 example](examples/videos/veda-int8-tp4-672124.gif)
+https://github.com/user-attachments/assets/93ff95b6-615c-4fc0-bf84-bb7dabe6b08a
 
 [MP4 with audio](examples/videos/veda-int8-tp4-672124.mp4) ·
 [sample contract](examples/videos/veda-int8-tp4-672124.json).

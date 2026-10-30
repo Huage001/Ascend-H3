@@ -193,7 +193,7 @@ PRO6000 VSA 一列为 2026-10-30 新测：官方 Triton tile64、代表层 24、
 Turbo8、seed 42，包含音频。两个 rank 均完成八次 DiT 前向，每步执行全部
 50 个 block，输出有限，QKV 权重确认为 INT8。
 
-![Full INT8 TP2 示例](examples/videos/full-int8-tp2-672124.gif)
+https://github.com/user-attachments/assets/fd9cf427-e6b4-4a6d-a7a5-ad72204cca86
 
 [带音频 MP4](examples/videos/full-int8-tp2-672124.mp4) ·
 [样例参数与校验值](examples/videos/full-int8-tp2-672124.json)。
@@ -202,7 +202,7 @@ Turbo8、seed 42，包含音频。两个 rank 均完成八次 DiT 前向，每�
 VSA INT8、原生 TP4、672×384、124 帧、四步 VSA 学生模型也已完整成片：
 四个 rank 均完成四次 DiT 前向，每一步检查到全部 50 个非零 gate。
 
-![VSA INT8 TP4 示例](examples/videos/vsa-int8-tp4-672124.gif)
+https://github.com/user-attachments/assets/590be000-8cbd-458e-9198-afb2a2bdcaa4
 
 [带音频 MP4](examples/videos/vsa-int8-tp4-672124.mp4) ·
 [样例参数](examples/videos/vsa-int8-tp4-672124.json)。
@@ -218,7 +218,7 @@ VSA INT8 TP4 的四种视频规格现已全部通过完整生成和解码，
 
 Veda INT8 TP4、672×384、124 帧、Turbo8、seed 42、名义稀疏度 90%：
 
-![Veda INT8 TP4 示例](examples/videos/veda-int8-tp4-672124.gif)
+https://github.com/user-attachments/assets/93ff95b6-615c-4fc0-bf84-bb7dabe6b08a
 
 [带音频 MP4](examples/videos/veda-int8-tp4-672124.mp4) ·
 [样例参数](examples/videos/veda-int8-tp4-672124.json)。
