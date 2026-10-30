@@ -183,8 +183,11 @@ Ascend 910B3 · 1344×768 · 单卡 · 四步 · seed 42，**每行一次正式�
 | 124 | BF16 | Full + LightX2V | 121.04 秒 | 1.00× | — | Offload |
 | 124 | BF16 | VSA · FastH3 | 83.72 秒 | 1.45× | — | Offload |
 | 124 | BF16 | Veda + LightX2V | 69.86 秒 | 1.73× | — | Offload |
+| 124 | BF16 | Spark-H3 + LightX2V | 78.15 秒 | 1.55× | — | Offload |
 | 124 | INT8 | Full + LightX2V | 111.90 秒 | 1.00× | 1.08× | Offload |
 | 124 | INT8 | VSA · FastH3 | 74.24 秒 | 1.51× | 1.13× | Offload |
+| 124 | INT8 | Veda + LightX2V | 61.78 秒 | 1.81× | 1.13× | Offload |
+| 124 | INT8 | Spark-H3 + LightX2V | 71.41 秒 | 1.57× | 1.09× | Offload |
 | 345 | BF16 | Full + LightX2V | 648.97 秒 | 1.00× | — | Offload |
 | 345 | BF16 | VSA · FastH3 | 285.69 秒 | 2.27× | — | Offload |
 | 345 | BF16 | Veda + LightX2V | 225.29 秒 | 2.88× | — | Offload |
@@ -192,6 +195,7 @@ Ascend 910B3 · 1344×768 · 单卡 · 四步 · seed 42，**每行一次正式�
 | 345 | INT8 | Full + LightX2V | 603.84 秒 | 1.00× | 1.07× | Offload |
 | 345 | INT8 | VSA · FastH3 | 261.56 秒 | 2.31× | 1.09× | Offload |
 | 345 | INT8 | Veda + LightX2V | 203.77 秒 | 2.96× | 1.11× | Offload |
+| 345 | INT8 | Spark-H3 + LightX2V | 247.17 秒 | 2.44× | 1.12× | Offload |
 
 RTX PRO 6000 · 1344×768 · 单卡 · 四步 · seed 42，**每行一次正式完整请求**：
 
@@ -199,11 +203,17 @@ RTX PRO 6000 · 1344×768 · 单卡 · 四步 · seed 42，**每行一次正式�
 | ---: | --- | --- | ---: | ---: | ---: | --- |
 | 345 | BF16 | Full + LightX2V | 250.88 秒 | 1.00× | — | Offload |
 
-仅列已完整验收的记录；其余组合和 PRO 6000 对照仍在补齐。
+已完整验收：昇腾 16/16 组，PRO 6000 1/16 组。 其余组合仍在补齐，不使用预热或失败记录作为测量结果。
 
 [高分辨率原始记录和独立分项测量](benchmarks/single-card-four-step-highres.json)。
 
 <!-- END HIGHRES RESULTS -->
+
+
+
+
+
+
 
 
 

@@ -202,8 +202,11 @@ Ascend 910B3 · 1344×768 · single card · four steps · seed 42 · **one forma
 | 124 | BF16 | Full + LightX2V | 121.04 s | 1.00× | — | Offload |
 | 124 | BF16 | VSA · FastH3 | 83.72 s | 1.45× | — | Offload |
 | 124 | BF16 | Veda + LightX2V | 69.86 s | 1.73× | — | Offload |
+| 124 | BF16 | Spark-H3 + LightX2V | 78.15 s | 1.55× | — | Offload |
 | 124 | INT8 | Full + LightX2V | 111.90 s | 1.00× | 1.08× | Offload |
 | 124 | INT8 | VSA · FastH3 | 74.24 s | 1.51× | 1.13× | Offload |
+| 124 | INT8 | Veda + LightX2V | 61.78 s | 1.81× | 1.13× | Offload |
+| 124 | INT8 | Spark-H3 + LightX2V | 71.41 s | 1.57× | 1.09× | Offload |
 | 345 | BF16 | Full + LightX2V | 648.97 s | 1.00× | — | Offload |
 | 345 | BF16 | VSA · FastH3 | 285.69 s | 2.27× | — | Offload |
 | 345 | BF16 | Veda + LightX2V | 225.29 s | 2.88× | — | Offload |
@@ -211,6 +214,7 @@ Ascend 910B3 · 1344×768 · single card · four steps · seed 42 · **one forma
 | 345 | INT8 | Full + LightX2V | 603.84 s | 1.00× | 1.07× | Offload |
 | 345 | INT8 | VSA · FastH3 | 261.56 s | 2.31× | 1.09× | Offload |
 | 345 | INT8 | Veda + LightX2V | 203.77 s | 2.96× | 1.11× | Offload |
+| 345 | INT8 | Spark-H3 + LightX2V | 247.17 s | 2.44× | 1.12× | Offload |
 
 RTX PRO 6000 · 1344×768 · single card · four steps · seed 42 · **one formal complete request per row**:
 
@@ -218,11 +222,17 @@ RTX PRO 6000 · 1344×768 · single card · four steps · seed 42 · **one forma
 | ---: | --- | --- | ---: | ---: | ---: | --- |
 | 345 | BF16 | Full + LightX2V | 250.88 s | 1.00× | — | Offload |
 
-Only fully validated records are listed; remaining combinations and PRO 6000 comparisons are in progress.
+Fully validated: Ascend 16/16 cases; PRO 6000 1/16 cases. Remaining cases are in progress; warmups and failed attempts are excluded.
 
 [Raw high-resolution records and independent profiles](benchmarks/single-card-four-step-highres.json).
 
 <!-- END HIGHRES RESULTS -->
+
+
+
+
+
+
 
 
 

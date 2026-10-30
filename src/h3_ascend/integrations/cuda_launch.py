@@ -1,5 +1,6 @@
 """Initialize the pinned official SM120 FA4 provider before Omni imports it."""
 
+import faulthandler
 import os
 import runpy
 import sys
@@ -8,6 +9,7 @@ import sys
 def main():
     if os.getenv("H3_ASCEND_CUDA_REFERENCE") != "1":
         raise RuntimeError("This launcher is only for the explicit single-card CUDA reference")
+    faulthandler.enable()
     sys.path.insert(0, os.environ["H3_CUDA_REFERENCE_CODE"])
     from dense_backend import _load_fa4
 
