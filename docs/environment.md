@@ -119,5 +119,8 @@ The setting is specific to the reference Torch version, not an Ascend requiremen
 The explicit CUDA reference launcher initializes Miowtion's official pinned
 SM120 FA4 provider before Omni can import `flash_attn.cute`. The provider's
 source and dependency hashes remain checked; import-order handling does not
-replace or modify its compute kernels. Complete CUDA video qualification is
-still in progress.
+replace or modify its compute kernels. Full BF16 single-card 1344×768 / 345-frame video qualification has passed.
+The remaining CUDA matrix is still in progress. The official Triton VSA
+provider is `fastvideo-kernel==0.3.4`, matching the pinned Omni `[vsa]` extra;
+its tile64 GPU check also passed. The token refiner remains dense, and VSA
+routing metadata is added only when a packed video layout is present.

@@ -37,12 +37,15 @@ def register(method):
             E.TORCH_SDPA, "h3_ascend.integrations.cuda_reference.CUDAReferenceBackend"
         )
     elif method == "vsa":
-        from vllm_omni.diffusion.models.minimax_h3.attention.fastvideo_h3 import MiniMaxH3VSAImpl
+        from vllm_omni.diffusion.models.minimax_h3.attention.fastvideo_h3 import (
+            MiniMaxH3VSAImpl,
+            _get_h3_layout,
+        )
 
         original = MiniMaxH3VSAImpl.forward_cuda
 
         def vsa(self, q, k, v, attn_metadata=None):
-            if attn_metadata is not None:
+            if _get_h3_layout(attn_metadata) is not None:
                 attn_metadata.extra.setdefault("vsa_h3_sparsity", .9)
             return original(self, q, k, v, attn_metadata)
 

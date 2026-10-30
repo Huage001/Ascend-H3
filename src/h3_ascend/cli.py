@@ -81,7 +81,7 @@ def command(a):
         cmd += ["--diffusion-attention-config", json.dumps({"default": {
             "backend": "FASTVIDEO_VSA", "fastvideo_vsa_provider": "triton",
             "fastvideo_vsa_precision": "bf16",
-        }})]
+        }, "per_role": {"minimax_h3.token_refiner": {"backend": "FLASH_ATTN"}}})]
     if a.precision == "int8":
         cmd += [
             "--diffusion-quantization-config",

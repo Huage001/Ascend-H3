@@ -26,6 +26,8 @@ class Contracts(unittest.TestCase):
                     config = json.loads(argv[argv.index("--diffusion-attention-config") + 1])
                     self.assertEqual(config["default"]["fastvideo_vsa_provider"], "triton")
                     self.assertEqual(config["default"]["fastvideo_vsa_precision"], "bf16")
+                    self.assertEqual(config["per_role"]["minimax_h3.token_refiner"]["backend"],
+                                     "FLASH_ATTN")
 
     def test_student_contracts(self):
         for method in ("full", "veda", "spark"):
