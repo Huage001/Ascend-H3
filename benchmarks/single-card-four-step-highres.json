@@ -1,7 +1,268 @@
 {
   "schema": "h3-single-card-e2e-four-step-v1",
   "reference": "same-device/same-precision Full LightX2V4",
+  "reporting_scope": "1344x768, native124/345frames, singlecard, fourstep Full reference",
   "records": [
+    {
+      "hardware": "Ascend 910B3",
+      "method": "full",
+      "precision": "bf16",
+      "baseline": false,
+      "case": "1344-124",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 1,
+      "actual_steps": 4,
+      "validated": true,
+      "contention_detected": false,
+      "offload": true,
+      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+      "e2e_seconds": [
+        121.04424563422799
+      ],
+      "profile": {
+        "actual_forwards": 4,
+        "dit_wall_seconds": 94.81481166277081,
+        "attention_seconds": 77.52066198730466,
+        "ffn_seconds": 15.54465892028808,
+        "categories_seconds": {
+          "qkv_projection": 7.0667755508422845,
+          "attention_dispatch": 65.85876901245119,
+          "output_projection": 2.219254445075989,
+          "attention": 77.52066198730466,
+          "ffn": 15.54465892028808
+        },
+        "request": {
+          "request": {
+            "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+            "width": 1344,
+            "height": 768,
+            "aspect_ratio": "16:9",
+            "num_frames": 124,
+            "fps": 24,
+            "num_inference_steps": 4,
+            "seed": 42,
+            "enable_frame_interpolation": "false",
+            "return_stage_metrics": "true",
+            "extra_params": "{\"task\": \"t2va\"}"
+          },
+          "headers": {
+            "date": "Fri, 30 Oct 2026 14:42:41 GMT",
+            "server": "uvicorn",
+            "x-request-id": "video_sync-851ae7828c7db46c",
+            "x-model": "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
+            "x-inference-time-s": "120.994",
+            "x-stage-durations": "{\"queue_wait_ms\":0.6655333563685417,\"stage_0_gen_ms\":120083.0454826355}",
+            "x-peak-memory-mb": "24894.000",
+            "content-length": "11231658",
+            "content-type": "video/mp4",
+            "vary": "Origin",
+            "connection": "close"
+          },
+          "client_wall_seconds": 121.02155044302344
+        }
+      },
+      "median_seconds": 121.04424563422799,
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/full-bf16-single-1344-124-student",
+      "speedup_vs_same_precision_full4": 1.0,
+      "bf16_to_int8_gain": null
+    },
+    {
+      "hardware": "Ascend 910B3",
+      "method": "vsa",
+      "precision": "bf16",
+      "baseline": false,
+      "case": "1344-124",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 1,
+      "actual_steps": 4,
+      "validated": true,
+      "contention_detected": false,
+      "offload": true,
+      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+      "e2e_seconds": [
+        83.72034247592092
+      ],
+      "profile": {
+        "actual_forwards": 4,
+        "dit_wall_seconds": 56.934519812464714,
+        "attention_seconds": 39.87378179931643,
+        "ffn_seconds": 15.381082847595211,
+        "categories_seconds": {
+          "qkv_projection": 6.996830520629888,
+          "attention_dispatch": 26.13493702697753,
+          "output_projection": 2.2021428623199473,
+          "attention": 39.87378179931643,
+          "ffn": 15.381082847595211
+        },
+        "request": {
+          "request": {
+            "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+            "width": 1344,
+            "height": 768,
+            "aspect_ratio": "16:9",
+            "num_frames": 124,
+            "fps": 24,
+            "num_inference_steps": 4,
+            "seed": 42,
+            "enable_frame_interpolation": "false",
+            "return_stage_metrics": "true",
+            "extra_params": "{\"task\": \"t2va\"}"
+          },
+          "headers": {
+            "date": "Fri, 30 Oct 2026 14:40:33 GMT",
+            "server": "uvicorn",
+            "x-request-id": "video_sync-bd6c736b1fe7c91d",
+            "x-model": "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
+            "x-inference-time-s": "83.472",
+            "x-stage-durations": "{\"queue_wait_ms\":0.7041534408926964,\"stage_0_gen_ms\":82609.48204994202}",
+            "x-peak-memory-mb": "29276.000",
+            "content-length": "9361234",
+            "content-type": "video/mp4",
+            "vary": "Origin",
+            "connection": "close"
+          },
+          "client_wall_seconds": 83.49627766478807
+        }
+      },
+      "median_seconds": 83.72034247592092,
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/vsa-bf16-single-1344-124-student",
+      "speedup_vs_same_precision_full4": 1.4458164175456154,
+      "bf16_to_int8_gain": null
+    },
+    {
+      "hardware": "Ascend 910B3",
+      "method": "veda",
+      "precision": "bf16",
+      "baseline": false,
+      "case": "1344-124",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 1,
+      "actual_steps": 4,
+      "validated": true,
+      "contention_detected": false,
+      "offload": true,
+      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+      "e2e_seconds": [
+        69.85518804192543
+      ],
+      "profile": {
+        "actual_forwards": 4,
+        "dit_wall_seconds": 43.36509154736996,
+        "attention_seconds": 26.373057228088374,
+        "ffn_seconds": 15.309294479370122,
+        "categories_seconds": {
+          "qkv_projection": 6.62620669174195,
+          "attention_dispatch": 15.20794108581543,
+          "output_projection": 2.2086953306198134,
+          "attention": 26.373057228088374,
+          "ffn": 15.309294479370122
+        },
+        "request": {
+          "request": {
+            "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+            "width": 1344,
+            "height": 768,
+            "aspect_ratio": "16:9",
+            "num_frames": 124,
+            "fps": 24,
+            "num_inference_steps": 4,
+            "seed": 42,
+            "enable_frame_interpolation": "false",
+            "return_stage_metrics": "true",
+            "extra_params": "{\"task\": \"t2va\"}"
+          },
+          "headers": {
+            "date": "Fri, 30 Oct 2026 14:40:18 GMT",
+            "server": "uvicorn",
+            "x-request-id": "video_sync-8d4bc2e6fbeaf647",
+            "x-model": "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
+            "x-inference-time-s": "69.470",
+            "x-stage-durations": "{\"queue_wait_ms\":1.1481447145342827,\"stage_0_gen_ms\":68438.13848495483}",
+            "x-peak-memory-mb": "24802.000",
+            "content-length": "11189822",
+            "content-type": "video/mp4",
+            "vary": "Origin",
+            "connection": "close"
+          },
+          "client_wall_seconds": 69.49826049432158
+        }
+      },
+      "median_seconds": 69.85518804192543,
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/veda-bf16-single-1344-124-student",
+      "speedup_vs_same_precision_full4": 1.732788201236823,
+      "bf16_to_int8_gain": null
+    },
+    {
+      "hardware": "Ascend 910B3",
+      "method": "full",
+      "precision": "bf16",
+      "baseline": false,
+      "case": "1344-345",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 1,
+      "actual_steps": 4,
+      "validated": true,
+      "contention_detected": false,
+      "offload": true,
+      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+      "e2e_seconds": [
+        648.9746385673061
+      ],
+      "profile": {
+        "actual_forwards": 4,
+        "dit_wall_seconds": 581.6513676848263,
+        "attention_seconds": 534.635206787109,
+        "ffn_seconds": 42.39348110961914,
+        "categories_seconds": {
+          "qkv_projection": 20.23779781341554,
+          "attention_dispatch": 500.97872583007813,
+          "output_projection": 7.139685146331784,
+          "attention": 534.635206787109,
+          "ffn": 42.39348110961914
+        },
+        "request": {
+          "request": {
+            "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+            "width": 1344,
+            "height": 768,
+            "aspect_ratio": "16:9",
+            "num_frames": 345,
+            "fps": 24,
+            "num_inference_steps": 4,
+            "seed": 42,
+            "enable_frame_interpolation": "false",
+            "return_stage_metrics": "true",
+            "extra_params": "{\"task\": \"t2va\"}"
+          },
+          "headers": {
+            "date": "Fri, 30 Oct 2026 14:10:41 GMT",
+            "server": "uvicorn",
+            "x-request-id": "video_sync-bdda6fcabba2a0ec",
+            "x-model": "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
+            "x-inference-time-s": "649.896",
+            "x-stage-durations": "{\"queue_wait_ms\":0.6332127377390862,\"stage_0_gen_ms\":647575.1540660858}",
+            "x-peak-memory-mb": "42038.000",
+            "content-length": "35241343",
+            "content-type": "video/mp4",
+            "vary": "Origin",
+            "connection": "close"
+          },
+          "client_wall_seconds": 649.9558117119595
+        }
+      },
+      "median_seconds": 648.9746385673061,
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/full-bf16-single-1344-345-student",
+      "speedup_vs_same_precision_full4": 1.0,
+      "bf16_to_int8_gain": null
+    },
     {
       "hardware": "Ascend 910B3",
       "method": "veda",
@@ -66,71 +327,6 @@
       "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/veda-bf16-single-1344-345-student",
       "speedup_vs_same_precision_full4": 2.8805623246813465,
       "bf16_to_int8_gain": null
-    },
-    {
-      "hardware": "Ascend 910B3",
-      "method": "full",
-      "precision": "int8",
-      "baseline": false,
-      "case": "1344-345",
-      "width": 1344,
-      "height": 768,
-      "frames": 345,
-      "devices": 1,
-      "actual_steps": 4,
-      "validated": true,
-      "contention_detected": false,
-      "offload": true,
-      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
-      "e2e_seconds": [
-        603.8437336655334
-      ],
-      "profile": {
-        "actual_forwards": 4,
-        "dit_wall_seconds": 535.3769561462104,
-        "attention_seconds": 500.6477309570313,
-        "ffn_seconds": 30.030988296508784,
-        "categories_seconds": {
-          "qkv_projection": 13.555963539123532,
-          "attention_dispatch": 476.6831379394533,
-          "output_projection": 4.136515533447265,
-          "attention": 500.6477309570313,
-          "ffn": 30.030988296508784
-        },
-        "request": {
-          "request": {
-            "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
-            "width": 1344,
-            "height": 768,
-            "aspect_ratio": "16:9",
-            "num_frames": 345,
-            "fps": 24,
-            "num_inference_steps": 4,
-            "seed": 42,
-            "enable_frame_interpolation": "false",
-            "return_stage_metrics": "true",
-            "extra_params": "{\"task\": \"t2va\"}"
-          },
-          "headers": {
-            "date": "Fri, 30 Oct 2026 14:12:03 GMT",
-            "server": "uvicorn",
-            "x-request-id": "video_sync-8382917500c66edb",
-            "x-model": "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
-            "x-inference-time-s": "604.528",
-            "x-stage-durations": "{\"queue_wait_ms\":0.620952807366848,\"stage_0_gen_ms\":602003.7126541138}",
-            "x-peak-memory-mb": "40520.000",
-            "content-length": "38472468",
-            "content-type": "video/mp4",
-            "vary": "Origin",
-            "connection": "close"
-          },
-          "client_wall_seconds": 604.5946731194854
-        }
-      },
-      "median_seconds": 603.8437336655334,
-      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/full-int8-single-1344-345-student",
-      "speedup_vs_same_precision_full4": 1.0,
-      "bf16_to_int8_gain": 1.0747393777324028
     },
     {
       "hardware": "Ascend 910B3",
@@ -200,7 +396,7 @@
     {
       "hardware": "Ascend 910B3",
       "method": "full",
-      "precision": "bf16",
+      "precision": "int8",
       "baseline": false,
       "case": "1344-345",
       "width": 1344,
@@ -213,19 +409,19 @@
       "offload": true,
       "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
       "e2e_seconds": [
-        648.9746385673061
+        603.8437336655334
       ],
       "profile": {
         "actual_forwards": 4,
-        "dit_wall_seconds": 581.6513676848263,
-        "attention_seconds": 534.635206787109,
-        "ffn_seconds": 42.39348110961914,
+        "dit_wall_seconds": 535.3769561462104,
+        "attention_seconds": 500.6477309570313,
+        "ffn_seconds": 30.030988296508784,
         "categories_seconds": {
-          "qkv_projection": 20.23779781341554,
-          "attention_dispatch": 500.97872583007813,
-          "output_projection": 7.139685146331784,
-          "attention": 534.635206787109,
-          "ffn": 42.39348110961914
+          "qkv_projection": 13.555963539123532,
+          "attention_dispatch": 476.6831379394533,
+          "output_projection": 4.136515533447265,
+          "attention": 500.6477309570313,
+          "ffn": 30.030988296508784
         },
         "request": {
           "request": {
@@ -242,25 +438,25 @@
             "extra_params": "{\"task\": \"t2va\"}"
           },
           "headers": {
-            "date": "Fri, 30 Oct 2026 14:10:41 GMT",
+            "date": "Fri, 30 Oct 2026 14:12:03 GMT",
             "server": "uvicorn",
-            "x-request-id": "video_sync-bdda6fcabba2a0ec",
+            "x-request-id": "video_sync-8382917500c66edb",
             "x-model": "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
-            "x-inference-time-s": "649.896",
-            "x-stage-durations": "{\"queue_wait_ms\":0.6332127377390862,\"stage_0_gen_ms\":647575.1540660858}",
-            "x-peak-memory-mb": "42038.000",
-            "content-length": "35241343",
+            "x-inference-time-s": "604.528",
+            "x-stage-durations": "{\"queue_wait_ms\":0.620952807366848,\"stage_0_gen_ms\":602003.7126541138}",
+            "x-peak-memory-mb": "40520.000",
+            "content-length": "38472468",
             "content-type": "video/mp4",
             "vary": "Origin",
             "connection": "close"
           },
-          "client_wall_seconds": 649.9558117119595
+          "client_wall_seconds": 604.5946731194854
         }
       },
-      "median_seconds": 648.9746385673061,
-      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/full-bf16-single-1344-345-student",
+      "median_seconds": 603.8437336655334,
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/full-int8-single-1344-345-student",
       "speedup_vs_same_precision_full4": 1.0,
-      "bf16_to_int8_gain": null
+      "bf16_to_int8_gain": 1.0747393777324028
     },
     {
       "hardware": "Ascend 910B3",
@@ -392,7 +588,5 @@
       "speedup_vs_same_precision_full4": 2.9632926880504815,
       "bf16_to_int8_gain": 1.105606121522352
     }
-  ],
-  "skipped": [],
-  "reporting_scope": "1344x768, native124/345frames, single card, four-step Full reference"
+  ]
 }

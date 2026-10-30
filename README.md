@@ -193,20 +193,27 @@ files for provenance and are not headline video speedups.
 Speedups are reported only at **1344×768, 124/345 frames**. The 672×384
 workloads remain supported for inference and functional validation.
 
-Measured 345-frame single-card Ascend 910B3 rows, four steps, matched Offload,
-seed 42, **one formal complete request per row**:
+<!-- BEGIN HIGHRES RESULTS -->
 
-| Precision | Method | Complete video + audio | Speedup vs same-precision Full4 | BF16 / INT8 gain |
-| --- | --- | ---: | ---: | ---: |
-| BF16 | Full + LightX2V | 648.97 s | 1.00× | — |
-| BF16 | Veda + LightX2V | 225.29 s | 2.88× | — |
-| BF16 | Spark-H3 + LightX2V | 276.45 s | 2.35× | — |
-| INT8 | Full + LightX2V | 603.84 s | 1.00× | 1.07× |
-| INT8 | VSA · FastH3 | 261.56 s | 2.31× | — |
-| INT8 | Veda + LightX2V | 203.77 s | 2.96× | 1.11× |
+Ascend 910B3 · 1344×768 · single card · four steps · seed 42 · **one formal complete request per row**:
 
-VSA BF16, Spark-H3 INT8, the 124-frame matrix and PRO 6000 results are
-still pending. [Raw high-resolution records and independent profiles](benchmarks/single-card-four-step-highres.json).
+| Frames | Precision | Method | Complete video + audio | vs same-precision Full4 | BF16 / INT8 | Memory |
+| ---: | --- | --- | ---: | ---: | ---: | --- |
+| 124 | BF16 | Full + LightX2V | 121.04 s | 1.00× | — | Offload |
+| 124 | BF16 | VSA · FastH3 | 83.72 s | 1.45× | — | Offload |
+| 124 | BF16 | Veda + LightX2V | 69.86 s | 1.73× | — | Offload |
+| 345 | BF16 | Full + LightX2V | 648.97 s | 1.00× | — | Offload |
+| 345 | BF16 | Veda + LightX2V | 225.29 s | 2.88× | — | Offload |
+| 345 | BF16 | Spark-H3 + LightX2V | 276.45 s | 2.35× | — | Offload |
+| 345 | INT8 | Full + LightX2V | 603.84 s | 1.00× | 1.07× | Offload |
+| 345 | INT8 | VSA · FastH3 | 261.56 s | 2.31× | — | Offload |
+| 345 | INT8 | Veda + LightX2V | 203.77 s | 2.96× | 1.11× | Offload |
+
+Only fully validated records are listed; remaining combinations and PRO 6000 comparisons are in progress.
+
+[Raw high-resolution records and independent profiles](benchmarks/single-card-four-step-highres.json).
+
+<!-- END HIGHRES RESULTS -->
 
 [Measurement and figure protocol](docs/benchmark-protocol.md).
 

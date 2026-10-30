@@ -174,20 +174,27 @@ Attention/FFN 分项来自单独的性能分析运行，不能代替端到端实
 
 加速比只报告 **1344×768、124/345 帧**两组；672×384 保留推理和功能验证支持。
 
-已测单卡昇腾 910B3、345 帧，四步，相同 Offload，seed 42，
-**每行一次正式完整请求**：
+<!-- BEGIN HIGHRES RESULTS -->
 
-| 精度 | 方法 | 完整视频 + 音频耗时 | 相对同精度 Full4 加速比 | BF16 / INT8 量化收益 |
-| --- | --- | ---: | ---: | ---: |
-| BF16 | Full + LightX2V | 648.97 秒 | 1.00× | — |
-| BF16 | Veda + LightX2V | 225.29 秒 | 2.88× | — |
-| BF16 | Spark-H3 + LightX2V | 276.45 秒 | 2.35× | — |
-| INT8 | Full + LightX2V | 603.84 秒 | 1.00× | 1.07× |
-| INT8 | VSA · FastH3 | 261.56 秒 | 2.31× | — |
-| INT8 | Veda + LightX2V | 203.77 秒 | 2.96× | 1.11× |
+Ascend 910B3 · 1344×768 · 单卡 · 四步 · seed 42，**每行一次正式完整请求**：
 
-VSA BF16、Spark-H3 INT8、124 帧矩阵和 PRO 6000 结果仍待完成。
+| 帧数 | 精度 | 方法 | 完整视频 + 音频 | 相对同精度 Full4 | BF16 / INT8 | 内存策略 |
+| ---: | --- | --- | ---: | ---: | ---: | --- |
+| 124 | BF16 | Full + LightX2V | 121.04 秒 | 1.00× | — | Offload |
+| 124 | BF16 | VSA · FastH3 | 83.72 秒 | 1.45× | — | Offload |
+| 124 | BF16 | Veda + LightX2V | 69.86 秒 | 1.73× | — | Offload |
+| 345 | BF16 | Full + LightX2V | 648.97 秒 | 1.00× | — | Offload |
+| 345 | BF16 | Veda + LightX2V | 225.29 秒 | 2.88× | — | Offload |
+| 345 | BF16 | Spark-H3 + LightX2V | 276.45 秒 | 2.35× | — | Offload |
+| 345 | INT8 | Full + LightX2V | 603.84 秒 | 1.00× | 1.07× | Offload |
+| 345 | INT8 | VSA · FastH3 | 261.56 秒 | 2.31× | — | Offload |
+| 345 | INT8 | Veda + LightX2V | 203.77 秒 | 2.96× | 1.11× | Offload |
+
+仅列已完整验收的记录；其余组合和 PRO 6000 对照仍在补齐。
+
 [高分辨率原始记录和独立分项测量](benchmarks/single-card-four-step-highres.json)。
+
+<!-- END HIGHRES RESULTS -->
 
 详见[端到端计时、Offload 和图表口径](docs/benchmark-protocol.md)。
 
