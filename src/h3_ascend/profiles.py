@@ -13,7 +13,7 @@ def step_count(method, few_step_lora=True):
     if method in ("vsa", "vdn"):
         if not few_step_lora:
             raise ValueError(f"{method} requires its own official student")
-        return 4 if method == "vsa" else 8
+        return 8
     return 4 if few_step_lora else 50
 
 

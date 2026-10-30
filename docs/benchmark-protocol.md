@@ -12,19 +12,22 @@ processes to obtain a result.
 
 The attention speedup is **same-device, same-precision Full + LightX2V,
 four steps / candidate end-to-end time**. Quantization gain is the same
-method's BF16 / INT8 end-to-end time. All four-step candidates run the same
+method's BF16 / INT8 end-to-end time. All candidates run the same
 resolution and native frame count. No 50/4 multiplier is applied. The earlier
 50-step baseline was cancelled at the user's request.
 
 | Row | LoRA / learned assets | Actual updates |
 | --- | --- | ---: |
 | Full (baseline) | Pinned LightX2V v1.0 768p | 4 |
-| VSA | Complete official FastH3 VSA adapter | 4 |
+| VSA V2 | Complete official FastH3 V2 checkpoint, shifts 10/3 | 8 |
 | Veda | LightX2V + official trained predictor | 4 |
 | Spark-H3 | LightX2V | 4 |
 
-VSA and Veda use **90% nominal video-block sparsity** on both hardware
-platforms and in both weight precisions: the video keep budget is 10%.
+VSA V2 uses **80% nominal video-block sparsity** (20% keep budget); Veda
+retains **90%** (10% keep budget) on both hardware platforms and precisions.
+VSA V2 against Full4 is a different-step end-to-end configuration comparison,
+not an equal-step attention-only acceleration. Legacy VSA v1 four-step results
+are archived separately; they must not be labeled V2.
 Text/audio global prefixes retain their native dense policy. Block rounding,
 padding and mandatory diagonal handling can change the effective block
 fraction slightly. These results do not use the earlier 97% experiments.
@@ -64,7 +67,8 @@ mean every operation, encoder or VAE is INT8.
 Finish checkpoint loading, all static LoRA merges, INT8 weight conversion and
 JIT warmup before timing. Run an audited warmup to verify finite DiT outputs,
 all 50 blocks, actual weight dtypes and all 50 VSA gates. Remove the audit hooks
-and restore the original forward before a further untimed warmup. All compared students retain their fixed four-step schedule during warmup.
+and restore the original forward before a further untimed warmup. Every student retains its trained schedule during warmup: eight forwards for
+VSA V2, four for Full/Veda/Spark.
 
 Measure from fresh prompt submission to complete MP4 receipt and file write.
 Include text encoding, all denoising updates, audio/video decode, MP4 encoding,
@@ -94,7 +98,8 @@ copy-stream time to compute time when they overlap.
 
 Bars show average measured DiT milliseconds per block, normalized by the
 actual number of profiled forwards and 50 blocks. Headline minutes and speedups
-come only from complete, uninstrumented requests. All headline results require an actual complete four-step request.
+come only from complete, uninstrumented requests. All headline results require an actual complete request at the recorded
+student schedule; VSA V2 must have eight forwards, including its separate profile.
 
 ```bash
 python scripts/plot_long_video.py --input benchmarks/long-video-e2e.json \

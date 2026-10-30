@@ -47,7 +47,7 @@ Full 和 VDN 不需要这里的自定义 CANN 扩展。当前使用源码可编�
 | 方法 | 所需权重 | 注意力机制 |
 | --- | --- | --- |
 | `full` | H3，默认 LightX2V 4-step，也可使用社区 LoRA | 全注意力 |
-| `vsa` | H3 + 带训练后 compression gate 的 Sol-H3 VSA LoRA | 默认名义视频稀疏度 90%；逻辑 tile64，选中的两个 KV64 在片上配对成 KV128 计算 |
+| `vsa` | 官方 FastH3 V2 完整学生权重，含 50 个训练后的 compression gate | 8 步，80% 视频稀疏率；逻辑 KV64，两个选中 KV64 在片上配对为 KV128 |
 | `veda` | H3 + LightX2V 4-step + 官方训练的 Veda predictor | 每层、每个 head 动态选块，默认名义稀疏度 90% |
 | `vdn` | H3 + 官方 VDN stage-DMD 权重目录 | local softmax + 保留 128 维状态的 DeltaNet 分支 |
 | `spark` | H3 + LightX2V 4-step | 内容相关层次分块，原 token 与 proxy 联合 softmax，精确分支默认名义稀疏度 90% |
@@ -74,7 +74,8 @@ Full、Veda、Spark 默认启用固定版本 **LightX2V 4-step LoRA**。
 提供本地官方文件，否则自动按固定版本下载并核验 SHA256。
 社区风格 LoRA 先用 `prepare-lora` 准备，再通过 `--lora` 与默认学生在加载时合并。
 指定另一个社区少步学生时关闭默认 LightX2V，避免叠加两个学生模型。
-Veda 始终必须带官方训练好的预测网络。VSA 只接受完整 FastH3 VSA 官方 LoRA，
+Veda 始终必须带官方训练好的预测网络。VSA 只接受官方 FastH3 V2 完整学生权重，
+采用 8 次前向、80% 视频稀疏率、视频/音频 shift 10/3，不传 `--lora`；
 VDN 只接受官方 stage-DMD 配置，二者不叠加其他 LoRA，也不支持关闭其学生模型。
 全部 LoRA 在计时前、TP 切分及 INT8 量化前合并，推理时不额外执行 LoRA 矩阵乘。
 
@@ -91,8 +92,8 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 其他注意力：
 
 ```bash
-h3-ascend serve --method vsa --model /models/MiniMax-H3 \
-  --lora /models/Sol-H3-VSA-LoRA --precision bf16 --devices 1
+h3-ascend serve --method vsa --model /models/FastH3-V2 \
+  --precision bf16 --devices 1
 h3-ascend serve --method veda --model /models/MiniMax-H3 \
   --predictor /models/veda/predictor.safetensors \
   --precision bf16 --devices 1
@@ -148,7 +149,7 @@ for CASE in 672-124 672-345 1344-124 1344-345; do
 done
 ```
 
-客户端传入与服务端相同的 `--method`：Full/Veda/Spark/VSA 默认四步，VDN 八步。
+客户端传入与服务端相同的 `--method`：Full/Veda/Spark 默认四步，VSA V2 与 VDN 八步。
 如需运行原版多步模型，服务端与客户端均加 `--no-few-step-lora`，客户端默认 50 步。
 独立社区学生模型可显式指定 `--steps`；`--guidance-scale` 省略时保留原生策略。
 本项目不额外添加 Refine。客户端保存完整 MP4 和请求/时延 JSON。
@@ -156,13 +157,15 @@ done
 ## 端到端性能
 
 新的单卡矩阵正在实测，仅下方“已测”数据已完成，其余仍待测。最新口径为相同硬件、精度、分辨率、
-帧数下，**Full + LightX2V 四步**端到端耗时 / 对应四步注意力方案端到端耗时。
+帧数下，**Full + LightX2V 四步**端到端耗时 / 对应原生学生设定端到端耗时。
 量化收益另报同一方案的 BF16 / INT8 耗时比。此前 50 步基线已按要求停止，
 不用于本轮图表。
 
-模型加载、LoRA 合并、JIT 预热均在计时前完成；计时包含每次文本编码、四次去噪、
+模型加载、LoRA 合并、JIT 预热均在计时前完成；计时包含每次文本编码、该学生全部实际去噪前向、
 音视频解码、MP4 编码及返回。Full、Veda、Spark 使用固定版本 LightX2V 4-step；
-VSA 使用完整官方 FastH3 4-step 学生。固定八步的 VDN 单独说明，不混入四步候选图。
+VSA 改为官方 FastH3 V2 完整八步学生（80% 稀疏率、shift 10/3）。
+VSA 八步相对 Full 四步是不同配置的完整系统比较，不是同等步数的纯注意力加速比。
+[旧版 VSA v1 数据](benchmarks/archive/fasth3-v1-four-step-highres.json)单独归档，不能视作 v2 结果。固定八步的 VDN 单独说明，暂不混入已完成的性能矩阵。
 不同学生不宣称画质等价，也不将 50→4 步蒸馏的收益计入本轮加速比。
 
 显存不足的设定使用 **Offload** 实测，不以 OOM 作为最终结果。PRO 6000 与昇腾
@@ -176,32 +179,32 @@ Attention/FFN 分项来自单独的性能分析运行，不能代替端到端实
 
 <!-- BEGIN HIGHRES RESULTS -->
 
-1344×768 · 单卡 · 四步 · seed 42，**每个已测硬件/设定一次正式完整请求**：
+1344×768 · 单卡 · Full/Veda/Spark 四步、VSA V2 八步 · seed 42，**每个已测硬件/设定一次正式完整请求**：
 
 | 帧数 | 精度 | 方法 | 昇腾 910B3 耗时 | 昇腾加速比 | PRO 6000 耗时 | PRO 6000 加速比 |
 | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| 124 | BF16 | Full + LightX2V | 121.04 秒 | 1.00× | — | — |
-| 124 | BF16 | VSA · FastH3 | 83.72 秒 | 1.45× | — | — |
-| 124 | BF16 | Veda + LightX2V | 69.86 秒 | 1.73× | — | — |
-| 124 | BF16 | Spark-H3 + LightX2V | 78.15 秒 | 1.55× | — | — |
-| 124 | INT8 | Full + LightX2V | 111.90 秒 | 1.00× | — | — |
-| 124 | INT8 | VSA · FastH3 | 74.24 秒 | 1.51× | — | — |
-| 124 | INT8 | Veda + LightX2V | 61.78 秒 | 1.81× | — | — |
-| 124 | INT8 | Spark-H3 + LightX2V | 71.41 秒 | 1.57× | — | — |
-| 345 | BF16 | Full + LightX2V | 648.97 秒 | 1.00× | 250.88 秒 | 1.00× |
-| 345 | BF16 | VSA · FastH3 | 285.69 秒 | 2.27× | — | — |
-| 345 | BF16 | Veda + LightX2V | 225.29 秒 | **2.88×** | 103.06 秒 | 2.43× |
-| 345 | BF16 | Spark-H3 + LightX2V | 276.45 秒 | **2.35×** | 115.23 秒 | 2.18× |
-| 345 | INT8 | Full + LightX2V | 603.84 秒 | 1.00× | 243.86 秒 | 1.00× |
-| 345 | INT8 | VSA · FastH3 | 261.56 秒 | **2.31×** | 132.66 秒 | 1.84× |
-| 345 | INT8 | Veda + LightX2V | 203.77 秒 | **2.96×** | 95.43 秒 | 2.56× |
-| 345 | INT8 | Spark-H3 + LightX2V | 247.17 秒 | 2.44× | — | — |
+| 124 | BF16 | Full + LightX2V · 4 | 121.04 秒 | 1.00× | — | — |
+| 124 | BF16 | VSA · FastH3 V2 · 8 · 80% | — | — | — | — |
+| 124 | BF16 | Veda + LightX2V · 4 · 90% | 69.86 秒 | 1.73× | — | — |
+| 124 | BF16 | Spark-H3 + LightX2V · 4 | 78.15 秒 | 1.55× | — | — |
+| 124 | INT8 | Full + LightX2V · 4 | 111.90 秒 | 1.00× | — | — |
+| 124 | INT8 | VSA · FastH3 V2 · 8 · 80% | — | — | — | — |
+| 124 | INT8 | Veda + LightX2V · 4 · 90% | 61.78 秒 | 1.81× | — | — |
+| 124 | INT8 | Spark-H3 + LightX2V · 4 | 71.41 秒 | 1.57× | — | — |
+| 345 | BF16 | Full + LightX2V · 4 | 648.97 秒 | 1.00× | 250.88 秒 | 1.00× |
+| 345 | BF16 | VSA · FastH3 V2 · 8 · 80% | — | — | — | — |
+| 345 | BF16 | Veda + LightX2V · 4 · 90% | 225.29 秒 | **2.88×** | 103.06 秒 | 2.43× |
+| 345 | BF16 | Spark-H3 + LightX2V · 4 | 276.45 秒 | **2.35×** | 115.23 秒 | 2.18× |
+| 345 | INT8 | Full + LightX2V · 4 | 603.84 秒 | 1.00× | 243.86 秒 | 1.00× |
+| 345 | INT8 | VSA · FastH3 V2 · 8 · 80% | — | — | — | — |
+| 345 | INT8 | Veda + LightX2V · 4 · 90% | 203.77 秒 | **2.96×** | 95.43 秒 | 2.56× |
+| 345 | INT8 | Spark-H3 + LightX2V · 4 | 247.17 秒 | **2.44×** | 107.27 秒 | 2.27× |
 
-所有结果统一使用 **Offload**（`omni-layer-prefetch1-vae-resident-v1`）。加速比均相对各自硬件、同精度的 Full 四步；加粗标记同一行中更高的加速比，相同值或尚未齐全的对照不加粗。
+所有结果统一使用 **Offload**（`omni-layer-prefetch1-vae-resident-v1`）。加速比均相对各自硬件、同精度的 Full 四步；VSA V2 保留官方八步，因此是不同步数的端到端配置比较。加粗标记同一行中更高的加速比，相同值或尚未齐全的对照不加粗。— 表示新版待测，不能套用旧 VSA v1 的四步数字。
 
-已完整验收：昇腾 16/16 组，PRO 6000 6/16 组。 其余组合仍在补齐，不使用预热或失败记录作为测量结果。
+已完整验收：昇腾 12/16 组，PRO 6000 6/16 组。 其余组合仍在补齐，不使用预热或失败记录作为测量结果。
 
-[高分辨率原始记录和独立分项测量](benchmarks/single-card-four-step-highres.json)。
+[高分辨率原始记录和独立分项测量](benchmarks/single-card-highres.json)。
 
 <!-- END HIGHRES RESULTS -->
 
@@ -213,7 +216,7 @@ Attention/FFN 分项来自单独的性能分析运行，不能代替端到端实
 
 左列 BF16，右列原生 W8A8 INT8；所有样例单卡、相同 prompt、seed 42、同一 Offload 策略。
 
-Full、VSA、Veda、Spark 为四步；**VDN 保留官方八步**，仅用于定性展示，不计入四步加速比。
+Full、Veda、Spark 为四步；**VSA V2 与 VDN 保留官方八步**。VSA V2 正在重新生成，旧 VSA v1 样例已归档，不冒充 v2。
 
 > A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.
 
@@ -239,16 +242,16 @@ https://github.com/user-attachments/assets/e0039d68-b50b-4f65-8714-07d4cfc3855a
 <tr>
 <td>
 
-**VSA · FastH3 · 4 步**
+**VSA · FastH3 V2 · 8 步 · 80%**
 
-https://github.com/user-attachments/assets/bc04612e-43e9-4d2e-a8df-14a891ecfdc6
+新版视频验收中。
 
 </td>
 <td>
 
-**VSA · FastH3 · 4 步**
+**VSA · FastH3 V2 · 8 步 · 80%**
 
-https://github.com/user-attachments/assets/37576726-d635-4f7c-80d3-c73de2837844
+新版视频验收中。
 
 </td>
 </tr>
@@ -303,9 +306,9 @@ https://github.com/user-attachments/assets/aba1d8ee-c178-4cd2-bb63-5e4a4c9f979e
 </table>
 <!-- END QUALITATIVE GALLERY -->
 
-VSA 与 Veda 均使用名义 **90% 视频稀疏率**（保留预算 10%）；文本/音频前缀按原规则保持稠密，实际比例有块取整误差。
+VSA V2 使用 **80% 视频稀疏率**（保留预算 20%），Veda 保持 **90%**（保留预算 10%）；文本/音频前缀按原规则保持稠密，实际比例有块取整误差。
 
-[十个视频的参数、SHA256 与原始来源](examples/videos/qualitative-1344-345.json)。所有视频已核对分辨率、345 帧、音轨及 DiT 有限输出。
+[已验收视频及待完成的 V2 样例](examples/videos/qualitative-1344-345.json)。已完成的视频核对了分辨率、345 帧、音轨及 DiT 有限输出；[旧版 VSA v1 样例来源](examples/videos/qualitative-1344-345-fasth3-v1-archive.json)单独保留。
 
 相同 prompt 与 seed 不意味着不同学生的结果逐像素或感知等价。VDN 求逆为完整 128 维的数值近似；时间卷积的舍入差异见[架构说明](docs/architecture.md)。VSA 历史样例出现过亮度回落，见[时间连续性记录](benchmarks/vsa-temporal-sample-check.json)；此处不作无闪烁保证。
 

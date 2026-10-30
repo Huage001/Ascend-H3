@@ -46,7 +46,8 @@ def register(method):
 
         def vsa(self, q, k, v, attn_metadata=None):
             if _get_h3_layout(attn_metadata) is not None:
-                attn_metadata.extra.setdefault("vsa_h3_sparsity", .9)
+                if attn_metadata.extra.get("vsa_h3_sparsity") is None:
+                    raise ValueError("FastH3 V2 VSA sparsity metadata is missing")
             return original(self, q, k, v, attn_metadata)
 
         MiniMaxH3VSAImpl.forward_cuda = vsa

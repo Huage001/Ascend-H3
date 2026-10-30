@@ -80,64 +80,6 @@
       }
     },
     {
-      "method": "vsa",
-      "precision": "bf16",
-      "width": 1344,
-      "height": 768,
-      "frames": 345,
-      "fps": 24,
-      "seed": 42,
-      "steps": 4,
-      "hardware": "Ascend 910B3",
-      "sha256": "6989d6a9853b0fad8ab694d61bc4a4d58c1f2a7f8cdfc399105650c03ee940b9",
-      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/vsa-bf16-single-1344-345-student",
-      "media_directory": "vsa-bf16-1344-345",
-      "bytes": 34489296,
-      "video_duration_seconds": 14.375,
-      "mp4": "https://github.com/user-attachments/assets/bc04612e-43e9-4d2e-a8df-14a891ecfdc6",
-      "devices": 1,
-      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
-      "student": {
-        "name": "official FastH3 VSA four-step student",
-        "sha256": "42dc502a2078f166c396a1fa75f29728d1844363652d345d5ef3e2b444ed6470",
-        "bytes": 5339117712
-      },
-      "nominal_video_sparsity": 0.9,
-      "video_keep_budget": 0.1,
-      "prefix_policy": "native text/audio dense",
-      "logical_video_blocks": 1716,
-      "selected_video_blocks_per_query": 172
-    },
-    {
-      "method": "vsa",
-      "precision": "int8",
-      "width": 1344,
-      "height": 768,
-      "frames": 345,
-      "fps": 24,
-      "seed": 42,
-      "steps": 4,
-      "hardware": "Ascend 910B3",
-      "sha256": "ce4210f2074597e13b0bbadf35f5bcc3deba0049733153ea66706ab9f8b9ba4a",
-      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/e2e/vsa-int8-single-1344-345-student",
-      "media_directory": "vsa-int8-1344-345",
-      "bytes": 34480854,
-      "video_duration_seconds": 14.375,
-      "mp4": "https://github.com/user-attachments/assets/37576726-d635-4f7c-80d3-c73de2837844",
-      "devices": 1,
-      "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
-      "student": {
-        "name": "official FastH3 VSA four-step student",
-        "sha256": "42dc502a2078f166c396a1fa75f29728d1844363652d345d5ef3e2b444ed6470",
-        "bytes": 5339117712
-      },
-      "nominal_video_sparsity": 0.9,
-      "video_keep_budget": 0.1,
-      "prefix_policy": "native text/audio dense",
-      "logical_video_blocks": 1716,
-      "selected_video_blocks_per_query": 172
-    },
-    {
       "method": "veda",
       "precision": "bf16",
       "width": 1344,
@@ -321,5 +263,23 @@
   "duration_seconds": 14.375,
   "hardware": "Ascend 910B3",
   "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
-  "quality_note": "Same prompt and seed; different students are not asserted to be perceptually equivalent. VDN keeps its official eight-step schedule."
+  "quality_note": "VSA switched to the full official FastH3 V2 student (8 forwards, 80% video sparsity); its two new samples are pending. Old VSA v1 videos are archived separately. Other methods retain their recorded configurations.",
+  "pending": [
+    {
+      "method": "vsa",
+      "student": "FastH3 V2",
+      "precision": "bf16",
+      "steps": 8,
+      "nominal_video_sparsity": 0.8,
+      "status": "pending validation"
+    },
+    {
+      "method": "vsa",
+      "student": "FastH3 V2",
+      "precision": "int8",
+      "steps": 8,
+      "nominal_video_sparsity": 0.8,
+      "status": "pending validation"
+    }
+  ]
 }

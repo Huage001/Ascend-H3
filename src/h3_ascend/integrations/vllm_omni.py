@@ -174,11 +174,10 @@ def _vsa_forward(self, q, k, v, attn_metadata=None):
         raise ValueError("VSA checkpoint gate is absent; refusing a dense fallback")
     n = layout.sequence_length
     sparsity = attn_metadata.extra.get("vsa_h3_sparsity")
-    # The exported Ascend VSA path uses the historical 90% route budget when
-    # a legacy student supplies no ratio. Do not inherit Omni's fixed top-64
-    # default, whose effective sparsity changes with the video resolution.
+    # V2 supplies the trained ratio explicitly. Missing metadata must not
+    # silently use a v1 budget or Omni's geometry-dependent fixed top-64.
     if sparsity is None:
-        sparsity = 0.9
+        raise ValueError("FastH3 V2 VSA sparsity metadata is missing")
     y = attention(
         q[0, :n].contiguous(),
         k[0, :n].contiguous(),

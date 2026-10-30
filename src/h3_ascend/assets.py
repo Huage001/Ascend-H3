@@ -53,25 +53,56 @@ def is_fasth3(path):
     ).startswith(("FastVideo/FastH3", "FastVideo/FastVideo-FastH3"))
 
 
-def validate_assets(method, lora=None, predictor=None):
+def validate_fasth3_v2(model):
+    """Reject the legacy v1 adapter and incomplete full-checkpoint exports."""
+    if not model:
+        raise ValueError("VSA requires --model pointing to the complete official FastH3 V2 checkpoint")
+    root = Path(model)
+    contract_path = root / "fastvideo_inference.json"
+    if not contract_path.is_file():
+        raise ValueError("VSA requires a local official FastH3 V2 checkpoint with fastvideo_inference.json")
+    contract = json.loads(contract_path.read_text())
+    required = {
+        "model_id": "FastVideo/FastVideo-FastH3-8-Step-V2",
+        "schema_version": "fasth3-inference-contract-v1",
+        "dmd_denoising_steps": [999, 874, 749, 624, 500, 375, 250, 125],
+        "transformer_forwards": 8,
+        "num_inference_steps": 9,
+        "video_scheduler_shift": 10.0, "audio_scheduler_shift": 3.0,
+        "guidance_scale": 1.0, "attention_backend": "VIDEO_SPARSE_ATTN_H3",
+        "vsa_sparsity": 0.8, "vsa_tile_size": 64, "task": "t2av",
+    }
+    for key, expected in required.items():
+        if contract.get(key) != expected:
+            raise ValueError(f"FastH3 V2 contract mismatch: {key}={contract.get(key)!r}; expected {expected!r}")
+    if not (root / "modular_model_index.json").is_file():
+        raise ValueError("FastH3 V2 requires the official modular_model_index.json")
+    transformer = root / "transformer"
+    indexes = list(transformer.glob("*.safetensors.index.json"))
+    if len(indexes) != 1:
+        raise ValueError("FastH3 V2 requires one complete transformer safetensors index")
+    weight_map = json.loads(indexes[0].read_text())["weight_map"]
+    gates = {
+        int(m[1]) for key in weight_map
+        if (m := re.fullmatch(r"transformer_blocks\.(\d+)\.attn\.to_gate_compress\.weight", key))
+    }
+    if gates != set(range(50)):
+        raise ValueError("FastH3 V2 requires all 50 trained compression gates")
+    for name in set(weight_map.values()):
+        file = transformer / name
+        if Path(name).name != name or not file.is_file() or file.stat().st_size < 16:
+            raise ValueError(f"FastH3 V2 transformer shard missing or invalid: {name}")
+
+
+def validate_assets(method, lora=None, predictor=None, *, model=None):
     if method == "veda":
         predictor = predictor or os.environ.get("H3_ASCEND_VEDA_PREDICTOR")
         if not predictor or not Path(predictor).is_file():
             raise ValueError("Veda requires its official trained predictor: pass --predictor FILE")
     if method == "vsa":
-        if not is_fasth3(lora):
-            raise ValueError("VSA requires the official FastH3 VSA LoRA, without extra community LoRAs")
-        header = adapter_header(lora)
-        gates = {
-            int(m[1]) for key in header
-            if (m := re.fullmatch(r"transformer_blocks\.(\d+)\.attn\.to_gate_compress\.set_weight", key))
-        }
-        factors = {key.removesuffix(".lora_A.weight") for key in header if key.endswith(".lora_A.weight")}
-        paired = {key.removesuffix(".lora_B.weight") for key in header if key.endswith(".lora_B.weight")}
-        if not factors or factors != paired:
-            raise ValueError("VSA needs the complete FastH3 student LoRA, not only compression gates")
-        if gates != set(range(50)):
-            raise ValueError("Use the FastH3 VSA variant with all 50 trained gates, not its dense variant")
+        if lora:
+            raise ValueError("VSA uses the full official FastH3 V2 student; additional or legacy LoRAs are unsupported")
+        validate_fasth3_v2(model)
     if method == "vdn":
         root = Path(lora) if lora else Path("")
         if not all((root / name).is_file() for name in (

@@ -19,16 +19,18 @@ def fixture():
             for method, baseline in figure.METHODS:
                 rows.append({
                     "hardware": hardware, "precision": precision, "method": method,
-                    "baseline": baseline, "actual_steps": 4, "validated": True,
+                    "baseline": baseline, "actual_steps": 8 if method == "vsa" else 4, "validated": True,
+                    "student_profile": "fasth3-v2" if method == "vsa" else "lightx2v4",
+                    "nominal_video_sparsity": .8 if method == "vsa" else .9,
                     "contention_detected": False, "offload": True, "offload_policy": "test",
-                    "e2e_seconds": [60.0], "profile": {"actual_forwards": 4,
+                    "e2e_seconds": [60.0], "profile": {"actual_forwards": 8 if method == "vsa" else 4,
                         "dit_wall_seconds": 40.0, "attention_seconds": 20.0, "ffn_seconds": 10.0},
                 })
     return {"width": 1344, "height": 768, "frames": 345, "devices": 1, "records": rows}
 
 
 class FigureContracts(unittest.TestCase):
-    def test_complete_four_step_matrix(self):
+    def test_complete_native_student_matrix(self):
         rows, policy = figure.validate(fixture())
         self.assertEqual(len(rows), 16)
         self.assertEqual(policy, "test")
@@ -39,6 +41,9 @@ class FigureContracts(unittest.TestCase):
         missing = copy.deepcopy(base)
         missing["records"].pop()
         cases.append(missing)
+        legacy = copy.deepcopy(base)
+        next(row for row in legacy["records"] if row["method"] == "vsa")["student_profile"] = "fasth3-v1"
+        cases.append(legacy)
         for field, value in (("actual_steps", 50), ("offload_policy", "other"),
                              ("contention_detected", True), ("devices", 2)):
             bad = copy.deepcopy(base)

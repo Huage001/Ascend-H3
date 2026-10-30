@@ -13,7 +13,7 @@ from pathlib import Path
 
 HARDWARE = ("Ascend 910B3", "RTX PRO 6000")
 METHODS = (("full", False), ("vsa", False), ("veda", False), ("spark", False))
-LABELS = ("Full + LightX2V", "VSA · FastH3", "Veda + LightX2V", "Spark-H3 + LightX2V")
+LABELS = ("Full + LightX2V", "VSA · FastH3 V2 · 80%", "Veda + LightX2V · 90%", "Spark-H3 + LightX2V")
 
 
 def validate(data):
@@ -30,7 +30,12 @@ def validate(data):
         samples = row["e2e_seconds"]
         if not samples or any(not math.isfinite(x) or x <= 0 for x in samples):
             raise ValueError(f"End-to-end measurements required: {key}")
-        expected = 4
+        expected = 8 if row["method"] == "vsa" else 4
+        if row["method"] == "vsa" and (
+            row.get("student_profile") != "fasth3-v2"
+            or row.get("nominal_video_sparsity") != .8
+        ):
+            raise ValueError(f"Figure requires the V2 student and 80% VSA, not legacy v1: {key}")
         if row["actual_steps"] != expected:
             raise ValueError(f"Wrong model/schedule: {key}")
         profile = row["profile"]
@@ -38,7 +43,7 @@ def validate(data):
         if any(not math.isfinite(x) or x < 0 for x in spans):
             raise ValueError(f"Invalid profiling spans: {key}")
         if profile["actual_forwards"] != expected:
-            raise ValueError(f"The independent profile must retain all four updates: {key}")
+            raise ValueError(f"The independent profile must retain all {expected} updates: {key}")
         if not math.isfinite(profile["dit_wall_seconds"]) or sum(spans) > profile["dit_wall_seconds"]:
             raise ValueError(f"Overlapping or invalid top-level profiling spans: {key}")
         if not row["offload"]:
@@ -126,7 +131,7 @@ def render(data, output):
              "Q = same-method BF16 / INT8.", fontsize=8, color="#626257")
     fig.text(.055, .028, f"Bars: separate DiT profiling, normalized over actual forwards × 50 blocks; no E2E extrapolation. "
              f"Offload policy: {policy}.", fontsize=8, color="#626257")
-    fig.text(.055, .015, "VDN requires its official eight-step student and is documented separately; it is not a four-step candidate.", fontsize=8, color="#626257")
+    fig.text(.055, .015, "VSA V2: 8 forwards, 80% sparsity; Full/Veda/Spark: 4 forwards. Different-step E2E configurations. VDN documented separately.", fontsize=8, color="#626257")
     output.parent.mkdir(parents=True, exist_ok=True)
     for suffix in ("png", "svg", "pdf"):
         fig.savefig(output.with_suffix("." + suffix), dpi=190, facecolor=fig.get_facecolor())

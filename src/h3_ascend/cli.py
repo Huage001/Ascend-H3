@@ -92,10 +92,8 @@ def command(a):
     lora = launch_adapter(a.method, getattr(a, "few_step_lora", True), a.lora)
     if lora:
         cmd += ["--lora-path", lora]
-    if a.method == "vsa" and not a.lora:
-        raise ValueError(
-            "VSA needs --lora with trained compression gates (or prepare a fused VSA checkpoint)"
-        )
+    if a.method == "vsa" and a.lora:
+        raise ValueError("VSA uses the complete official FastH3 V2 checkpoint; remove --lora")
     if a.method == "vdn" and not a.lora:
         raise ValueError("VDN needs --lora pointing to its stage-dmd-step-250 checkpoint directory")
     return cmd
@@ -116,7 +114,7 @@ def main():
     s = sub.add_parser("serve")
     s.add_argument("--method", choices=METHODS, required=True)
     s.add_argument("--model", required=True)
-    s.add_argument("--lora", help="Official VSA/VDN student, or a prepared community adapter")
+    s.add_argument("--lora", help="Official VDN student, or a prepared community adapter; VSA V2 is a full checkpoint")
     s.add_argument("--few-step-lora", action=argparse.BooleanOptionalAction, default=True)
     s.add_argument("--few-step-source", type=Path, help="Local pinned LightX2V file; otherwise download")
     s.add_argument("--precision", choices=["bf16", "int8"], default="bf16")
@@ -177,7 +175,7 @@ def main():
         )
         if prepared:
             cmd[cmd.index("--lora-path") + 1] = prepared
-        validate_assets(a.method, a.lora, a.predictor)
+        validate_assets(a.method, a.lora, a.predictor, model=a.model)
         os.environ["H3_ASCEND_METHOD"] = a.method
         if a.predictor:
             os.environ["H3_ASCEND_VEDA_PREDICTOR"] = a.predictor
@@ -191,6 +189,8 @@ def main():
 
         if a.steps is None:
             a.steps = step_count(a.method, a.few_step_lora)
+        if a.method == "vsa" and a.steps != 8:
+            raise ValueError("FastH3 V2 requires eight forwards with its trained sigma schedule")
         generate(a)
 
 

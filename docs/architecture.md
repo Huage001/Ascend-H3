@@ -48,11 +48,12 @@ Default multi-card launches use vLLM tensor parallel head sharding: QKV and
 output projections are managed upstream, and this package sees local heads.
 56 heads support TP sizes 1, 2, 4, 7 and 8. Veda translates local IDs back to
 global checkpoint head IDs. Optional Ulysses is exposed separately; upstream
-VDN currently forbids Ulysses and distributed layerwise offload. VSA and VDN
-use ordinary layerwise offload so their load-time weight fusion is not skipped
-by a direct checkpoint host-weight plan. The VSA compatibility patch narrows
-the upstream offload rejection to the distributed path; its normal weight
-loader and complete-fusion validation still run.
+VDN currently forbids Ulysses and distributed layerwise offload. All comparisons
+use ordinary layerwise offload. VSA loads the complete official FastH3 V2
+checkpoint in its released Diffusers layout, including 50 trained gates, with
+80% video sparsity, tile64, eight forwards and shifts 10/3. No additional LoRA
+is fused into V2. The earlier v1 adapter-fusion patch remains a dependency
+compatibility patch; v1 measurements are archived, not V2 results.
 
 The initial release targets one T2VA document per request. Plan objects hold
 mutable scratch tensors and NPU graph buffers, so one worker must serialize

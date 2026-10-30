@@ -47,17 +47,39 @@ adapters; a separately distilled student can pin `--steps`, `--video-shift`,
 A legacy eight-step Turbo adapter remains an explicit optional input; it is
 not substituted for the default LightX2V four-step source.
 
-## Four-step VSA
+## FastH3 V2 VSA: eight forwards, 80% sparsity
 
-Use a trained VSA student rather than adding an untrained compression gate:
-[FastH3 VSA adapter family](https://huggingface.co/FastVideo/FastVideo-FastH3-4-step-Preview-v1-LoRA/tree/main/vsa-datafree).
+Use the complete official [FastH3 V2 student](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2),
+revision `3da2ddfe1954d9cda4c05b643dc0f26007a655c5`. This is a **full checkpoint**,
+not the old v1 LoRA. Do not stack LightX2V or another adapter. The released
+contract is eight actual DiT forwards (nine sigma points), tile64, 80% nominal
+video sparsity, guidance 1, video/audio shifts **10/3**. Base sigma positions are
+`[0.999, 0.874, 0.749, 0.624, 0.5, 0.375, 0.25, 0.125, 0]`; Omni applies the
+trained shifts. Its API uses `--steps 8`, not the raw FastVideo grid count 9.
+
+The downloader pins every file digest in `configs/fasth3-v2.json`. It can reuse
+existing text/processor/tokenizer and native VAE files **only after hash checks**;
+it always obtains the entire trained V2 transformer and all 50 gates.
+The transformer download alone is 70.10 GB. If frozen components are absent,
+additional storage is required. The native VAE compatibility revision is pinned
+to the one required by the selected Omni release.
 
 ```bash
-hf download FastVideo/FastVideo-FastH3-4-step-Preview-v1-LoRA \
-  vsa-datafree/adapter_model.safetensors --local-dir /models/fasth3
-# serve --lora /models/fasth3/vsa-datafree/adapter_model.safetensors
-# generate --steps 4
+python scripts/download_fasth3_v2.py --output /models/FastH3-V2 \
+  --base /models/MiniMax-H3 --native-cache /models/hf-v2 \
+  --endpoint https://huggingface.co --workers 4
+# Use --endpoint https://hf-mirror.com when required by your network.
+export HF_HUB_CACHE=/models/hf-v2 HF_HUB_OFFLINE=1
+h3-ascend serve --method vsa --model /models/FastH3-V2 \
+  --precision bf16 --devices 1
+h3-ascend generate --method vsa --case 1344-345 --prompt-file prompt.txt \
+  --output vsa-v2.mp4
 ```
+
+中文：VSA 已切换到官方 FastH3 V2 完整学生模型，80% 稀疏、8 次前向、shift 10/3。
+不能仅把旧 LoRA 的稀疏度从 90% 改为 80%，也不能复用旧四步结果；完整权重、训练门控、
+采样日程必须一起更换。INT8 使用同一 V2 学生，经原生量化后运行；双卡/四卡仍使用
+vLLM-Omni attention-head TP。新版视频和性能未验收前均标记为待完成。
 
 ## Veda predictor
 

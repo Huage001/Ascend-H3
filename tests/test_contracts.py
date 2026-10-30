@@ -19,7 +19,7 @@ class Contracts(unittest.TestCase):
             for method in ("full", "vsa", "veda", "spark"):
                 args = argparse.Namespace(method=method, parallel="tp", devices=1,
                     model="model", host="127.0.0.1", port=8000, precision="bf16",
-                    lora="checkpoint")
+                    lora=None if method == "vsa" else "checkpoint")
                 argv = command(args)
                 self.assertEqual(argv[2], "h3_ascend.integrations.cuda_launch")
                 if method == "vsa":
@@ -34,7 +34,7 @@ class Contracts(unittest.TestCase):
             self.assertEqual(step_count(method), 4)
             self.assertEqual(step_count(method, False), 50)
             self.assertEqual(launch_adapter(method, False, None), None)
-        self.assertEqual(step_count("vsa"), 4)
+        self.assertEqual(step_count("vsa"), 8)
         self.assertEqual(step_count("vdn"), 8)
         for method in ("vsa", "vdn"):
             with self.assertRaises(ValueError):
@@ -79,7 +79,7 @@ class Contracts(unittest.TestCase):
                 host="127.0.0.1",
                 port=8000,
                 precision="int8",
-                lora="checkpoint",
+                lora=None if method == "vsa" else "checkpoint",
             )
             argv = command(args)
             self.assertEqual(argv[argv.index("--tensor-parallel-size") + 1], "4")

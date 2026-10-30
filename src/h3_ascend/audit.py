@@ -88,6 +88,8 @@ def install():
             ],
             "nonzero_vsa_gates": sum(value is True for value in self._h3_audit_gates),
             "vsa_gate_checks": self._h3_audit_gates,
+            "vsa_sparsities": [getattr(block.attn, "vsa_sparsity", None) for block in self.blocks],
+            "vsa_tile_sizes": [getattr(block.attn, "vsa_tile_size", None) for block in self.blocks],
         }
         root = Path(directory)
         root.mkdir(parents=True, exist_ok=True)
