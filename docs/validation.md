@@ -21,6 +21,14 @@ This document records evidence, not intended support inferred from CLI flags.
 | INT8 W8A8 projection output entering Full/VSA/Spark/Veda | Passed native smoke |
 | VDN 128-dimensional factor versus FP64 inverse | Passed; relative L2 1.45e-7 |
 | VDN dynamic graph scan with changed inputs versus eager | Passed bitwise check |
+| Pinned LightX2V four-step source and prepared fusion | SHA256 verified; 312 factor pairs / 208 native targets; alpha=rank=128, shifts 6/3 |
+| General partial Q-only community LoRA | CPU tensor regression passed; K/V slots unchanged |
+| Audit removal before performance requests | CPU regression passed; all hooks removed and native forward restored |
+| Full LightX2V4 INT8 single-card 672×384 / 124 frames | Complete video/audio passed; four finite DiT updates and all 50 blocks; visually inspected |
+| VSA INT8 single-card 672×384 / 124 frames | Complete video/audio passed; four updates, 50 nonzero active gates each step |
+| VDN official eight-step INT8 single-card 672×384 / 124 frames | Complete video/audio passed with all eight finite updates and 50 blocks; excluded from the four-step performance figure |
+| Veda and Spark BF16 single-card 1344×768 / 345 frames | Complete four-step MP4s and independent profiling requests passed |
+| Cross-device original DiT tensors | All 535 tensors match in shape, dtype and SHA256 after lossless native repacking |
 | New framework server, single-card full video matrix | In progress |
 | New framework server, INT8 full video matrix | In progress |
 | Four-card TP model inference for all five methods | In progress |
@@ -50,8 +58,8 @@ quantization-error measurements.
 Gate auditing runs at the child projection before execution: ordinary layerwise
 offload clears the parent block's device weights afterward. Inspecting all
 weights at the end of the DiT would miscount valid gates as unloaded zeros.
-A CPU regression reproduced this clear/restore behavior and checked all 50
-gates across two forwards.
+CPU regressions reproduced this clear/restore behavior, checked all 50
+active gates and verified complete hook removal after the audited warmup.
 
 The complete VSA INT8 TP4 matrix is recorded in
 `benchmarks/vsa-int8-tp4-matrix.json`; all four videos have audio.
@@ -71,3 +79,9 @@ a fixed-latent decoder A/B is still required to assign a root cause.
 
 The complete Veda INT8 TP4 matrix is recorded in
 `benchmarks/veda-int8-tp4-matrix.json`, including all four video hashes.
+
+The current performance baseline is same-device, same-precision **Full +
+LightX2V, four steps**. Quantization gain is reported separately as BF16/INT8.
+The former 50-step benchmark was cancelled at the user's request. See
+[the benchmark protocol](benchmark-protocol.md). Neither old attention-only
+ratios nor eight-step Turbo8 samples are relabeled as these new four-step results.
