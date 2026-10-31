@@ -1,0 +1,266 @@
+{
+  "protocol": {
+    "precision": "bf16",
+    "layers": [
+      0,
+      24,
+      49
+    ],
+    "repetitions": 3,
+    "average": "sum of nine timings / 9",
+    "offload": false,
+    "input": "frozen shared synthetic hidden states and real student weights",
+    "clock": "synchronized host wall time; device synchronize immediately before and after the core call",
+    "attention_excludes": [
+      "QKV projection",
+      "Q/K norm",
+      "RoPE",
+      "final output projections",
+      "AdaLN",
+      "FFN"
+    ],
+    "attention_includes": [
+      "required sparse gates and predictors",
+      "block selection",
+      "token rearrangement/restoration",
+      "both VDN core branches"
+    ],
+    "full_providers": {
+      "ascend": "torch_npu.npu_fused_infer_attention_score, BNSD",
+      "cuda": "pinned official Miowtion FA4 provider"
+    },
+    "attention_scope": "core only: QKV and Q/K norm/RoPE ready; required sparse gate/predictor/routing and both VDN branches included; final output projections excluded"
+  },
+  "matched_core_pairs": 10,
+  "expected_core_pairs": 10,
+  "records": [
+    {
+      "method": "full",
+      "frames": 124,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 491.5147740393877,
+          "dit_block_speedup": 1.0,
+          "block_source": "benchmarks/raw/three-layer/ascend/410-full-bf16-layers-1344-124.json",
+          "core_ms": 343.31338925080166,
+          "core_speedup": 1.0,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/610-full-bf16-core-1344-124.json"
+        },
+        "cuda": {
+          "dit_block_ms": 185.92793877340026,
+          "dit_block_speedup": 1.0,
+          "block_source": "benchmarks/raw/three-layer/cuda/500-full-bf16-1344-124.json",
+          "core_ms": 111.64344629893701,
+          "core_speedup": 1.0,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/600-full-bf16-core-1344-124.json"
+        }
+      }
+    },
+    {
+      "method": "vsa",
+      "frames": 124,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 346.40078246593475,
+          "dit_block_speedup": 1.418919352723239,
+          "block_source": "benchmarks/raw/three-layer/ascend/411-vsa-bf16-layers-1344-124.json",
+          "core_ms": 216.24268922540875,
+          "core_speedup": 1.5876300395660357,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/611-vsa-bf16-core-1344-124.json"
+        },
+        "cuda": {
+          "dit_block_ms": 166.56315461215047,
+          "dit_block_speedup": 1.1162609114022939,
+          "block_source": "benchmarks/raw/three-layer/cuda/501-vsa-bf16-1344-124.json",
+          "core_ms": 93.55685508085622,
+          "core_speedup": 1.193321923898035,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/601-vsa-bf16-core-1344-124.json"
+        }
+      }
+    },
+    {
+      "method": "veda",
+      "frames": 124,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 213.5606947251492,
+          "dit_block_speedup": 2.3015226405400258,
+          "block_source": "benchmarks/raw/three-layer/ascend/412-veda-bf16-layers-1344-124.json",
+          "core_ms": 75.49813876135482,
+          "core_speedup": 4.5473093096506005,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/612-veda-bf16-core-1344-124.json"
+        },
+        "cuda": {
+          "dit_block_ms": 97.7620818755693,
+          "dit_block_speedup": 1.901841032907295,
+          "block_source": "benchmarks/raw/three-layer/cuda/502-veda-bf16-1344-124.json",
+          "core_ms": 25.013775150809025,
+          "core_speedup": 4.463278558547613,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/602-veda-bf16-core-1344-124.json"
+        }
+      }
+    },
+    {
+      "method": "vdn",
+      "frames": 124,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 527.747401346763,
+          "dit_block_speedup": 0.9313447546782553,
+          "block_source": "benchmarks/raw/three-layer/ascend/413-vdn-bf16-layers-1344-124.json",
+          "core_ms": 368.89020612256394,
+          "core_speedup": 0.9306655030487191,
+          "softmax_ms": 187.61765211820602,
+          "linear_ms": 181.19034357368946,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/613-vdn-bf16-core-1344-124.json"
+        },
+        "cuda": {
+          "dit_block_ms": 222.88930892116494,
+          "dit_block_speedup": 0.8341716328761297,
+          "block_source": "benchmarks/raw/three-layer/cuda/503-vdn-bf16-1344-124.json",
+          "core_ms": 142.74212614529662,
+          "core_speedup": 0.7821338333246879,
+          "softmax_ms": 61.301219173603585,
+          "linear_ms": 81.65716131528218,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/603-vdn-bf16-core-1344-124.json"
+        }
+      }
+    },
+    {
+      "method": "spark",
+      "frames": 124,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 267.4168473523524,
+          "dit_block_speedup": 1.838009754829547,
+          "block_source": "benchmarks/raw/three-layer/ascend/414-spark-bf16-layers-1344-124.json",
+          "core_ms": 128.5422562311093,
+          "core_speedup": 2.6708212483337,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/614-spark-bf16-core-1344-124.json"
+        },
+        "cuda": {
+          "dit_block_ms": 112.6460563391447,
+          "dit_block_speedup": 1.6505499155125767,
+          "block_source": "benchmarks/raw/three-layer/cuda/504-spark-bf16-1344-124.json",
+          "core_ms": 39.353570486936306,
+          "core_speedup": 2.8369330893621925,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/604-spark-bf16-core-1344-124.json"
+        }
+      }
+    },
+    {
+      "method": "full",
+      "frames": 345,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 3000.601710544692,
+          "dit_block_speedup": 1.0,
+          "block_source": "benchmarks/raw/three-layer/ascend/415-full-bf16-layers-1344-345.json",
+          "core_ms": 2578.595876072844,
+          "core_speedup": 1.0,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/615-full-bf16-core-1344-345.json"
+        },
+        "cuda": {
+          "dit_block_ms": 1054.580451403227,
+          "dit_block_speedup": 1.0,
+          "block_source": "benchmarks/raw/three-layer/cuda/505-full-bf16-1344-345.json",
+          "core_ms": 838.0992805792225,
+          "core_speedup": 1.0,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/605-full-bf16-core-1344-345.json"
+        }
+      }
+    },
+    {
+      "method": "vsa",
+      "frames": 345,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 1550.074839240147,
+          "dit_block_speedup": 1.9357786053837243,
+          "block_source": "benchmarks/raw/three-layer/ascend/416-vsa-bf16-layers-1344-345.json",
+          "core_ms": 1196.303195009629,
+          "core_speedup": 2.1554701908591736,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/616-vsa-bf16-core-1344-345.json"
+        },
+        "cuda": {
+          "dit_block_ms": 703.9171435559789,
+          "dit_block_speedup": 1.4981599198959723,
+          "block_source": "benchmarks/raw/three-layer/cuda/506-vsa-bf16-1344-345.json",
+          "core_ms": 498.3411784180337,
+          "core_speedup": 1.681778100777742,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/606-vsa-bf16-core-1344-345.json"
+        }
+      }
+    },
+    {
+      "method": "veda",
+      "frames": 345,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 787.9085202390949,
+          "dit_block_speedup": 3.8083123020857097,
+          "block_source": "benchmarks/raw/three-layer/ascend/417-veda-bf16-layers-1344-345.json",
+          "core_ms": 380.2578811430269,
+          "core_speedup": 6.781176680209169,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/617-veda-bf16-core-1344-345.json"
+        },
+        "cuda": {
+          "dit_block_ms": 330.5999127527078,
+          "dit_block_speedup": 3.1898993639241047,
+          "block_source": "benchmarks/raw/three-layer/cuda/507-veda-bf16-1344-345.json",
+          "core_ms": 123.45428143938382,
+          "core_speedup": 6.788742122246527,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/607-veda-bf16-core-1344-345.json"
+        }
+      }
+    },
+    {
+      "method": "vdn",
+      "frames": 345,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 1534.1892290032572,
+          "dit_block_speedup": 1.9558224329955336,
+          "block_source": "benchmarks/raw/three-layer/ascend/418-vdn-bf16-layers-1344-345.json",
+          "core_ms": 1093.4569572822916,
+          "core_speedup": 2.3582051939947943,
+          "softmax_ms": 639.4794205617574,
+          "linear_ms": 454.3810763085882,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/618-vdn-bf16-core-1344-345.json"
+        },
+        "cuda": {
+          "dit_block_ms": 647.1938408083386,
+          "dit_block_speedup": 1.629466142764997,
+          "block_source": "benchmarks/raw/three-layer/cuda/508-vdn-bf16-1344-345.json",
+          "core_ms": 423.1174239474866,
+          "core_speedup": 1.9807723179068126,
+          "softmax_ms": 191.79981336411504,
+          "linear_ms": 231.67985553542772,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/608-vdn-bf16-core-1344-345.json"
+        }
+      }
+    },
+    {
+      "method": "spark",
+      "frames": 345,
+      "hardware": {
+        "ascend": {
+          "dit_block_ms": 1028.4340909371774,
+          "dit_block_speedup": 2.9176412343647073,
+          "block_source": "benchmarks/raw/three-layer/ascend/419-spark-bf16-layers-1344-345.json",
+          "core_ms": 636.976327540146,
+          "core_speedup": 4.048181642841861,
+          "core_source": "benchmarks/raw/three-layer/core/ascend/619-spark-bf16-core-1344-345.json"
+        },
+        "cuda": {
+          "dit_block_ms": 393.05623579356404,
+          "dit_block_speedup": 2.6830268937829556,
+          "block_source": "benchmarks/raw/three-layer/cuda/509-spark-bf16-1344-345.json",
+          "core_ms": 184.37614695479473,
+          "core_speedup": 4.545594939592199,
+          "core_source": "benchmarks/raw/three-layer/core/cuda/609-spark-bf16-core-1344-345.json"
+        }
+      }
+    }
+  ]
+}

@@ -29,12 +29,12 @@ def command(a):
         "text_encoder": {"weight_transfer": "rank-local"},
     }
     components = ["text_encoder"] if policy == "text" else ["dit", "text_encoder"]
+    config = {"mode": "module" if policy == "module" else "layer", "components": components}
+    if policy != "module":
+        config["layer_options"] = {key: layer_options[key] for key in components}
     offload = [] if policy == "none" else [
         "--diffusion-offload-config",
-        json.dumps(
-            {"mode": "layer", "components": components,
-             "layer_options": {key: layer_options[key] for key in components}}
-        ),
+        json.dumps(config),
     ]
     tp = a.devices if a.parallel == "tp" else 1
     usp = a.devices if a.parallel == "ulysses" else 1
@@ -125,7 +125,7 @@ def main():
     s.add_argument("--precision", choices=["bf16", "int8"], default="bf16")
     s.add_argument("--devices", type=int, default=1)
     s.add_argument("--parallel", choices=["tp", "ulysses"], default="tp")
-    s.add_argument("--offload", choices=["none", "text", "layer"], default="none",
+    s.add_argument("--offload", choices=["none", "text", "module", "layer"], default="none",
                    help="Keep weights resident by default; text offloads only the text encoder")
     s.add_argument("--vae-parallel-size", type=int, default=1,
                    help="Native tiled VAE decode: 1 or the full device count; 0 selects all")

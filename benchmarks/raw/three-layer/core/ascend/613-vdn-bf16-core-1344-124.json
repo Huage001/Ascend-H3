@@ -1,0 +1,124 @@
+{
+  "status": "complete",
+  "hardware": "ascend",
+  "method": "vdn",
+  "precision": "bf16",
+  "width": 1344,
+  "height": 768,
+  "frames": 124,
+  "sequence_length": 37861,
+  "layers": [
+    0,
+    24,
+    49
+  ],
+  "repetitions_per_layer": 3,
+  "warmups_per_layer": 2,
+  "offload": false,
+  "input_kind": "frozen shared BF16 synthetic hidden states; real pre-merged student weights",
+  "input_schema": 1,
+  "input_manifest": {
+    "schema": 1,
+    "width": 1344,
+    "height": 768,
+    "frames": 124,
+    "seed": 7,
+    "torch_source": "2.10.0+cpu",
+    "tensors": {
+      "x": {
+        "shape": [
+          37861,
+          5376
+        ],
+        "dtype": "torch.bfloat16",
+        "sha256": "57b15362f6d09a638616540f1eb6089b8f210946d680aaa1e1ac83e35a2c587a"
+      },
+      "t_emb": {
+        "shape": [
+          1,
+          2688
+        ],
+        "dtype": "torch.bfloat16",
+        "sha256": "885a59892de53bfbbb3447b7428671c77535122763cc907596bf69c5f4a8cb44"
+      },
+      "combined_indices": {
+        "shape": [
+          37861
+        ],
+        "dtype": "torch.int64",
+        "sha256": "ca2197845cd99d6744c8963423e1b5575a1f18a3551342fa4cf8325ea9ef5802"
+      },
+      "rope_table": {
+        "shape": [
+          37861,
+          96
+        ],
+        "dtype": "torch.bfloat16",
+        "sha256": "82210e0e2ad2183c927d62b80c79b7d7ee4d51cd7e4d68ecc8bb56f1f4f2fd16"
+      }
+    }
+  },
+  "input_sha256": "57b15362f6d09a638616540f1eb6089b8f210946d680aaa1e1ac83e35a2c587a",
+  "attention_scope": "QKV and Q/K norm/RoPE ready; method-specific gate/predictor/routing/VDN linear work included; final output projections excluded",
+  "measurement_scope": "core",
+  "aggregation": "sum of all nine synchronized timings / 9",
+  "records": [
+    {
+      "layer": 0,
+      "core_ms": [
+        366.32038094103336,
+        367.96109937131405,
+        368.56630351394415
+      ],
+      "softmax_ms": [
+        187.70009838044643,
+        187.69933842122555,
+        188.5313717648387
+      ],
+      "linear_ms": [
+        180.24891056120396,
+        179.62348740547895,
+        179.8691600561142
+      ]
+    },
+    {
+      "layer": 24,
+      "core_ms": [
+        369.75759733468294,
+        370.7915525883436,
+        370.62929198145866
+      ],
+      "softmax_ms": [
+        188.15306946635246,
+        188.15774004906416,
+        188.76760452985764
+      ],
+      "linear_ms": [
+        181.63746874779463,
+        181.8210892379284,
+        181.67172838002443
+      ]
+    },
+    {
+      "layer": 49,
+      "core_ms": [
+        367.82780941575766,
+        369.46104653179646,
+        368.6967734247446
+      ],
+      "softmax_ms": [
+        186.47717218846083,
+        186.03942915797234,
+        187.03304510563612
+      ],
+      "linear_ms": [
+        181.87891878187656,
+        181.72209803014994,
+        182.2402309626341
+      ]
+    }
+  ],
+  "mean_core_ms": 368.89020612256394,
+  "mean_softmax_ms": 187.61765211820602,
+  "mean_linear_ms": 181.19034357368946
+}

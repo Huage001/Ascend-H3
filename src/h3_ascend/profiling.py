@@ -98,7 +98,14 @@ def install():
             (p.device.type for p in model.parameters() if p.device.type in ("cuda", "npu")), None
         )
         if kind is None:
-            raise RuntimeError("No accelerator-resident model state found for profiling")
+            # Native component offload can leave every DiT parameter on CPU
+            # while idle. Events are recorded later, in the forward thread,
+            # after the upstream hook has restored the executing component.
+            from vllm_omni.platforms import current_omni_platform
+
+            kind = current_omni_platform.device_type
+            if kind not in ("cuda", "npu"):
+                raise RuntimeError("No accelerator device found for profiling")
         device = torch.get_device_module(kind)
         rows = []
         handles = []

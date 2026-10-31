@@ -8,7 +8,7 @@ INT8 transformer quantization and native tensor parallel attention heads.
 
 **Integration validation is in progress.** The source operators have compiled
 successfully; this branch is not yet a qualified release of every
-method × precision × workload × parallel configuration. All 40 matched-Offload single-card end-to-end cases have passed against eight-step Full BF16. Resident attention/DiT-block measurements on both devices and Ascend 1/2/4/8-card end-to-end measurements with Offload only where necessary are in progress; the existing Offload tables remain a diagnostic reference.
+method × precision × workload × parallel configuration. Complete DiT-block measurements: 20/20; attention-core measurements: 20/20; the new resident-first INT8 E2E matrix has 4/40 qualified cases. The 40 earlier matched-Offload single-card records remain historical references.
 
 ## Default 768p workloads
 
@@ -142,6 +142,7 @@ global predictor head IDs after sharding. Seven-card DiT TP uses one text
 encoder rank because its 64 query / 8 KV heads cannot be divided by seven.
 Launches default to `--offload none` (resident weights). If memory is insufficient,
 `--offload text` streams only the text encoder while retaining the DiT on device;
+`--offload module` swaps complete components (experimental qualification);
 `--offload layer` streams both components, keeping one active and one prefetched
 block. The completed matched-Offload reference below explicitly uses
 `--offload layer` (`omni-layer-prefetch1-vae-resident-v1`) on both hardware
@@ -151,7 +152,8 @@ and DiT-block comparison uses BF16 on both devices: layers 0/24/49, three runs
 each, summing the nine timings and dividing by nine. Optional
 `--parallel ulysses` is exposed for non-VDN paths; TP remains the default.
 `--vae-parallel-size 0` additionally selects native tiled VAE decoding across
-all selected cards; the default is one. Multi-card VAE qualification is in progress.
+all selected cards; the default is one. Native tiled VAE has passed the complete
+four-card / 124-frame pipeline; eight-card validation is still in progress.
 
 ## Generate the two 768p cases
 
@@ -172,7 +174,78 @@ An explicit `--steps` remains available for a separately prepared community
 student. `--guidance-scale` is optional; omission preserves native policy.
 No Refine stage is added. The client saves the MP4 and a JSON timing receipt.
 
-## End-to-end performance
+<!-- BEGIN BF16 LAYER RESULTS -->
+
+## BF16 layer comparison: resident on both devices
+
+1344×768, 124/345 frames only. Real student weights and byte-identical frozen synthetic hidden states; these are not layer activations captured from a video request. Layers 0, 24 and 49 each receive two untimed warmups and three formal runs: **sum the nine timings and divide by nine**. Weights stay resident on both devices. Activations/main weights are BF16; required FP32 predictors, accumulations and VDN state are retained. Speedups use the same-hardware, same-shape BF16 Full baseline. The higher relative speedup is bold; absolute latency is shown too.
+
+### Attention core only
+
+Starts with prepared Q/K/V and ends at the attention output. Excludes QKV projection, Q/K norm, RoPE, output projection, AdaLN and FFN. Includes required sparse gates, prediction, selection, rearrangement and restoration; VDN includes both complete softmax and linear cores. Every method uses this boundary; whole-module timings are not substituted. Core timing has completed 10/10 matched hardware pairs; pending cells do not reuse earlier module measurements.
+
+| Frames | Method | Ascend latency | PRO 6000 latency | Ascend speedup | PRO 6000 speedup |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 124 | Full | 343.31 ms | 111.64 ms | 1.00× | 1.00× |
+| 124 | VSA V2 · 80% | 216.24 ms | 93.56 ms | **1.59×** | 1.19× |
+| 124 | Veda · 90% | 75.50 ms | 25.01 ms | **4.55×** | 4.46× |
+| 124 | VDN · official | 368.89 ms | 142.74 ms | **0.93×** | 0.78× |
+| 124 | Spark-H3 · 90% | 128.54 ms | 39.35 ms | 2.67× | **2.84×** |
+| 345 | Full | 2578.60 ms | 838.10 ms | 1.00× | 1.00× |
+| 345 | VSA V2 · 80% | 1196.30 ms | 498.34 ms | **2.16×** | 1.68× |
+| 345 | Veda · 90% | 380.26 ms | 123.45 ms | 6.78× | **6.79×** |
+| 345 | VDN · official | 1093.46 ms | 423.12 ms | **2.36×** | 1.98× |
+| 345 | Spark-H3 · 90% | 636.98 ms | 184.38 ms | 4.05× | **4.55×** |
+
+### Complete DiT block
+
+Runs from block input to block output, including projections, normalization, RoPE, attention core, AdaLN, FFN and residual operations. Measured independently of the core; their difference is not an FFN measurement, and neither is extrapolated into E2E time.
+
+| Frames | Method | Ascend latency | PRO 6000 latency | Ascend speedup | PRO 6000 speedup |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 124 | Full | 491.51 ms | 185.93 ms | 1.00× | 1.00× |
+| 124 | VSA V2 · 80% | 346.40 ms | 166.56 ms | **1.42×** | 1.12× |
+| 124 | Veda · 90% | 213.56 ms | 97.76 ms | **2.30×** | 1.90× |
+| 124 | VDN · official | 527.75 ms | 222.89 ms | **0.93×** | 0.83× |
+| 124 | Spark-H3 · 90% | 267.42 ms | 112.65 ms | **1.84×** | 1.65× |
+| 345 | Full | 3000.60 ms | 1054.58 ms | 1.00× | 1.00× |
+| 345 | VSA V2 · 80% | 1550.07 ms | 703.92 ms | **1.94×** | 1.50× |
+| 345 | Veda · 90% | 787.91 ms | 330.60 ms | **3.81×** | 3.19× |
+| 345 | VDN · official | 1534.19 ms | 647.19 ms | **1.96×** | 1.63× |
+| 345 | Spark-H3 · 90% | 1028.43 ms | 393.06 ms | **2.92×** | 2.68× |
+
+![BF16 attention core and DiT block comparison](docs/figures/bf16-three-layer.png)
+
+[All nine-run records and input identity checks](benchmarks/bf16-three-layer.json).
+
+<!-- END BF16 LAYER RESULTS -->
+
+<!-- BEGIN INT8 E2E MATRIX -->
+
+## INT8 E2E: Ascend 1 / 2 / 4 / 8 cards
+
+1344×768, eight actual DiT updates, including text encoding, video/audio decoding and MP4 write. Model loading, prior LoRA merge and warmups are excluded. Try resident execution, text-encoder-only Offload, component swapping, then layer streaming; fall back only after a recorded OOM. Accept only completed requests with all-rank audits and separate profiles.
+
+| Frames | Method | 1 card | 2 cards | 4 cards | 8 cards |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 124 | Full | 196.31 s †L | 117.38 s †T | 64.94 s | — |
+| 124 | VSA V2 · 80% | — | — | — | — |
+| 124 | Veda · 90% | — | — | 43.39 s | — |
+| 124 | VDN · official | — | — | — | — |
+| 124 | Spark-H3 · 90% | — | — | — | — |
+| 345 | Full | — | — | — | — |
+| 345 | VSA V2 · 80% | — | — | — | — |
+| 345 | Veda · 90% | — | — | — | — |
+| 345 | VDN · official | — | — | — | — |
+| 345 | Spark-H3 · 90% | — | — | — | — |
+
+Validated **4/40**; — is pending. †T: text-encoder layer Offload only; †M: whole-component swapping; †L: DiT and text-encoder layer streaming. Unmarked cells use no Offload. Native VAE tile parallelism matches device count; DiT heads split as 56/28/14/7. Native INT8 covers supported linears; the single-card wide-AdaLN BF16 fallback and changes in coverage after sharding are retained in the runtime records.
+
+[INT8 E2E records](benchmarks/ascend-int8-e2e.json)
+
+<!-- END INT8 E2E MATRIX -->
+
+## Historical matched-Offload single-card E2E reference
 
 **All methods, the baseline and timed requests use eight actual DiT forwards.** Full/Veda/Spark use the pinned official LightX2V 8-step 768p LoRA (shifts 6/3); VSA uses official FastH3 V2 (80% sparsity, shifts 10/3); VDN retains its official eight-step student. Veda remains at 90% sparsity. Each student keeps its trained schedule; four-step weights are not stretched to eight steps.
 
@@ -225,50 +298,9 @@ VSA V2 uses 80% sparsity, whereas Veda and Spark use 90%, so those rows also
 compare different attention mechanisms and students rather than equal-quality
 or equal-sparsity kernels.
 
-![Measured long-video comparison across hardware and precision](docs/figures/long-video-e2e.png)
+The earlier E2E module-profile figure is retained as [historical diagnostic data](benchmarks/long-video-e2e.json); its broad module spans are excluded from the attention-core comparison above.
 
-1344×768 / 345 frames: headline times and speedups use complete uninstrumented
-requests; bars use a separate DiT profile on a shared milliseconds-per-block
-axis. Module spans include waits and are not isolated kernel compute.
-One formal request per cell; no statistical error bars are claimed.
-[Measured figure data](benchmarks/long-video-e2e.json) ·
-[SVG](docs/figures/long-video-e2e.svg) · [PDF](docs/figures/long-video-e2e.pdf).
-
-
-<!-- BEGIN TP8 SCALING -->
-
-## Eight-card scaling: same method and precision
-
-Here speedup is **same-method, same-precision one-card time / eight-card time**, separate from the Full BF16 algorithm gains above. All requests use eight updates, seed7, 1344×768 and the same Offload policy. Native TP assigns seven of 56 DiT heads to each rank; the text encoder also uses native TP. One-card references come from the qualified matrix. Selected cards are guarded; whole-host CPU isolation is not claimed.
-
-| Frames | Precision | Method | One card | Eight cards | TP8 / TP1 speedup | Attention p95 max/mean |
-| ---: | --- | --- | ---: | ---: | ---: | ---: |
-| 124 | BF16 | Full + LightX2V8 | 206.71 s | — | — | — |
-| 124 | BF16 | VSA V2 · 80% | 163.20 s | — | — | — |
-| 124 | BF16 | Veda · 90% | 113.43 s | — | — | — |
-| 124 | BF16 | VDN · official | 301.42 s | — | — | — |
-| 124 | BF16 | Spark-H3 · 90% | 132.78 s | — | — | — |
-| 124 | INT8 | Full + LightX2V8 | 189.57 s | — | — | — |
-| 124 | INT8 | VSA V2 · 80% | 146.89 s | — | — | — |
-| 124 | INT8 | Veda · 90% | 97.61 s | — | — | — |
-| 124 | INT8 | VDN · official | 213.95 s | — | — | — |
-| 124 | INT8 | Spark-H3 · 90% | 116.19 s | — | — | — |
-| 345 | BF16 | Full + LightX2V8 | 1179.84 s | 232.85 s | 5.07× | 1.068 |
-| 345 | BF16 | VSA V2 · 80% | 661.43 s | — | — | — |
-| 345 | BF16 | Veda · 90% | 376.99 s | — | — | — |
-| 345 | BF16 | VDN · official | 842.14 s | — | — | — |
-| 345 | BF16 | Spark-H3 · 90% | 472.93 s | — | — | — |
-| 345 | INT8 | Full + LightX2V8 | 1125.43 s | — | — | — |
-| 345 | INT8 | VSA V2 · 80% | 617.55 s | — | — | — |
-| 345 | INT8 | Veda · 90% | 338.55 s | — | — | — |
-| 345 | INT8 | VDN · official | 620.67 s | — | — | — |
-| 345 | INT8 | Spark-H3 · 90% | 419.44 s | — | — | — |
-
-Validated 1/20; — means pending. Balance uses a separate profile: compute attention-dispatcher max/mean across eight ranks for every step/block, then take p95; one is balanced. VDN dispatcher spans cover its softmax subbranch; complete hybrid-module distributions are retained separately in the raw records.
-
-[Raw scaling records](benchmarks/tp8-scaling.json)
-
-<!-- END TP8 SCALING -->
+[Earlier BF16 TP8 diagnostic with matched layer Offload](docs/archive/tp8-matched-offload.md), excluded from the new resident-first INT8 matrix.
 
 
 ## Qualitative results and validation

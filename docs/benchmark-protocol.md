@@ -1,17 +1,56 @@
-# Single-card end-to-end benchmark / 单卡端到端测试
+# Benchmark protocol / 测试口径
 
 The next end-to-end campaign measures **INT8 only** on Ascend 1/2/4/8 cards.
-The Ascend/PRO 6000 attention and complete DiT-block comparison instead uses
+The Ascend/PRO 6000 **attention-core-only** and complete DiT-block comparison uses
 **BF16 on both devices**: layers 0, 24 and 49, each run three times after
 untimed warmup. Sum the nine timings and divide by nine for the per-layer
 latency. Layer weights and inputs remain resident during these measurements;
-VDN attention includes both its softmax and linear branches. These are layer
+VDN attention includes both its softmax and linear cores. These are layer
 measurements, not BF16 end-to-end runs.
+
+## Current attention timer boundary
+
+Prepare Q/K/V, Q/K normalization and RoPE before starting the timer. Stop when
+the attention core produces its output, before the final output projections.
+Exclude QKV projection, Q/K norm, RoPE, output projection, AdaLN and FFN.
+Include method-required sparse gates, prediction, block selection, token
+rearrangement/restoration and, for VDN, both softmax and linear core branches.
+Do not supply an already computed sparse plan to one method while charging
+online selection to another. All required FP32 predictors/state arithmetic
+remain included in the BF16 protocol.
+
+Measure layers 0, 24 and 49, two untimed warmups and three formal runs each,
+using device synchronization immediately before and after the core call.
+Report the sum of all nine formal timings divided by nine. Use identical
+serialized synthetic inputs on both platforms and record their tensor hashes.
+These inputs are not activations captured from an actual video request.
+Core and complete-block scopes are measured independently. The complete block
+includes all projections, normalization, RoPE, core, AdaLN, FFN and residuals;
+its latency is reported separately. Previous whole-attention-module intervals
+are diagnostic raw data only and must not populate an attention-core table.
+
+Only accepted core records may populate `benchmarks/bf16-three-layer.json`'s
+`core_ms` fields. A missing core result remains pending; never substitute a
+module measurement or estimate it by subtraction.
+
+## Current INT8 end-to-end protocol
+
 Start with resident execution (`--offload none`); preserve any OOM evidence and
-try text-encoder-only streaming (`--offload text`) before streaming the DiT
+try text-encoder-only streaming (`--offload text`), then whole-component swapping
+(`--offload module`, qualification pending), before streaming the DiT
 (`--offload layer`). Mark the actual policy for every accepted result. These
 new measurements remain separate from the completed matched-Offload reference
 documented below. BF16 end-to-end inference remains supported but is not rerun.
+
+The remaining matched-Offload sections describe the earlier completed E2E
+reference. Their broad module profiling spans are not the current attention
+core benchmark and must not be reported as attention-core latency.
+
+The current dense core references are Ascend's
+`torch_npu.npu_fused_infer_attention_score` in BNSD layout and the pinned
+official Miowtion FA4 provider on PRO 6000. Historical CUDA cuDNN baselines and
+earlier layer-median aggregation are separate experiments; their ratios must
+not be substituted into this nine-run comparison.
 
 Performance reporting covers **1344×768 at 124 and 345 native frames**.
 All workloads in `configs/workloads.json` use native 124 or 345 frames,

@@ -18,6 +18,7 @@ class Contracts(unittest.TestCase):
         args = argparse.Namespace(method="full", parallel="tp", devices=8,
             model="model", host="127.0.0.1", port=8000, precision="int8", lora=None)
         for policy, components in (("none", None), ("text", ["text_encoder"]),
+                                   ("module", ["dit", "text_encoder"]),
                                    ("layer", ["dit", "text_encoder"])):
             args.offload = policy
             argv = command(args)
@@ -26,7 +27,11 @@ class Contracts(unittest.TestCase):
             else:
                 config = json.loads(argv[argv.index("--diffusion-offload-config") + 1])
                 self.assertEqual(config["components"], components)
-                self.assertEqual(set(config["layer_options"]), set(components))
+                if policy == "module":
+                    self.assertEqual(config["mode"], "module")
+                    self.assertNotIn("layer_options", config)
+                else:
+                    self.assertEqual(set(config["layer_options"]), set(components))
         args.vae_parallel_size = 0
         argv = command(args)
         self.assertEqual(argv[argv.index("--vae-patch-parallel-size") + 1], "8")

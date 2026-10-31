@@ -1,0 +1,107 @@
+{
+  "status": "complete",
+  "hardware": "ascend",
+  "method": "vdn",
+  "precision": "bf16",
+  "width": 1344,
+  "height": 768,
+  "frames": 345,
+  "sequence_length": 104117,
+  "layers": [
+    0,
+    24,
+    49
+  ],
+  "repetitions_per_layer": 3,
+  "warmups_per_layer": 2,
+  "offload": false,
+  "input_kind": "frozen shared BF16 synthetic hidden states; real pre-merged student weights",
+  "input_schema": 1,
+  "input_manifest": {
+    "schema": 1,
+    "width": 1344,
+    "height": 768,
+    "frames": 345,
+    "seed": 7,
+    "torch_source": "2.10.0+cpu",
+    "tensors": {
+      "x": {
+        "shape": [
+          104117,
+          5376
+        ],
+        "dtype": "torch.bfloat16",
+        "sha256": "f9bf1a97d6b169986bb6025b244eb5d44ae9c3af4492dc2efb5cc6a947b44788"
+      },
+      "t_emb": {
+        "shape": [
+          1,
+          2688
+        ],
+        "dtype": "torch.bfloat16",
+        "sha256": "3d7997f290256bee147f1d6de07826858dc1fbeb8b4799afa018240e3f5d1536"
+      },
+      "combined_indices": {
+        "shape": [
+          104117
+        ],
+        "dtype": "torch.int64",
+        "sha256": "1c0bccea89c4dbbac88a21a28d2129ef8841ee70d7388a87df14bd514f1c0cc5"
+      },
+      "rope_table": {
+        "shape": [
+          104117,
+          96
+        ],
+        "dtype": "torch.bfloat16",
+        "sha256": "20f6d67be7fd1449f1794221a49d892339123d3316475e9798f5e051cd072ee4"
+      }
+    }
+  },
+  "input_sha256": "f9bf1a97d6b169986bb6025b244eb5d44ae9c3af4492dc2efb5cc6a947b44788",
+  "attention_scope": "complete attention module, including QKV/norm/RoPE/output projection; VDN includes both branches",
+  "aggregation": "sum of all nine synchronized timings / 9",
+  "records": [
+    {
+      "layer": 0,
+      "attention_ms": [
+        1302.7801113203168,
+        1303.2016130164266,
+        1300.850810483098
+      ],
+      "dit_block_ms": [
+        1534.0133542194963,
+        1535.448302514851,
+        1537.1224153786898
+      ]
+    },
+    {
+      "layer": 24,
+      "attention_ms": [
+        1303.4832635894418,
+        1303.8186449557543,
+        1303.1456619501114
+      ],
+      "dit_block_ms": [
+        1540.1737596839666,
+        1534.7881643101573,
+        1537.2672565281391
+      ]
+    },
+    {
+      "layer": 49,
+      "attention_ms": [
+        1300.1441080123186,
+        1301.1136529967189,
+        1301.4827845618129
+      ],
+      "dit_block_ms": [
+        1529.4384080916643,
+        1528.961836360395,
+        1530.4895639419556
+      ]
+    }
+  ],
+  "mean_attention_ms": 1302.224516765111,
+  "mean_dit_block_ms": 1534.1892290032572
+}
