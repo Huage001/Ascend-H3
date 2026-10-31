@@ -140,13 +140,18 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 `--devices` supports 1, 2, 4, 7 and 8, which divide 56 heads. Veda retains
 global predictor head IDs after sharding. Seven-card DiT TP uses one text
 encoder rank because its 64 query / 8 KV heads cannot be divided by seven.
-All methods use **Offload: one active block plus one asynchronously prefetched
-block**, for both DiT and text encoder, with pinned CPU weight masters. VAEs
-remain resident. The benchmark policy is
-`omni-layer-prefetch1-vae-resident-v1`; NVIDIA reference measurements must use
-the same pinned Omni implementation and policy. This is an explicit memory
-policy, not a different resident-layer count for each algorithm. Optional
+Launches default to `--offload none` (resident weights). If memory is insufficient,
+`--offload text` streams only the text encoder while retaining the DiT on device;
+`--offload layer` streams both components, keeping one active and one prefetched
+block. The completed matched-Offload reference below explicitly uses
+`--offload layer` (`omni-layer-prefetch1-vae-resident-v1`) on both hardware
+platforms. New end-to-end measurements use **INT8 only**, starting with resident
+execution and marking every necessary Offload fallback. The isolated attention
+and DiT-block comparison uses BF16 on both devices: layers 0/24/49, three runs
+each, summing the nine timings and dividing by nine. Optional
 `--parallel ulysses` is exposed for non-VDN paths; TP remains the default.
+`--vae-parallel-size 0` additionally selects native tiled VAE decoding across
+all selected cards; the default is one. Multi-card VAE qualification is in progress.
 
 ## Generate the two 768p cases
 

@@ -134,11 +134,16 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 Veda 在分片后仍使用原 checkpoint 的全局 head 编号。
 七卡 DiT TP 时，文本编码器使用一张卡，因为其 64 个 query head、
 8 个 KV head 不能按七份切分。
-所有方法统一使用 **Offload：一个计算块加一个异步预取块**。DiT 和文本编码器的
-权重保存在锁页 CPU 内存中，VAE 常驻设备。策略编号为
-`omni-layer-prefetch1-vae-resident-v1`，N 卡对照必须使用同一固定版本的 Omni
-实现和相同策略，避免为不同方法设置不同的常驻层数。
+启动默认 `--offload none`，权重常驻设备。内存不足时，`--offload text` 只流式
+加载文本编码器，DiT 仍常驻；`--offload layer` 同时流式加载两个组件，每次保留
+一个计算块和一个异步预取块。下方已完成的统一 Offload 对照明确使用
+`--offload layer`（`omni-layer-prefetch1-vae-resident-v1`），两种硬件策略相同。
+新一轮端到端**只测试 INT8**，优先常驻，必要的 Offload 回退会单独标记。
+双方 attention/DiT block 对照统一 BF16，取第 0/24/49 层，每层跑三次，
+九次耗时之和除以九得到每层平均时延。
 非 VDN 方法另提供 `--parallel ulysses`；默认使用 TP。
+`--vae-parallel-size 0` 另可将原生 VAE 分块解码分配到全部选中卡，默认值为 1。
+多卡 VAE 正在进行完整链路验收。
 
 ## 生成两组 768p 视频
 

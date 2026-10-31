@@ -21,22 +21,27 @@ def command(a):
         "vdn": "VDNH3_ATTN",
         "spark": "TORCH_SDPA",
     }[a.method]
-    # Identical policy for baseline and all students: current block plus one
-    # asynchronously prefetched block, independent of weight dtype/method.
-    # No method-dependent resident-layer count in comparative measurements.
+    # Prefer resident execution. Explicit fallbacks keep the selected transfer
+    # policy visible in launch receipts and comparative measurements.
+    policy = getattr(a, "offload", "layer")
     layer_options = {
         "dit": {"weight_transfer": "rank-local"},
         "text_encoder": {"weight_transfer": "rank-local"},
     }
-    offload = [
+    components = ["text_encoder"] if policy == "text" else ["dit", "text_encoder"]
+    offload = [] if policy == "none" else [
         "--diffusion-offload-config",
         json.dumps(
-            {"mode": "layer", "components": ["dit", "text_encoder"], "layer_options": layer_options}
+            {"mode": "layer", "components": components,
+             "layer_options": {key: layer_options[key] for key in components}}
         ),
     ]
     tp = a.devices if a.parallel == "tp" else 1
     usp = a.devices if a.parallel == "ulysses" else 1
     encoder_tp = a.devices if a.devices in (1, 2, 4, 8) else 1
+    vae_parallel = getattr(a, "vae_parallel_size", 1) or a.devices
+    if vae_parallel not in (1, a.devices):
+        raise ValueError("H3 VAE parallel size must be one or the full device count")
     cmd = [
         sys.executable,
         "-m",
@@ -69,7 +74,7 @@ def command(a):
         "tile",
         "--vae-use-tiling",
         "--vae-patch-parallel-size",
-        "1",
+        str(vae_parallel),
         "--enforce-eager",
         "--diffusion-attention-backend",
         backend,
@@ -120,6 +125,10 @@ def main():
     s.add_argument("--precision", choices=["bf16", "int8"], default="bf16")
     s.add_argument("--devices", type=int, default=1)
     s.add_argument("--parallel", choices=["tp", "ulysses"], default="tp")
+    s.add_argument("--offload", choices=["none", "text", "layer"], default="none",
+                   help="Keep weights resident by default; text offloads only the text encoder")
+    s.add_argument("--vae-parallel-size", type=int, default=1,
+                   help="Native tiled VAE decode: 1 or the full device count; 0 selects all")
     s.add_argument("--host", default="127.0.0.1")
     s.add_argument("--port", type=int, default=8000)
     s.add_argument("--predictor")

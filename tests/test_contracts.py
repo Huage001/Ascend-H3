@@ -14,6 +14,26 @@ from h3_ascend.profiles import launch_adapter, step_count
 
 
 class Contracts(unittest.TestCase):
+    def test_resident_and_explicit_offload_launch_policies(self):
+        args = argparse.Namespace(method="full", parallel="tp", devices=8,
+            model="model", host="127.0.0.1", port=8000, precision="int8", lora=None)
+        for policy, components in (("none", None), ("text", ["text_encoder"]),
+                                   ("layer", ["dit", "text_encoder"])):
+            args.offload = policy
+            argv = command(args)
+            if components is None:
+                self.assertNotIn("--diffusion-offload-config", argv)
+            else:
+                config = json.loads(argv[argv.index("--diffusion-offload-config") + 1])
+                self.assertEqual(config["components"], components)
+                self.assertEqual(set(config["layer_options"]), set(components))
+        args.vae_parallel_size = 0
+        argv = command(args)
+        self.assertEqual(argv[argv.index("--vae-patch-parallel-size") + 1], "8")
+        args.vae_parallel_size = 4
+        with self.assertRaises(ValueError):
+            command(args)
+
     def test_cuda_reference_preloads_official_fa4_before_omni(self):
         with patch.dict("os.environ", {"H3_ASCEND_CUDA_REFERENCE": "1"}):
             for method in ("full", "vsa", "veda", "spark"):

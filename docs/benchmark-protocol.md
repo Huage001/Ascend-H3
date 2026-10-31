@@ -1,5 +1,18 @@
 # Single-card end-to-end benchmark / 单卡端到端测试
 
+The next end-to-end campaign measures **INT8 only** on Ascend 1/2/4/8 cards.
+The Ascend/PRO 6000 attention and complete DiT-block comparison instead uses
+**BF16 on both devices**: layers 0, 24 and 49, each run three times after
+untimed warmup. Sum the nine timings and divide by nine for the per-layer
+latency. Layer weights and inputs remain resident during these measurements;
+VDN attention includes both its softmax and linear branches. These are layer
+measurements, not BF16 end-to-end runs.
+Start with resident execution (`--offload none`); preserve any OOM evidence and
+try text-encoder-only streaming (`--offload text`) before streaming the DiT
+(`--offload layer`). Mark the actual policy for every accepted result. These
+new measurements remain separate from the completed matched-Offload reference
+documented below. BF16 end-to-end inference remains supported but is not rerun.
+
 Performance reporting covers **1344×768 at 124 and 345 native frames**.
 All workloads in `configs/workloads.json` use native 124 or 345 frames,
 batch one, reviewed common seed 7 and the same prompt. Frame interpolation and Refine are off.
