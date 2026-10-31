@@ -3,16 +3,23 @@
 Performance reporting covers **1344×768 at 124 and 345 native frames**.
 The 672×384 cases remain supported but are excluded from the reported speedups.
 All workloads in `configs/workloads.json` use native 124 or 345 frames,
-batch one, seed 42 and the same prompt. Frame interpolation and Refine are off.
+batch one, reviewed common seed 7 and the same prompt. Frame interpolation and Refine are off.
 Only the selected card must be free of other compute processes. Unknown or
 unverifiable processes invalidate a measurement. Never terminate other users'
 processes to obtain a result.
 
+Hardware labels identify the accelerator model. On the Ascend test host,
+345-frame BF16 groups use physical card 1, 345-frame INT8 groups use card 3,
+and 124-frame groups use card 3 except Spark BF16, which uses card 1 after
+the long-video retake finishes. At most two suite jobs run at once.
+The PRO 6000 reference uses its single GPU. The selected cards are guarded;
+the protocol does not claim isolation of the entire host CPU or memory bus.
+
 ## Reference and students
 
 **Every method and baseline performs eight actual DiT forwards.** Speedup is
-same-device, same-precision **Full + LightX2V8 end-to-end time / candidate
-eight-step end-to-end time**, at the same geometry, frame count, prompt and
+same-hardware **BF16 Full + LightX2V8 end-to-end time / candidate
+eight-step end-to-end time**, for both BF16 and INT8 candidates, at the same geometry, frame count, prompt and
 selected common seed. No 50/8 or 4/8 multiplier is applied. Earlier Full4 and
 seed42 results are archived and cannot enter this matrix.
 
@@ -92,6 +99,8 @@ intervals cover non-overlapping top-level attention and FFN calls, including
 QKV/output projection within the attention module. The remaining **DiT** wall
 time includes unhidden transfers, modulation and dispatch gaps; do not add all
 copy-stream time to compute time when they overlap.
+These are observed module intervals, not isolated kernel compute times:
+dependency waits and resource contention can appear inside a module span too.
 
 Bars show average measured DiT milliseconds per block, normalized by the
 actual number of profiled forwards and 50 blocks. Headline minutes and speedups
@@ -99,12 +108,32 @@ come only from complete, uninstrumented requests. All headline results require a
 student schedule: all methods require eight forwards, including the separate profile.
 
 ```bash
+python -m pip install -e '.[plotting]'  # Figure generation can run on a CPU-only host.
 python scripts/plot_long_video.py --input benchmarks/long-video-e2e.json \
   --output docs/figures/long-video-e2e
 ```
 
 The JSON and final figure are populated only after actual measurements finish.
 There are no placeholder performance numbers.
+
+## Interpreting the speedups
+
+Complete-request ratios include encoder, FFN, projection, decoder and MP4 work
+that sparse attention does not remove. All methods and the Full baseline use
+eight updates, so no step-reduction benefit appears in these ratios. INT8
+targets supported linear layers rather than the entire attention computation.
+Compare absolute latency alongside relative speedup: a faster Full baseline
+can produce a smaller ratio even when sparse inference finishes sooner.
+
+The optional `attention_dispatch` event brackets the `block.attn.attention`
+child, while `attention_seconds` brackets the entire `block.attn` module.
+Method-specific preparation or another branch can run outside that child.
+Neither event is a universally complete attention-kernel benchmark. In
+particular, do not quote a dispatch-only VDN ratio as acceleration of its
+whole hybrid attention module. The independent profile and the uninstrumented
+formal request are different runs; their times must not be subtracted to
+claim an exact transfer-time or fixed-overhead decomposition. Such attribution
+requires a separate timeline trace.
 
 ## Loading memory fixes
 
@@ -115,3 +144,17 @@ CUDA initialization may collect unreachable objects and trim unused host pages
 before constructing each pinned CPU master. This runs only during offloader
 construction, outside measured requests; it changes no tensor values, master
 dtypes, residency or prefetch policy. Failed attempts stay in the raw archive.
+
+For VSA and VDN BF16, both platforms use exact file-backed masters for the 27 input-only
+vision blocks. These blocks do not execute in T2VA; active text and DiT masters
+retain the pinned one-current/one-prefetch policy. This matched initialization
+setting is recorded separately as `dormant_input_vision_file_backed`; older
+BF16 records for these methods without it are superseded by a complete retake.
+
+The NPU VDN local branch bounds temporary KV gathers by batching complete
+independent windows. It retains each window's keys and normalization rather
+than changing model weight residency. This is an NPU workspace allocation
+change; the NVIDIA kernel implementation remains its platform reference.
+No native bitwise equivalence is asserted for the changed CANN call shapes.
+Independent profiling also releases unreachable host response objects after
+all formal timing has finished, before installing profiling hooks.

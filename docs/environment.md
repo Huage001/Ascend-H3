@@ -36,6 +36,9 @@ the accelerator before offload hooks exist. It preserves the encoder's
 runtime target device and leaves quantized encoder loading unchanged.
 The fourth preserves prepared community adapter schedules and the explicitly
 selected serving flow shifts during static fusion.
+The fifth permits online INT8 FastH3 V2 loading without requiring a derived
+gate scale to exist in the BF16 source checkpoint. All 50 trained gate weights
+remain required; serialized INT8 checkpoints must still provide their scales.
 
 The upstream Ascend Dockerfile additionally pins
 `flash-linear-attention-npu-a2==26.9.1+dev5cc6990` from its official release,
@@ -79,7 +82,7 @@ The installation does not change the host driver or shared CANN directories.
 Start from a dedicated Python 3.12 Ascend environment with the Torch stack
 above. The script checks that stack, constrains dependency resolution to the
 existing accelerator packages, checks out exact framework revisions, applies
-the four reviewed patches and installs the project and fixed FLA wheel:
+the five reviewed patches and installs the project and fixed FLA wheel:
 
 ```bash
 source /path/to/Ascend/cann/set_env.sh
@@ -135,9 +138,11 @@ The primitive checks are not comparisons with the unquantized BF16 model.
 The explicit CUDA reference launcher initializes Miowtion's official pinned
 SM120 FA4 provider before Omni can import `flash_attn.cute`. The provider's
 source and dependency hashes remain checked; import-order handling does not
-replace or modify its compute kernels. Full, Veda and Spark BF16 single-card
-1344×768 / 345-frame video qualification has passed.
-The remaining CUDA matrix is still in progress. The official Triton VSA
+replace or modify its compute kernels. Earlier Full, Veda and Spark BF16
+four-step long-video runs are historical; they do not qualify the new
+eight-step matrix. Current eight-step Full and VSA BF16/INT8 long-video
+requests have passed; the remaining CUDA matrix is still in progress.
+The official Triton VSA
 provider is `fastvideo-kernel==0.3.4`, matching the pinned Omni `[vsa]` extra;
 its tile64 GPU check also passed. The token refiner remains dense, and VSA
 routing metadata is added only when a packed video layout is present.

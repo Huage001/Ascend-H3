@@ -15,11 +15,11 @@
   },
   "driver": "595.71.05",
   "pinned_omni_revision": "45603043133fda3fe486d8e558c226d3391940f0",
-  "patched_pipeline_sha256": "9ec96d4c62aa91ba6f99abd924dffb61ca2bc88835a283b0e2904120ac9b10a5",
+  "patched_pipeline_sha256": "db652209adf46d0d6a43ed20b2853a6395443f86f03c4408c562115d0c8ec328",
   "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
   "host_allocator_config": "pinned_max_round_threshold_mb:64",
   "allocator_note": "Large pinned CPU masters use requested size instead of power-of-two rounding. Residency/prefetch, weight values and timed computations are unchanged.",
-  "validation_status": "Full, Veda and Spark BF16, and Full INT8 single-card1344x768/345frames four-step video, audio, formal request and independent profiling passed; remaining matrix in progress.",
+  "validation_status": "Current unified8-v1: all ten single-card 1344x768/345-frame eight-forward cases accepted at seed7, covering Full, FastH3 V2 VSA, Veda, VDN and Spark in BF16/INT8. The 124-frame cases remain in progress. Each accepted case has a video/audio check, audited warmup, further warmup, uninstrumented formal request and independent eight-forward profile.",
   "cuda_runtime": "13.0",
   "int8_kernel": "native vLLM TritonInt8ScaledMMLinearKernel",
   "int8_dispatch_environment": {
@@ -33,10 +33,23 @@
     "width": 1344,
     "height": 768,
     "frames": 345,
-    "steps": 4,
-    "end_to_end_seconds": 243.85801353678107,
+    "steps": 8,
+    "seed": 7,
+    "end_to_end_seconds": 454.3186523411423,
     "formal_requests": 1,
-    "independent_profile_forwards": 4,
-    "source": "single-card-four-step-highres.json"
-  }
+    "independent_profile_forwards": 8,
+    "source": "single-card-highres.json",
+    "matrix_id": "unified8-v1"
+  },
+  "framework_patch_count": 5,
+  "torch_distribution_version": "2.13.0",
+  "dormant_input_vision_file_backing": {
+    "scope": "VSA and VDN BF16, both comparison platforms",
+    "vision_blocks": 27,
+    "file_backed_bytes": 822933216,
+    "exact_storage_values": true,
+    "active_text_dit_offload_unchanged": true,
+    "performed_before_timing": true
+  },
+  "historical_environment_record": "archive/reference-environment-pro6000-pre-unified8.json"
 }

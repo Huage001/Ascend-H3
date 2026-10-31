@@ -26,7 +26,7 @@ Without `H3_ASCEND_METHOD`, importing the package changes no backend.
   captured tree reduce dispatch overhead. Workspaces and launch plans are
   reusable; content-dependent routes are not.
 * **VDN:** upstream learned local-softmax plus full-width DeltaNet linear
-  branch. Frame windows are batched into two CANN calls. A centered Newton
+  branch. Complete frame windows are grouped to bound each temporary KV gather to 1 GiB; a softmax sequence is never split across calls. A centered Newton
   inverse and captured bidirectional scans replace expensive host launches.
   The default retains all 128 state coordinates. Newton inversion is
   numerically approximate and is not advertised as bitwise Cholesky.
@@ -75,3 +75,24 @@ for every geometry; `auto` is the optimized default described above. This
 option does not replace Newton inversion with Cholesky. The historical VDN
 ratios use the automatic policy and should not be presented as a bitwise
 implementation of the upstream feature and inverse computations.
+
+## Long-video memory handling
+
+VDN groups complete packed windows rather than materializing every repeated KV
+row at once. Selected tokens, per-window normalization and masks are unchanged.
+The CANN call shape changes, so this path is not advertised as bitwise identical
+to the earlier all-window batch. Same-seed decoded video comparisons are recorded
+separately from operator correctness and from formal latency measurements.
+
+VSA and VDN BF16 initialize the 27 input-vision blocks with exact file-backed CPU
+masters. For T2VA those blocks do not execute; active text and DiT weights keep
+the same pinned current-block/one-prefetch policy. No weight precision is reduced.
+The mapping retains all values, shapes and strides, so input-vision weights can
+still be paged in, but conditioned-input performance is not part of this release's
+validation. Both comparison platforms use this initialization setting for VSA and VDN
+BF16. Set `H3_ASCEND_DORMANT_VISION_MMAP=0` only to investigate the earlier host
+memory layout; that setting is outside the reported matched configuration.
+
+Independent profiling runs perform host garbage collection after formal timing
+has finished, before profiling hooks are installed. This cleanup is not inserted
+into a timed denoising forward.

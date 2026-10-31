@@ -9,6 +9,9 @@ description = "Unified MiniMax H3 inference with optimized Ascend sparse attenti
 requires-python = ">=3.12"
 dependencies = ["packaging>=24", "safetensors>=0.5"]
 
+[project.optional-dependencies]
+plotting = ["matplotlib>=3.8"]
+
 [project.scripts]
 h3-ascend = "h3_ascend.cli:main"
 ascend-h3 = "h3_ascend.cli:main"

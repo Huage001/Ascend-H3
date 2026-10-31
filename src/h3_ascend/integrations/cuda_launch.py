@@ -19,6 +19,11 @@ def main():
     from h3_ascend.integrations.host_memory import install_initialization_cleanup
 
     install_initialization_cleanup()
+
+    if os.getenv("H3_ASCEND_DORMANT_VISION_MMAP") == "1":
+        from h3_ascend.integrations.dormant_memory import install as install_dormant_memory
+
+        install_dormant_memory()
     runpy.run_module("vllm_omni.entrypoints.cli.main", run_name="__main__", alter_sys=True)
 
 

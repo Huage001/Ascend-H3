@@ -153,7 +153,7 @@ Create a UTF-8 prompt file, start a server, then use its matching step count:
 printf '%s\n' 'A cyclist rides through a green park, cinematic tracking shot.' > prompt.txt
 for CASE in 672-124 672-345 1344-124 1344-345; do
   h3-ascend generate --case "$CASE" --prompt-file prompt.txt \
-    --method full --seed 42 --output "outputs/${CASE}.mp4"
+    --method full --seed 7 --output "outputs/${CASE}.mp4"
 done
 ```
 
@@ -168,7 +168,7 @@ No Refine stage is added. The client saves the MP4 and a JSON timing receipt.
 
 **All methods, the baseline and timed requests use eight actual DiT forwards.** Full/Veda/Spark use the pinned official LightX2V 8-step 768p LoRA (shifts 6/3); VSA uses official FastH3 V2 (80% sparsity, shifts 10/3); VDN retains its official eight-step student. Veda remains at 90% sparsity. Each student keeps its trained schedule; four-step weights are not stretched to eight steps.
 
-Speedup is **Full eight-step end-to-end time / candidate eight-step end-to-end time**, at the same hardware, precision, geometry, frame count and seed. Reporting covers single-card 1344×768 at 124/345 frames, BF16 and INT8. LoRAs merge before TP slicing and quantization. Timing includes prompt encoding, all eight updates, audio/video decoding, MP4 encoding and complete delivery; loading, fusion, warmup and visual screening are excluded.
+Speedup is **BF16 Full eight-step end-to-end time / candidate eight-step end-to-end time**, at the same hardware, geometry, frame count and seed. Both BF16 and INT8 candidates use this BF16 Full baseline, including Full INT8. Reporting covers single-card 1344×768 at 124/345 frames, BF16 and INT8. LoRAs merge before TP slicing and quantization. Timing includes prompt encoding, all eight updates, audio/video decoding, MP4 encoding and complete delivery; loading, fusion, warmup and visual screening are excluded.
 
 At the user's request, VSA seed screening selected common seed **7**. Every method uses the same prompt and seed for formal timing, with the screening disclosed. The table accepts only newly measured results; old four-step measurements are not doubled or converted. [Earlier Full4-reference results](benchmarks/archive/pre-unified8-full4-reference.json) are historical only.
 
@@ -178,39 +178,60 @@ All methods: eight forwards; common seed: 7
 
 | Frames | Precision | Method | Ascend 910B3 time | Ascend speedup | PRO 6000 time | PRO 6000 speedup |
 | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| 124 | BF16 | Full + LightX2V8 | — | — | — | — |
-| 124 | BF16 | VSA · FastH3 V2 · 80% | — | — | — | — |
-| 124 | BF16 | Veda + LightX2V8 · 90% | — | — | — | — |
-| 124 | BF16 | VDN · official | — | — | — | — |
-| 124 | BF16 | Spark-H3 + LightX2V8 | — | — | — | — |
-| 124 | INT8 | Full + LightX2V8 | — | — | — | — |
-| 124 | INT8 | VSA · FastH3 V2 · 80% | — | — | — | — |
-| 124 | INT8 | Veda + LightX2V8 · 90% | — | — | — | — |
-| 124 | INT8 | VDN · official | — | — | — | — |
-| 124 | INT8 | Spark-H3 + LightX2V8 | — | — | — | — |
-| 345 | BF16 | Full + LightX2V8 | — | — | — | — |
-| 345 | BF16 | VSA · FastH3 V2 · 80% | — | — | — | — |
-| 345 | BF16 | Veda + LightX2V8 · 90% | — | — | — | — |
-| 345 | BF16 | VDN · official | — | — | — | — |
-| 345 | BF16 | Spark-H3 + LightX2V8 | — | — | — | — |
-| 345 | INT8 | Full + LightX2V8 | — | — | — | — |
-| 345 | INT8 | VSA · FastH3 V2 · 80% | — | — | — | — |
-| 345 | INT8 | Veda + LightX2V8 · 90% | — | — | — | — |
-| 345 | INT8 | VDN · official | — | — | — | — |
-| 345 | INT8 | Spark-H3 + LightX2V8 | — | — | — | — |
+| 124 | BF16 | Full + LightX2V8 | 206.71 s | 1.00× | — | — |
+| 124 | BF16 | VSA · FastH3 V2 · 80% | 163.20 s | 1.27× | — | — |
+| 124 | BF16 | Veda + LightX2V8 · 90% | 113.43 s | 1.82× | — | — |
+| 124 | BF16 | VDN · official | 301.42 s | 0.69× | — | — |
+| 124 | BF16 | Spark-H3 + LightX2V8 | 132.78 s | 1.56× | — | — |
+| 124 | INT8 | Full + LightX2V8 | 189.57 s | 1.09× | — | — |
+| 124 | INT8 | VSA · FastH3 V2 · 80% | 146.89 s | 1.41× | — | — |
+| 124 | INT8 | Veda + LightX2V8 · 90% | 97.61 s | 2.12× | — | — |
+| 124 | INT8 | VDN · official | 213.95 s | 0.97× | — | — |
+| 124 | INT8 | Spark-H3 + LightX2V8 | 116.19 s | 1.78× | — | — |
+| 345 | BF16 | Full + LightX2V8 | 1179.84 s | 1.00× | 467.81 s | 1.00× |
+| 345 | BF16 | VSA · FastH3 V2 · 80% | 661.43 s | **1.78×** | 318.03 s | 1.47× |
+| 345 | BF16 | Veda + LightX2V8 · 90% | 376.99 s | **3.13×** | 173.62 s | 2.69× |
+| 345 | BF16 | VDN · official | 842.14 s | 1.40× | 299.42 s | **1.56×** |
+| 345 | BF16 | Spark-H3 + LightX2V8 | 472.93 s | **2.49×** | 196.73 s | 2.38× |
+| 345 | INT8 | Full + LightX2V8 | 1125.43 s | **1.05×** | 454.32 s | 1.03× |
+| 345 | INT8 | VSA · FastH3 V2 · 80% | 617.55 s | **1.91×** | 304.01 s | 1.54× |
+| 345 | INT8 | Veda + LightX2V8 · 90% | 338.55 s | **3.48×** | 157.90 s | 2.96× |
+| 345 | INT8 | VDN · official | 620.67 s | **1.90×** | 281.81 s | 1.66× |
+| 345 | INT8 | Spark-H3 + LightX2V8 | 419.44 s | **2.81×** | 182.20 s | 2.57× |
 
-Matched **Offload**: `omni-layer-prefetch1-vae-resident-v1`. Ratios use same-device/same-precision Full8. The higher speedup in each completed hardware pair is bold; ties and missing values are not. — means pending; old four-step or old-seed data cannot enter this table.
+Matched **Offload**: `omni-layer-prefetch1-vae-resident-v1`. Both BF16 and INT8 ratios use same-hardware BF16 Full8; values below 1× are slower than that baseline. The higher speedup in each completed hardware pair is bold; ties and missing values are not. — means pending; old four-step or old-seed data cannot enter this table.
 
-Validated: Ascend 0/20, PRO 6000 0/20.
+Validated: Ascend 20/20, PRO 6000 10/20.
 
 [Raw eight-step records](benchmarks/single-card-highres.json)
 
 <!-- END HIGHRES RESULTS -->
 
+These are complete-request speedups with eight updates on both sides, not
+50-to-8-step distillation gains or attention-kernel benchmarks. Attention
+sparsity does not reduce FFN, encoder, decoder or MP4 work; the matched Offload
+policy also remains active. INT8 quantizes supported transformer linear layers,
+not every attention operation. A larger relative speedup on Ascend does not
+imply a lower absolute latency than PRO 6000: compare the time columns too.
+VSA V2 uses 80% sparsity, whereas Veda and Spark use 90%, so those rows also
+compare different attention mechanisms and students rather than equal-quality
+or equal-sparsity kernels.
+
+![Measured long-video comparison across hardware and precision](docs/figures/long-video-e2e.png)
+
+1344×768 / 345 frames: headline times and speedups use complete uninstrumented
+requests; bars use a separate DiT profile on a shared milliseconds-per-block
+axis. Module spans include waits and are not isolated kernel compute.
+One formal request per cell; no statistical error bars are claimed.
+[Measured figure data](benchmarks/long-video-e2e.json) ·
+[SVG](docs/figures/long-video-e2e.svg) · [PDF](docs/figures/long-video-e2e.pdf).
+
 
 ## Qualitative results and validation
 
-Ascend 910B3 only: 1344×768, 345 native frames, 24 FPS (14.375 seconds, approximately 14.4 seconds), with audio. All five methods use eight forwards; BF16 is on the left and native W8A8 INT8 on the right. Samples use the reviewed common seed **7**; the remaining videos are being regenerated; earlier four-step or seed42 videos are not relabeled.
+Ascend 910B3 only: **1344×768, 345 native frames, 24 FPS (14.375 seconds, approximately 14.4 seconds)**, with audio.
+
+All five methods use eight forwards. Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt, common seed **7** and matched Offload.
 
 > A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.
 
@@ -222,14 +243,14 @@ Ascend 910B3 only: 1344×768, 345 native frames, 24 FPS (14.375 seconds, approxi
 
 **Full + LightX2V8 · 8 steps**
 
-New-seed eight-step video pending validation.
+https://github.com/user-attachments/assets/1751d9fe-3ff9-48d1-a0dd-9ed62d431d17
 
 </td>
 <td>
 
 **Full + LightX2V8 · 8 steps**
 
-New-seed eight-step video pending validation.
+https://github.com/user-attachments/assets/0514e9a0-76dd-4946-b4b8-b39ca38d7c69
 
 </td>
 </tr>
@@ -245,7 +266,7 @@ https://github.com/user-attachments/assets/4a03fd28-4c88-4b46-b3aa-7dcb4ec4b1c1
 
 **VSA · FastH3 V2 · 80% · 8 steps**
 
-New-seed eight-step video pending validation.
+https://github.com/user-attachments/assets/bae64455-0bbc-4708-b33e-1e1a4269e4cf
 
 </td>
 </tr>
@@ -254,30 +275,30 @@ New-seed eight-step video pending validation.
 
 **Veda + LightX2V8 · 90% · 8 steps**
 
-New-seed eight-step video pending validation.
+https://github.com/user-attachments/assets/2c345f2b-4188-48d1-b0fc-6a44dd59800b
 
 </td>
 <td>
 
 **Veda + LightX2V8 · 90% · 8 steps**
 
-New-seed eight-step video pending validation.
+https://github.com/user-attachments/assets/bc8e2eb5-b51b-4a53-bf9b-05c432dfe62a
 
 </td>
 </tr>
 <tr>
 <td>
 
-**VDN · official student · 8 steps**
+**VDN · official · 8 steps**
 
-New-seed eight-step video pending validation.
+https://github.com/user-attachments/assets/5e4d2ced-da14-4e50-b7ac-6ff1d298d478
 
 </td>
 <td>
 
-**VDN · official student · 8 steps**
+**VDN · official · 8 steps**
 
-New-seed eight-step video pending validation.
+https://github.com/user-attachments/assets/7069c2e4-844c-497b-a824-7a26a515dce2
 
 </td>
 </tr>
@@ -286,23 +307,23 @@ New-seed eight-step video pending validation.
 
 **Spark-H3 + LightX2V8 · 8 steps**
 
-New-seed eight-step video pending validation.
+https://github.com/user-attachments/assets/66032d79-cf29-499e-ad0e-3f1bcaa753a9
 
 </td>
 <td>
 
 **Spark-H3 + LightX2V8 · 8 steps**
 
-New-seed eight-step video pending validation.
+https://github.com/user-attachments/assets/c4a787a9-c1e9-46df-97f1-2887c7e49135
 
 </td>
 </tr>
 </table>
 <!-- END QUALITATIVE GALLERY -->
 
-Common seed **7** was selected after reviewing 16 uniformly spaced frames, including the last frame, from two candidates: seed7 has one cyclist; seed123 retains two. Shot changes remain. Screening is user-requested and did not select the fastest timing; this screening request is excluded from formal measurements.
+VSA V2 uses 80% video sparsity; Veda uses 90%. Text and audio retain their native rules.
 
-[New sample metadata and progress](examples/videos/qualitative-1344-345.json); [earlier seed/configuration archive](examples/videos/archive/qualitative-pre-unified8-seed42.json). Seed screening is user-requested and excluded from timing. Different students are not asserted to have pixel or perceptual equivalence.
+[Parameters, SHA256 and provenance for all ten videos](examples/videos/qualitative-1344-345.json). Full decoding verifies 345 frames and audio; 16 uniform frames per clip were visually reviewed. Distinct students are not asserted to be pixel- or perceptually equivalent. VSA retains shot changes; no flicker-free guarantee is made.
 
 The initial integration targets batch-one T2VA without reference videos.
 See [architecture](docs/architecture.md), [validation status](docs/validation.md)

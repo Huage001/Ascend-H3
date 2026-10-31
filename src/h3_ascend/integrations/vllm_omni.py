@@ -36,6 +36,11 @@ def register():
     import torch
     import torch_npu  # noqa: F401 -- registers torch.npu before it is used
 
+    if os.getenv("H3_ASCEND_DORMANT_VISION_MMAP") == "1":
+        from h3_ascend.integrations.dormant_memory import install as install_dormant_memory
+
+        install_dormant_memory()
+
     torch.npu.matmul.allow_hf32 = False
     from vllm_omni.diffusion.attention.backends.registry import (
         DiffusionAttentionBackendEnum as E,

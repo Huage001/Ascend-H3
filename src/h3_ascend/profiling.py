@@ -36,12 +36,32 @@ def install():
     def watch():
         while not (root / "start").is_file():
             time.sleep(1)
+        # Timed requests are finished. Release unreachable response objects
+        # before the independent profiling request; no weights are offloaded
+        # differently and no cleanup is inserted in a timed forward.
+        import ctypes
+        import gc
+
+        unreachable = gc.collect()
+        trim = getattr(ctypes.CDLL(None), "malloc_trim", None)
+        trimmed = trim(0) if trim is not None else None
+        (root / "pre-profile-gc.json").write_text(
+            json.dumps(
+                {
+                    "unreachable": unreachable,
+                    "malloc_trim": trimmed,
+                    "formal_measurement_already_complete": True,
+                }
+            )
+        )
         models = [ref() for ref in instances if ref() is not None]
         if len(models) != 1:
             (root / "error.json").write_text(json.dumps({"model_count": len(models)}))
             return
         model = models[0]
-        kind = next((p.device.type for p in model.parameters() if p.device.type in ("cuda", "npu")), None)
+        kind = next(
+            (p.device.type for p in model.parameters() if p.device.type in ("cuda", "npu")), None
+        )
         if kind is None:
             raise RuntimeError("No accelerator-resident model state found for profiling")
         device = torch.get_device_module(kind)
@@ -71,7 +91,8 @@ def install():
             span(block.attn, "attention", index)
             span(block.mlp, "ffn", index)
             for name, category in (
-                ("qkv_proj", "qkv_projection"), ("attention", "attention_dispatch"),
+                ("qkv_proj", "qkv_projection"),
+                ("attention", "attention_dispatch"),
                 ("out_proj", "output_projection"),
             ):
                 child = getattr(block.attn, name, None)
@@ -88,12 +109,21 @@ def install():
         @torch.compiler.disable
         def flush(module, args, result):
             device.synchronize()
-            values = [dict(category=c, layer=i, milliseconds=a.elapsed_time(b))
-                      for c, i, a, b in rows]
+            values = [
+                dict(category=c, layer=i, milliseconds=a.elapsed_time(b)) for c, i, a, b in rows
+            ]
             rows.clear()
             with (root / f"events-{os.getpid()}.jsonl").open("a") as stream:
-                stream.write(json.dumps({"spans": values, "instrumented": True,
-                                         "dit_wall_seconds": time.perf_counter() - started[0]}) + "\n")
+                stream.write(
+                    json.dumps(
+                        {
+                            "spans": values,
+                            "instrumented": True,
+                            "dit_wall_seconds": time.perf_counter() - started[0],
+                        }
+                    )
+                    + "\n"
+                )
 
         handles.append(model.register_forward_hook(flush))
         # Keep handles alive; the server exits after the separate profiling run.

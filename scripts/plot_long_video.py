@@ -40,6 +40,8 @@ def validate(data):
             or row.get("nominal_video_sparsity") != .8
         ):
             raise ValueError(f"Figure requires the V2 student and 80% VSA, not legacy v1: {key}")
+        if row["method"] in ("vsa", "vdn") and row["precision"] == "bf16" and row.get("dormant_input_vision_file_backed") is not True:
+            raise ValueError(f"BF16 {row['method']} must use the matched file-backed input-vision initialization: {key}")
         if row["actual_steps"] != expected:
             raise ValueError(f"Wrong model/schedule: {key}")
         student = "fasth3-v2" if row["method"] == "vsa" else "vdn-official8" if row["method"] == "vdn" else "lightx2v8"
@@ -68,11 +70,21 @@ def validate(data):
     return rows, policies.pop()
 
 
+def speedup_vs_bf16_full(rows, item):
+    """Both candidate precisions share the same hardware's BF16 Full8 baseline."""
+    reference = rows[(item["hardware"], "bf16", "full", False)]
+    return statistics.median(reference["e2e_seconds"]) / statistics.median(item["e2e_seconds"])
+
+
 def render(data, output):
     import matplotlib.pyplot as plt
     from matplotlib.patches import Patch
 
     rows, policy = validate(data)
+    shared_xmax = max(
+        row["profile"]["dit_wall_seconds"] / row["profile"]["actual_forwards"]
+        for row in rows.values()
+    ) * 1000 / 50
     sample_counts = sorted({len(row["e2e_seconds"]) for row in rows.values()})
     sample_note = "N=" + "/".join(map(str, sample_counts)) + " formal requests per cell"
     colors = ("#a63d2a", "#3e8296", "#ee9650")
@@ -99,13 +111,12 @@ def render(data, output):
         best_label = LABELS[[m for m, _ in METHODS].index(best["method"])]
         top.text(.56, .08, f"{best_label} · {best['precision'].upper()}", color="#126f66", fontsize=9)
         top.text(.56, -.17, f"{baseline / fastest:.2f}× vs BF16 Full8", color="#126f66", fontsize=9)
-        xmax = max(r["profile"]["dit_wall_seconds"] / r["profile"]["actual_forwards"] for r in candidates) * 1000 / 50
+        xmax = shared_xmax
         for row_index, precision in enumerate(("bf16", "int8"), 1):
             ax = fig.add_subplot(grids[row_index, col], facecolor="#fffdf8")
             ax.set_title(precision.upper() + "  ·  Offload", loc="left", fontsize=14, pad=24)
             for index, ((method, original), label) in enumerate(zip(METHODS, LABELS)):
                 item = rows[(hardware, precision, method, original)]
-                reference = statistics.median(rows[(hardware, precision, "full", False)]["e2e_seconds"])
                 seconds = statistics.median(item["e2e_seconds"])
                 profile = item["profile"]
                 stages = (profile["attention_seconds"], profile["ffn_seconds"],
@@ -118,29 +129,25 @@ def render(data, output):
                 y = index - .30
                 ax.text(0, y, f"{label} · {item['actual_steps']} steps", va="bottom", fontsize=9,
                         weight="bold", color="#252523")
-                text = f"{seconds / 60:.2f} min  /  {reference / seconds:.2f}×"
-                if precision == "int8":
-                    unquantized = statistics.median(rows[(hardware, "bf16", method, original)]["e2e_seconds"])
-                    text += f"  /  Q {unquantized / seconds:.2f}×"
+                text = f"{seconds / 60:.2f} min  /  {speedup_vs_bf16_full(rows, item):.2f}×"
                 ax.text(xmax, y, text,
                         va="bottom", ha="right", fontsize=9, color="#126f66")
             ax.set_ylim(len(METHODS) - .4, -.9)
             ax.set_xlim(0, xmax * 1.01)
             ax.set_yticks([])
-            ax.set_xlabel("Separate DiT profile · mean milliseconds per block", fontsize=9)
+            ax.set_xlabel("Separate DiT profile · mean ms/block · shared axis", fontsize=9)
             ax.tick_params(axis="x", labelsize=8, colors="#68685e")
             for spine in ("top", "left", "right"):
                 ax.spines[spine].set_visible(False)
             ax.spines["bottom"].set_color("#d5c8b7")
     fig.legend(handles=[Patch(color=c, label=label) for c, label in zip(
-        colors, ("Attention module", "FFN", "Other DiT work incl. unhidden Offload"))],
+        colors, ("Attention module", "FFN module", "Other DiT work incl. unhidden Offload"))],
         loc="lower left", bbox_to_anchor=(.05, .052), ncol=3, frameon=False, fontsize=9)
     fig.text(.055, .039, "Headline times: median uninstrumented request → completed MP4; "
-             f"{sample_note}. Reference: same-device, same-precision Full8. "
-             "Q = same-method BF16 / INT8.", fontsize=8, color="#626257")
+             f"{sample_note}. Every speedup uses same-hardware BF16 Full8, including INT8 candidates.", fontsize=8, color="#626257")
     fig.text(.055, .028, f"Bars: separate DiT profiling, normalized over actual forwards × 50 blocks; no E2E extrapolation. "
              f"Offload policy: {policy}.", fontsize=8, color="#626257")
-    fig.text(.055, .015, "All five methods and Full baseline: eight actual forwards, one common reviewed seed. Each student retains its trained schedule.", fontsize=8, color="#626257")
+    fig.text(.055, .015, "All methods: eight forwards, one reviewed seed, trained schedules. Module spans include waits; bars are not isolated kernel compute.", fontsize=8, color="#626257")
     output.parent.mkdir(parents=True, exist_ok=True)
     for suffix in ("png", "svg", "pdf"):
         fig.savefig(output.with_suffix("." + suffix), dpi=190, facecolor=fig.get_facecolor())

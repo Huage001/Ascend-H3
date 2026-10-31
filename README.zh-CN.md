@@ -8,7 +8,7 @@ head 多卡并行。
 
 **当前仍在进行整合验收。** 自定义 CANN 算子已从源码编译通过；
 尚未将所有“方法 × 精度 × 视频规格 × 并行规模”标记为通过。
-下文历史性能数据与这个仓库的整合验收分开记录。
+下文性能表仅收录本仓库八步配置的实测验收结果；早期配置单独归档。
 
 ## 四组视频规格
 
@@ -145,7 +145,7 @@ Veda 在分片后仍使用原 checkpoint 的全局 head 编号。
 printf '%s\n' 'A cyclist rides through a green park, cinematic tracking shot.' > prompt.txt
 for CASE in 672-124 672-345 1344-124 1344-345; do
   h3-ascend generate --case "$CASE" --prompt-file prompt.txt \
-    --method full --seed 42 --output "outputs/${CASE}.mp4"
+    --method full --seed 7 --output "outputs/${CASE}.mp4"
 done
 ```
 
@@ -158,7 +158,7 @@ done
 
 **所有方法、基线和计时请求统一为 8 次实际 DiT 前向。** Full/Veda/Spark 使用固定版本的官方 LightX2V 8-step 768p LoRA（shift 6/3）；VSA 使用官方 FastH3 V2（80% 稀疏率、shift 10/3）；VDN 保留官方八步学生。Veda 保持 90% 稀疏率。各学生保留自己的训练日程，不把四步权重强行运行八步。
 
-加速比 = 同一硬件、同一精度、同一分辨率/帧数/种子的 **Full 八步端到端耗时 / 当前方法八步端到端耗时**。报告仅覆盖 1344×768 的 124 帧和 345 帧，单卡，BF16 / INT8；先合并 LoRA，再进行 TP 切分与量化。计时包含文本编码、全部八次去噪、音视频解码、MP4 编码和完整返回；模型加载、权重合并、预热及画面筛选不计时。
+加速比 = 同一硬件、同一分辨率/帧数/种子的 **Full BF16 八步端到端耗时 / 当前方法八步端到端耗时**。BF16 与 INT8 均使用这个 BF16 Full 分母，Full INT8 也一样。报告仅覆盖 1344×768 的 124 帧和 345 帧，单卡，BF16 / INT8；先合并 LoRA，再进行 TP 切分与量化。计时包含文本编码、全部八次去噪、音视频解码、MP4 编码和完整返回；模型加载、权重合并、预热及画面筛选不计时。
 
 VSA 已按用户要求选定共同种子 **7**，各方法正式测速使用同一个 prompt 和种子；筛选过程已记录。下表只接受这套新口径的实测值，不把旧四步结果翻倍或换算。[此前 Full 四步为基线的数据](benchmarks/archive/pre-unified8-full4-reference.json)仅作历史归档。
 
@@ -168,39 +168,57 @@ VSA 已按用户要求选定共同种子 **7**，各方法正式测速使用同�
 
 | 帧数 | 精度 | 方法 | 昇腾 910B3 耗时 | 昇腾加速比 | PRO 6000 耗时 | PRO 6000 加速比 |
 | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| 124 | BF16 | Full + LightX2V8 | — | — | — | — |
-| 124 | BF16 | VSA · FastH3 V2 · 80% | — | — | — | — |
-| 124 | BF16 | Veda + LightX2V8 · 90% | — | — | — | — |
-| 124 | BF16 | VDN · official | — | — | — | — |
-| 124 | BF16 | Spark-H3 + LightX2V8 | — | — | — | — |
-| 124 | INT8 | Full + LightX2V8 | — | — | — | — |
-| 124 | INT8 | VSA · FastH3 V2 · 80% | — | — | — | — |
-| 124 | INT8 | Veda + LightX2V8 · 90% | — | — | — | — |
-| 124 | INT8 | VDN · official | — | — | — | — |
-| 124 | INT8 | Spark-H3 + LightX2V8 | — | — | — | — |
-| 345 | BF16 | Full + LightX2V8 | — | — | — | — |
-| 345 | BF16 | VSA · FastH3 V2 · 80% | — | — | — | — |
-| 345 | BF16 | Veda + LightX2V8 · 90% | — | — | — | — |
-| 345 | BF16 | VDN · official | — | — | — | — |
-| 345 | BF16 | Spark-H3 + LightX2V8 | — | — | — | — |
-| 345 | INT8 | Full + LightX2V8 | — | — | — | — |
-| 345 | INT8 | VSA · FastH3 V2 · 80% | — | — | — | — |
-| 345 | INT8 | Veda + LightX2V8 · 90% | — | — | — | — |
-| 345 | INT8 | VDN · official | — | — | — | — |
-| 345 | INT8 | Spark-H3 + LightX2V8 | — | — | — | — |
+| 124 | BF16 | Full + LightX2V8 | 206.71 秒 | 1.00× | — | — |
+| 124 | BF16 | VSA · FastH3 V2 · 80% | 163.20 秒 | 1.27× | — | — |
+| 124 | BF16 | Veda + LightX2V8 · 90% | 113.43 秒 | 1.82× | — | — |
+| 124 | BF16 | VDN · official | 301.42 秒 | 0.69× | — | — |
+| 124 | BF16 | Spark-H3 + LightX2V8 | 132.78 秒 | 1.56× | — | — |
+| 124 | INT8 | Full + LightX2V8 | 189.57 秒 | 1.09× | — | — |
+| 124 | INT8 | VSA · FastH3 V2 · 80% | 146.89 秒 | 1.41× | — | — |
+| 124 | INT8 | Veda + LightX2V8 · 90% | 97.61 秒 | 2.12× | — | — |
+| 124 | INT8 | VDN · official | 213.95 秒 | 0.97× | — | — |
+| 124 | INT8 | Spark-H3 + LightX2V8 | 116.19 秒 | 1.78× | — | — |
+| 345 | BF16 | Full + LightX2V8 | 1179.84 秒 | 1.00× | 467.81 秒 | 1.00× |
+| 345 | BF16 | VSA · FastH3 V2 · 80% | 661.43 秒 | **1.78×** | 318.03 秒 | 1.47× |
+| 345 | BF16 | Veda + LightX2V8 · 90% | 376.99 秒 | **3.13×** | 173.62 秒 | 2.69× |
+| 345 | BF16 | VDN · official | 842.14 秒 | 1.40× | 299.42 秒 | **1.56×** |
+| 345 | BF16 | Spark-H3 + LightX2V8 | 472.93 秒 | **2.49×** | 196.73 秒 | 2.38× |
+| 345 | INT8 | Full + LightX2V8 | 1125.43 秒 | **1.05×** | 454.32 秒 | 1.03× |
+| 345 | INT8 | VSA · FastH3 V2 · 80% | 617.55 秒 | **1.91×** | 304.01 秒 | 1.54× |
+| 345 | INT8 | Veda + LightX2V8 · 90% | 338.55 秒 | **3.48×** | 157.90 秒 | 2.96× |
+| 345 | INT8 | VDN · official | 620.67 秒 | **1.90×** | 281.81 秒 | 1.66× |
+| 345 | INT8 | Spark-H3 + LightX2V8 | 419.44 秒 | **2.81×** | 182.20 秒 | 2.57× |
 
-统一 **Offload**：`omni-layer-prefetch1-vae-resident-v1`。加速比相对各自硬件、同精度的 Full 八步；每组对照中更高的加速比加粗，缺失或相同的值不加粗。— 为待测；旧四步或旧种子结果不进入新表。
+统一 **Offload**：`omni-layer-prefetch1-vae-resident-v1`。BF16 与 INT8 的加速比都相对各自硬件的 Full BF16 八步；低于 1× 表示慢于该基线。每组对照中更高的加速比加粗，缺失或相同的值不加粗。— 为待测；旧四步或旧种子结果不进入新表。
 
-已验收：昇腾 0/20, PRO 6000 0/20.
+已验收：昇腾 20/20, PRO 6000 10/20.
 
 [八步原始记录](benchmarks/single-card-highres.json)
 
 <!-- END HIGHRES RESULTS -->
 
+这里是双方均为八步的完整请求加速比，不包含从 50 步降到 8 步的蒸馏收益，
+也不是单独注意力内核的加速比。注意力稀疏化不会减少 FFN、编码器、解码器和
+MP4 编码的工作，统一的 Offload 策略也始终启用。INT8 量化覆盖受支持的
+Transformer 线性层，不代表所有注意力运算都使用 INT8。昇腾的相对加速比
+更高不代表绝对耗时低于 PRO 6000，请同时比较耗时列。VSA V2 使用 80%
+稀疏率，Veda 和 Spark 使用 90%；这些行比较的是不同注意力机制和学生模型，
+不能理解为相同质量或相同稀疏率下的纯内核对照。
+
+![两种硬件、两种精度的长视频实测对照](docs/figures/long-video-e2e.png)
+
+1344×768、345 帧：标题耗时和加速比来自不带 profiling 的完整请求；条形图
+来自独立 DiT profiling，双方共享每个 block 平均毫秒数的坐标轴。
+模块区间包含等待，不代表纯内核计算时间。每格一次正式请求，不声称统计误差范围。
+[图表实测数据](benchmarks/long-video-e2e.json) ·
+[SVG](docs/figures/long-video-e2e.svg) · [PDF](docs/figures/long-video-e2e.pdf)。
+
 
 ## 效果展示与验证范围
 
-仅展示昇腾 910B3：1344×768、345 原生帧、24 FPS（14.375 秒，约 14.4 秒），含音轨。五种方法全部八步，左列 BF16，右列原生 W8A8 INT8。共同种子固定为 **7**，其余样例正在重生成；不会把旧四步或旧种子视频改标签当成新结果。
+仅展示昇腾 910B3 的 **1344×768、345 原生帧、24 FPS（14.375 秒，约 14.4 秒）**完整音视频。
+
+五种方法全部八步；左列 BF16，右列原生 W8A8 INT8。所有样例单卡、相同 prompt、共同种子 **7**、同一 Offload 策略。
 
 > A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.
 
@@ -212,14 +230,14 @@ VSA 已按用户要求选定共同种子 **7**，各方法正式测速使用同�
 
 **Full + LightX2V8 · 8 步**
 
-新种子八步视频生成/验收中。
+https://github.com/user-attachments/assets/1751d9fe-3ff9-48d1-a0dd-9ed62d431d17
 
 </td>
 <td>
 
 **Full + LightX2V8 · 8 步**
 
-新种子八步视频生成/验收中。
+https://github.com/user-attachments/assets/0514e9a0-76dd-4946-b4b8-b39ca38d7c69
 
 </td>
 </tr>
@@ -235,7 +253,7 @@ https://github.com/user-attachments/assets/4a03fd28-4c88-4b46-b3aa-7dcb4ec4b1c1
 
 **VSA · FastH3 V2 · 80% · 8 步**
 
-新种子八步视频生成/验收中。
+https://github.com/user-attachments/assets/bae64455-0bbc-4708-b33e-1e1a4269e4cf
 
 </td>
 </tr>
@@ -244,30 +262,30 @@ https://github.com/user-attachments/assets/4a03fd28-4c88-4b46-b3aa-7dcb4ec4b1c1
 
 **Veda + LightX2V8 · 90% · 8 步**
 
-新种子八步视频生成/验收中。
+https://github.com/user-attachments/assets/2c345f2b-4188-48d1-b0fc-6a44dd59800b
 
 </td>
 <td>
 
 **Veda + LightX2V8 · 90% · 8 步**
 
-新种子八步视频生成/验收中。
+https://github.com/user-attachments/assets/bc8e2eb5-b51b-4a53-bf9b-05c432dfe62a
 
 </td>
 </tr>
 <tr>
 <td>
 
-**VDN · official student · 8 步**
+**VDN · official · 8 步**
 
-新种子八步视频生成/验收中。
+https://github.com/user-attachments/assets/5e4d2ced-da14-4e50-b7ac-6ff1d298d478
 
 </td>
 <td>
 
-**VDN · official student · 8 步**
+**VDN · official · 8 步**
 
-新种子八步视频生成/验收中。
+https://github.com/user-attachments/assets/7069c2e4-844c-497b-a824-7a26a515dce2
 
 </td>
 </tr>
@@ -276,23 +294,23 @@ https://github.com/user-attachments/assets/4a03fd28-4c88-4b46-b3aa-7dcb4ec4b1c1
 
 **Spark-H3 + LightX2V8 · 8 步**
 
-新种子八步视频生成/验收中。
+https://github.com/user-attachments/assets/66032d79-cf29-499e-ad0e-3f1bcaa753a9
 
 </td>
 <td>
 
 **Spark-H3 + LightX2V8 · 8 步**
 
-新种子八步视频生成/验收中。
+https://github.com/user-attachments/assets/c4a787a9-c1e9-46df-97f1-2887c7e49135
 
 </td>
 </tr>
 </table>
 <!-- END QUALITATIVE GALLERY -->
 
-共同种子已选定为 **7**：查看了两个候选的 16 个均匀分布帧（含末帧），seed 7 为单个骑行者，seed 123 仍为双人。seed 7 有镜头切换；不作完美连续镜头保证。筛选按用户要求进行，未按耗时挑选；该筛选请求不进入正式测速。
+VSA V2 为 80% 视频稀疏率；Veda 为 90%。文本和音频保留各自原生规则。
 
-[新样例参数与进度](examples/videos/qualitative-1344-345.json)；[旧种子/旧配置样例归档](examples/videos/archive/qualitative-pre-unified8-seed42.json)。种子筛选按用户要求进行，筛选样例不作为计时样本，不承诺不同学生的画面逐像素或感知等价。
+[十个视频的参数、SHA256 与来源](examples/videos/qualitative-1344-345.json)。已完整解码核对 345 帧及音轨，并检查每段 16 个均匀抽样帧。不同学生不保证像素或感知等价；VSA 仍有镜头切换，不作无闪烁保证。
 
 首版目标是 batch=1、无参考视频的 T2VA。更多信息见
 [架构设计](docs/architecture.md)、[验证状态](docs/validation.md)

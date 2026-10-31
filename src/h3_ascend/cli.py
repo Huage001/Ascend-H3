@@ -177,6 +177,10 @@ def main():
             cmd[cmd.index("--lora-path") + 1] = prepared
         validate_assets(a.method, a.lora, a.predictor, model=a.model)
         os.environ["H3_ASCEND_METHOD"] = a.method
+        if a.method in ("vsa", "vdn") and a.precision == "bf16":
+            # File-backed input-only vision masters keep long T2VA requests
+            # below host-memory limits without changing active model math.
+            os.environ.setdefault("H3_ASCEND_DORMANT_VISION_MMAP", "1")
         if a.predictor:
             os.environ["H3_ASCEND_VEDA_PREDICTOR"] = a.predictor
         os.environ.setdefault("VLLM_WORKER_MULTIPROC_METHOD", "spawn")

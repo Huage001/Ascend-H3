@@ -111,8 +111,23 @@ def scans(t, b, start):
     return _SCANS[key](t, b, start)
 
 
+def packed_window_batches(cq, ck, element_bytes, max_gather_bytes=1024**3):
+    """Partition complete packed sequences while bounding each KV gather."""
+    if len(cq) != len(ck):
+        raise ValueError("Packed Q and KV window counts differ")
+    first = 0
+    while first < len(cq):
+        qlo = cq[first - 1] if first else 0
+        klo = ck[first - 1] if first else 0
+        last = first + 1
+        while last < len(cq) and (ck[last] - klo) * element_bytes <= max_gather_bytes:
+            last += 1
+        yield first, last, qlo, cq[last - 1], klo, ck[last - 1]
+        first = last
+
+
 def batched_window(query, key, value, window):
-    """Two dense NPU calls for the exact union of frame windows/global rows."""
+    """Bounded packed-window groups plus global rows, retaining every key."""
     import torch
     import torch_npu
     from vllm_omni.diffusion.attention.backends.vdnh3_attn import window_plan
@@ -162,17 +177,27 @@ def batched_window(query, key, value, window):
         )[0][0]
         out[0].index_copy_(0, dq, y)
     if wq.numel():
-        y = torch_npu.npu_fusion_attention(
-            q.index_select(0, wq),
-            k.index_select(0, wk),
-            v.index_select(0, wk),
-            h,
-            "TND",
-            scale=scale,
-            actual_seq_qlen=cq,
-            actual_seq_kvlen=ck,
-        )[0]
-        out[0].index_copy_(0, wq, y)
+        # Packed windows are independent softmax sequences. Limit each KV
+        # gather to 1 GiB, retaining every token and each window's full keys.
+        # This changes batching only, never splits a softmax reduction.
+        element_bytes = k.element_size() * k.shape[1] * k.shape[2]
+        for first, last, qlo, qhi, klo, khi in packed_window_batches(cq, ck, element_bytes):
+            selected_q = wq[qlo:qhi]
+            qpart = q.index_select(0, selected_q)
+            kpart = k.index_select(0, wk[klo:khi])
+            vpart = v.index_select(0, wk[klo:khi])
+            y = torch_npu.npu_fusion_attention(
+                qpart,
+                kpart,
+                vpart,
+                h,
+                "TND",
+                scale=scale,
+                actual_seq_qlen=[n - qlo for n in cq[first:last]],
+                actual_seq_kvlen=[n - klo for n in ck[first:last]],
+            )[0]
+            out[0].index_copy_(0, selected_q, y)
+            del y, qpart, kpart, vpart
     return out
 
 
