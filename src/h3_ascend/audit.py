@@ -2,6 +2,7 @@
 
 import json
 import os
+import traceback
 from pathlib import Path
 
 
@@ -53,6 +54,12 @@ def install():
                     weight = getattr(module, "weight", None)
                     linears.append({"name": name, "method": type(quant).__name__,
                                     "weight_dtype": str(weight.dtype) if weight is not None else None})
+            from h3_ascend.integrations.adaln_precompute import runtime_stats
+
+            adaln_stats = runtime_stats(self)
+            if os.getenv("H3_ASCEND_PRECOMPUTE_ADALN") == "1":
+                assert adaln_stats and adaln_stats["adaln_weights_cpu"]
+                assert adaln_stats["other_dit_parameters_npu"]
             (root / f"runtime-{os.getpid()}.json").write_text(json.dumps({
                 "offload_strategy": policy.strategy.value,
                 "components": sorted(policy.components),
@@ -64,6 +71,7 @@ def install():
                 "tp_world_size": tp_size,
                 "local_attention_heads": [block.attn.num_heads for block in self.blocks],
                 "total_attention_heads": [block.attn.total_num_heads for block in self.blocks],
+                "adaln_precompute": adaln_stats,
             }, indent=2))
             self._h3_audit_counts = [0] * len(self.blocks)
             self._h3_audit_gates = [None] * len(self.blocks)
@@ -84,6 +92,9 @@ def install():
 
                     self._h3_audit_handles.append(gate.register_forward_pre_hook(check_gate))
         before = list(self._h3_audit_counts)
+        from h3_ascend.integrations.adaln_precompute import runtime_stats
+
+        adaln_before = runtime_stats(self)
         self._h3_audit_gates = [None] * len(self.blocks)
         result = original(self, *args, **kwargs)
         tensors = [value for value in result if isinstance(value, torch.Tensor)]
@@ -105,6 +116,13 @@ def install():
             "vsa_sparsities": [getattr(block.attn, "vsa_sparsity", None) for block in self.blocks],
             "vsa_tile_sizes": [getattr(block.attn, "vsa_tile_size", None) for block in self.blocks],
         }
+        if adaln_before is not None:
+            adaln_after = runtime_stats(self)
+            row["adaln_cache_hits"] = adaln_after["cache_hits"] - adaln_before["cache_hits"]
+            row["adaln_cache_misses"] = adaln_after["cache_misses"] - adaln_before["cache_misses"]
+            row["adaln_weight_stage_loads"] = adaln_after["weight_stage_loads"] - adaln_before["weight_stage_loads"]
+            assert row["adaln_cache_hits"] >= 51 and row["adaln_cache_misses"] == 0
+            assert row["adaln_weight_stage_loads"] == 0
         root = Path(directory)
         root.mkdir(parents=True, exist_ok=True)
         with (root / f"dit-{os.getpid()}.jsonl").open("a") as stream:
@@ -123,5 +141,25 @@ def install():
             )
         return result
 
-    forward._h3_audited = True
-    MiniMaxH3DiTModel.forward = forward
+    @torch.compiler.disable
+    def reporting_forward(self, *args, **kwargs):
+        try:
+            return forward(self, *args, **kwargs)
+        except Exception as error:
+            from h3_ascend.integrations.adaln_precompute import runtime_stats
+
+            root = Path(directory)
+            root.mkdir(parents=True, exist_ok=True)
+            path = root / f"error-{os.getpid()}.json"
+            path.write_text(json.dumps({
+                "type": type(error).__name__, "error": str(error),
+                "traceback": traceback.format_exc(),
+                "block_counts": getattr(self, "_h3_audit_counts", None),
+                "adaln_precompute": runtime_stats(self),
+            }, indent=2) + "\n")
+            # An empty AssertionError message is otherwise lost by the native
+            # async RPC pump's truthiness check. Preserve a nonempty diagnostic.
+            raise RuntimeError(f"DiT warmup audit failed: {type(error).__name__}; see {path}") from error
+
+    reporting_forward._h3_audited = True
+    MiniMaxH3DiTModel.forward = reporting_forward

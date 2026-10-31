@@ -1,0 +1,3445 @@
+{
+  "method": "vdn",
+  "precision": "int8",
+  "case": "1344-345",
+  "devices": 1,
+  "matrix_id": "unified8-v1",
+  "benchmark_seed": 7,
+  "student_profile": "vdn-official8",
+  "student_source_sha256": null,
+  "student_revision": null,
+  "nominal_video_sparsity": null,
+  "video_shift": 12.0,
+  "audio_shift": 3.0,
+  "hardware": "Ascend 910B3",
+  "baseline": false,
+  "actual_steps": 8,
+  "offload": true,
+  "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+  "model_load_lora_fusion_and_warmup_excluded": true,
+  "scope": "prompt request through completed MP4 write, including audio",
+  "seconds": [
+    620.6711292918772
+  ],
+  "median_seconds": 620.6711292918772,
+  "diagnostic_hooks_removed_before_measurement": true,
+  "contention_detected": false,
+  "profile": {
+    "actual_forwards": 8,
+    "dit_wall_seconds": 548.2501536896452,
+    "attention_seconds": 478.91603796386744,
+    "ffn_seconds": 60.024729476928705,
+    "categories_seconds": {
+      "qkv_projection": 27.196097953796386,
+      "attention_dispatch": 232.62974993896498,
+      "output_projection": 8.254381437301635,
+      "attention": 478.91603796386744,
+      "ffn": 60.024729476928705
+    },
+    "request": {
+      "request": {
+        "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+        "width": 1344,
+        "height": 768,
+        "aspect_ratio": "16:9",
+        "num_frames": 345,
+        "fps": 24,
+        "num_inference_steps": 8,
+        "seed": 7,
+        "enable_frame_interpolation": "false",
+        "return_stage_metrics": "true",
+        "extra_params": "{\"task\": \"t2va\"}",
+        "guidance_scale": 1.0
+      },
+      "headers": {
+        "date": "Sat, 31 Oct 2026 06:00:55 GMT",
+        "server": "uvicorn",
+        "x-request-id": "video_sync-941b2251714654fe",
+        "x-model": "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
+        "x-inference-time-s": "617.039",
+        "x-stage-durations": "{\"queue_wait_ms\":0.5334625020623207,\"stage_0_gen_ms\":614786.2014770508}",
+        "x-peak-memory-mb": "56690.000",
+        "content-length": "38995361",
+        "content-type": "video/mp4",
+        "vary": "Origin",
+        "connection": "close"
+      },
+      "client_wall_seconds": 617.1094004958868
+    }
+  },
+  "runtime": {
+    "offload_strategy": "layer_wise",
+    "components": [
+      "dit",
+      "text_encoder"
+    ],
+    "resident_layers": 0,
+    "pin_memory": true,
+    "block_hooks": [
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      },
+      {
+        "implementation": "vllm_omni.diffusion.offloader.layerwise_backend.LayerwiseOffloadHook",
+        "pin_memory": true,
+        "cpu_master_bytes": 953108448
+      }
+    ],
+    "linear_methods": [
+      {
+        "name": "video_patch_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.float32"
+      },
+      {
+        "name": "audio_patch_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.float32"
+      },
+      {
+        "name": "condition_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "time_embedder.proj_in",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.float32"
+      },
+      {
+        "name": "time_embedder.proj_out",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.float32"
+      },
+      {
+        "name": "token_refiner.blocks.0.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "token_refiner.blocks.0.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "token_refiner.blocks.0.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "token_refiner.blocks.0.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "token_refiner.blocks.1.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "token_refiner.blocks.1.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "token_refiner.blocks.1.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "token_refiner.blocks.1.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.0.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.0.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.0.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.0.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.0.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.0.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.0.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.0.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.0.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.0.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.0.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.0.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.1.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.1.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.1.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.1.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.1.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.1.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.1.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.1.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.1.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.1.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.1.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.1.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.2.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.2.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.2.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.2.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.2.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.2.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.2.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.2.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.2.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.2.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.2.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.2.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.3.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.3.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.3.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.3.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.3.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.3.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.3.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.3.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.3.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.3.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.3.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.3.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.4.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.4.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.4.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.4.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.4.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.4.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.4.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.4.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.4.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.4.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.4.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.4.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.5.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.5.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.5.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.5.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.5.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.5.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.5.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.5.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.5.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.5.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.5.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.5.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.6.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.6.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.6.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.6.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.6.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.6.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.6.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.6.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.6.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.6.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.6.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.6.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.7.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.7.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.7.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.7.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.7.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.7.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.7.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.7.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.7.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.7.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.7.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.7.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.8.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.8.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.8.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.8.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.8.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.8.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.8.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.8.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.8.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.8.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.8.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.8.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.9.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.9.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.9.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.9.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.9.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.9.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.9.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.9.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.9.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.9.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.9.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.9.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.10.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.10.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.10.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.10.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.10.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.10.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.10.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.10.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.10.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.10.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.10.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.10.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.11.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.11.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.11.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.11.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.11.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.11.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.11.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.11.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.11.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.11.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.11.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.11.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.12.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.12.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.12.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.12.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.12.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.12.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.12.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.12.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.12.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.12.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.12.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.12.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.13.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.13.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.13.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.13.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.13.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.13.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.13.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.13.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.13.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.13.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.13.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.13.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.14.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.14.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.14.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.14.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.14.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.14.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.14.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.14.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.14.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.14.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.14.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.14.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.15.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.15.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.15.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.15.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.15.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.15.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.15.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.15.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.15.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.15.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.15.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.15.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.16.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.16.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.16.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.16.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.16.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.16.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.16.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.16.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.16.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.16.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.16.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.16.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.17.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.17.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.17.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.17.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.17.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.17.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.17.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.17.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.17.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.17.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.17.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.17.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.18.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.18.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.18.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.18.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.18.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.18.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.18.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.18.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.18.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.18.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.18.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.18.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.19.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.19.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.19.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.19.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.19.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.19.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.19.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.19.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.19.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.19.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.19.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.19.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.20.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.20.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.20.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.20.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.20.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.20.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.20.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.20.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.20.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.20.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.20.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.20.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.21.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.21.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.21.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.21.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.21.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.21.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.21.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.21.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.21.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.21.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.21.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.21.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.22.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.22.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.22.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.22.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.22.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.22.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.22.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.22.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.22.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.22.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.22.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.22.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.23.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.23.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.23.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.23.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.23.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.23.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.23.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.23.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.23.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.23.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.23.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.23.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.24.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.24.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.24.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.24.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.24.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.24.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.24.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.24.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.24.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.24.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.24.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.24.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.25.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.25.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.25.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.25.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.25.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.25.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.25.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.25.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.25.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.25.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.25.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.25.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.26.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.26.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.26.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.26.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.26.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.26.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.26.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.26.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.26.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.26.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.26.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.26.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.27.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.27.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.27.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.27.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.27.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.27.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.27.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.27.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.27.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.27.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.27.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.27.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.28.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.28.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.28.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.28.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.28.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.28.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.28.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.28.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.28.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.28.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.28.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.28.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.29.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.29.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.29.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.29.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.29.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.29.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.29.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.29.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.29.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.29.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.29.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.29.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.30.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.30.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.30.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.30.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.30.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.30.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.30.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.30.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.30.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.30.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.30.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.30.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.31.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.31.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.31.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.31.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.31.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.31.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.31.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.31.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.31.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.31.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.31.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.31.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.32.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.32.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.32.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.32.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.32.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.32.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.32.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.32.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.32.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.32.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.32.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.32.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.33.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.33.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.33.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.33.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.33.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.33.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.33.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.33.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.33.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.33.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.33.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.33.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.34.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.34.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.34.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.34.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.34.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.34.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.34.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.34.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.34.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.34.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.34.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.34.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.35.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.35.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.35.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.35.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.35.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.35.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.35.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.35.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.35.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.35.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.35.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.35.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.36.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.36.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.36.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.36.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.36.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.36.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.36.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.36.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.36.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.36.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.36.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.36.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.37.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.37.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.37.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.37.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.37.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.37.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.37.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.37.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.37.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.37.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.37.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.37.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.38.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.38.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.38.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.38.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.38.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.38.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.38.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.38.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.38.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.38.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.38.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.38.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.39.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.39.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.39.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.39.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.39.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.39.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.39.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.39.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.39.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.39.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.39.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.39.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.40.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.40.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.40.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.40.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.40.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.40.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.40.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.40.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.40.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.40.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.40.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.40.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.41.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.41.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.41.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.41.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.41.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.41.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.41.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.41.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.41.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.41.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.41.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.41.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.42.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.42.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.42.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.42.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.42.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.42.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.42.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.42.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.42.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.42.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.42.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.42.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.43.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.43.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.43.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.43.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.43.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.43.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.43.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.43.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.43.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.43.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.43.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.43.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.44.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.44.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.44.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.44.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.44.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.44.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.44.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.44.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.44.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.44.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.44.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.44.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.45.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.45.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.45.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.45.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.45.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.45.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.45.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.45.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.45.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.45.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.45.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.45.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.46.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.46.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.46.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.46.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.46.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.46.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.46.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.46.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.46.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.46.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.46.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.46.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.47.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.47.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.47.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.47.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.47.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.47.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.47.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.47.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.47.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.47.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.47.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.47.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.48.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.48.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.48.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.48.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.48.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.48.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.48.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.48.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.48.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.48.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.48.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.48.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.49.attn.qkv_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.49.attn.out_proj",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.49.attn.vdn.softmax_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.49.attn.vdn.linear_attention.alpha.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.49.attn.vdn.linear_attention.alpha.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.49.attn.vdn.linear_attention.beta_proj",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.49.attn.vdn.linear_attention.output_gate.down",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.49.attn.vdn.linear_attention.output_gate.up",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "blocks.49.attn.vdn.to_out_linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.49.mlp.fc1",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.49.mlp.fc2",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "blocks.49.adaln_proj.linear",
+        "method": "UnquantizedHostLinearMethod",
+        "weight_dtype": "torch.bfloat16"
+      },
+      {
+        "name": "final_layer.adaln_proj.linear",
+        "method": "NPUInt8OnlineLinearMethod",
+        "weight_dtype": "torch.int8"
+      },
+      {
+        "name": "final_layer.video_out",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.float32"
+      },
+      {
+        "name": "final_layer.audio_out",
+        "method": "UnquantizedLinearMethod",
+        "weight_dtype": "torch.float32"
+      }
+    ]
+  },
+  "receipts": [
+    {
+      "request": {
+        "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+        "width": 1344,
+        "height": 768,
+        "aspect_ratio": "16:9",
+        "num_frames": 345,
+        "fps": 24,
+        "num_inference_steps": 8,
+        "seed": 7,
+        "enable_frame_interpolation": "false",
+        "return_stage_metrics": "true",
+        "extra_params": "{\"task\": \"t2va\"}",
+        "guidance_scale": 1.0
+      },
+      "headers": {
+        "date": "Sat, 31 Oct 2026 05:50:33 GMT",
+        "server": "uvicorn",
+        "x-request-id": "video_sync-86a2ffc313033830",
+        "x-model": "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
+        "x-inference-time-s": "620.582",
+        "x-stage-durations": "{\"queue_wait_ms\":1.3031959533691406,\"stage_0_gen_ms\":618358.9985370636}",
+        "x-peak-memory-mb": "57676.000",
+        "content-length": "39208194",
+        "content-type": "video/mp4",
+        "vary": "Origin",
+        "connection": "close"
+      },
+      "client_wall_seconds": 620.6711292918772
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "method": "vsa",
+  "precision": "int8",
+  "case": "1344-124",
+  "tp": 2,
+  "ready_seconds": 284.08444892056286,
+  "total_wall_seconds": 768.9697885075584,
+  "external_processes_detected": false
+}

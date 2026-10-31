@@ -1,0 +1,9 @@
+{
+  "method": "spark",
+  "precision": "int8",
+  "case": "1344-345",
+  "tp": 4,
+  "ready_seconds": 308.0988549143076,
+  "total_wall_seconds": 1022.7587297316641,
+  "external_processes_detected": false
+}

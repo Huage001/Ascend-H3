@@ -36,6 +36,10 @@ def register():
     import torch
     import torch_npu  # noqa: F401 -- registers torch.npu before it is used
 
+    from h3_ascend.integrations.adaln_precompute import install as install_adaln_precompute
+
+    install_adaln_precompute()
+
     if os.getenv("H3_ASCEND_DORMANT_VISION_MMAP") == "1":
         from h3_ascend.integrations.dormant_memory import install as install_dormant_memory
 

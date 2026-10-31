@@ -1,0 +1,9 @@
+{
+  "method": "full",
+  "precision": "int8",
+  "case": "1344-124",
+  "tp": 4,
+  "ready_seconds": 304.10087268892676,
+  "total_wall_seconds": 672.1613744348288,
+  "external_processes_detected": false
+}

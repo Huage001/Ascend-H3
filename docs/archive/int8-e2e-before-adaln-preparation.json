@@ -1,0 +1,137 @@
+{
+  "status": "in_progress",
+  "protocol": {
+    "precision": "int8",
+    "width": 1344,
+    "height": 768,
+    "frames": [
+      124,
+      345
+    ],
+    "actual_steps": 8,
+    "policy_priority": [
+      "none",
+      "text",
+      "module",
+      "layer"
+    ],
+    "selection": "least offload, earliest qualified sample within policy"
+  },
+  "accepted": 5,
+  "expected": 40,
+  "hardware": "Ascend 910B3",
+  "records": [
+    {
+      "method": "full",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 1,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 196.31261389702559,
+      "formal_repetitions": 1,
+      "offload": "layer",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 210,
+        "UnquantizedHostLinearMethod": 50
+      },
+      "source_performance_sha256": "5eb0ac5a9b3cabd45ae16cc3f89b9f3663c1a074f31bb25032bfde729c83f851"
+    },
+    {
+      "method": "full",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 117.3810915518552,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "1936f01c2b8e41c0693ade43532d9f6274a3eb0a05365fa3fa31936083da8b04"
+    },
+    {
+      "method": "full",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 64.9392138691619,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "54d783036d3cc44435dc615eb9482cf2af027a38b13ac330a536dc05a35e09f4"
+    },
+    {
+      "method": "full",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 36.03299137298018,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "3d8ff044c42fb97506e03c6d21c50308296e81a00286c264cc607a4915273167"
+    },
+    {
+      "method": "veda",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 43.3850723169744,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "08d23344351e1b3945b4a34ccaad20145d4ce827830dc22fbc4cb941cc423796"
+    }
+  ],
+  "source_selection": "least offload policy; earliest qualified formal sample within policy; VAE1 TP8 pilot excluded"
+}

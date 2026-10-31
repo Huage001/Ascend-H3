@@ -1,0 +1,18 @@
+[
+  "/cache/songhua/envs/h3-ascend-release31984/bin/python",
+  "-m",
+  "h3_ascend.cli",
+  "serve",
+  "--method",
+  "vdn",
+  "--model",
+  "/cache/songhua/h3-ascend-release-20261030/models/MiniMax-H3/FL2VA",
+  "--precision",
+  "int8",
+  "--devices",
+  "1",
+  "--port",
+  "20207",
+  "--lora",
+  "/cache/songhua/h3-ascend-release-20261030/models/VDN/stage-dmd-step-250"
+]

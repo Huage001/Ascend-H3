@@ -1,6 +1,7 @@
 {
-  "status": "in_progress",
+  "status": "complete",
   "protocol": {
+    "matrix_id": "resident-adaln-matrix-v2",
     "precision": "int8",
     "width": 1344,
     "height": 768,
@@ -9,15 +10,38 @@
       345
     ],
     "actual_steps": 8,
+    "seed": 7,
     "policy_priority": [
       "none",
       "text",
-      "module",
       "layer"
     ],
-    "selection": "least offload, earliest qualified sample within policy"
+    "adaln_precomputed": true,
+    "resident_preferred": true,
+    "formal_cache_proof": "resident rows only: all ranks zero AdaLN misses and weight loads; at least 408 hits per request",
+    "reused_offload_cells": [
+      {
+        "method": "spark",
+        "case": "1344-345",
+        "devices": 1,
+        "source_matrix": "unified8-v1"
+      },
+      {
+        "method": "vsa",
+        "case": "1344-345",
+        "devices": 1,
+        "source_matrix": "unified8-v1"
+      },
+      {
+        "method": "vdn",
+        "case": "1344-345",
+        "devices": 1,
+        "source_matrix": "unified8-v1"
+      }
+    ],
+    "selection": "least offload; earliest qualified response timestamp within policy; never fastest retake"
   },
-  "accepted": 4,
+  "accepted": 40,
   "expected": 40,
   "hardware": "Ascend 910B3",
   "records": [
@@ -26,22 +50,32 @@
       "width": 1344,
       "height": 768,
       "frames": 124,
-      "devices": 4,
+      "devices": 1,
       "precision": "int8",
       "actual_steps": 8,
       "seed": 7,
-      "seconds": 64.9392138691619,
+      "seconds": 197.6581579996273,
       "formal_repetitions": 1,
-      "offload": "none",
+      "offload": "text",
       "parallel": "native TP",
-      "attention_heads_per_rank": 14,
-      "vae_parallel_size": 4,
-      "runtime_offload_strategy": "none",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
       "runtime_linear_method_counts": {
-        "UnquantizedLinearMethod": 6,
-        "NPUInt8OnlineLinearMethod": 260
+        "UnquantizedLinearMethod": 56,
+        "NPUInt8OnlineLinearMethod": 210
       },
-      "source_performance_sha256": "0dd6d629bd9a1b0858a8b380c279062c72119075f2cf2a65d043be9362c45b96"
+      "source_performance_sha256": "961c61bc02c2f06e18721b3e55e83d8c2bee49fae80a4e58c6d9a1031fd4d173",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/full-int8-tp1-1344-124-text-student-seed7/performance.json"
     },
     {
       "method": "full",
@@ -52,21 +86,31 @@
       "precision": "int8",
       "actual_steps": 8,
       "seed": 7,
-      "seconds": 117.3810915518552,
+      "seconds": 116.03094741981477,
       "formal_repetitions": 1,
-      "offload": "text",
+      "offload": "none",
       "parallel": "native TP",
       "attention_heads_per_rank": 28,
       "vae_parallel_size": 2,
-      "runtime_offload_strategy": "layer_wise",
+      "runtime_offload_strategy": "none",
       "runtime_linear_method_counts": {
         "UnquantizedLinearMethod": 6,
         "NPUInt8OnlineLinearMethod": 260
       },
-      "source_performance_sha256": "1936f01c2b8e41c0693ade43532d9f6274a3eb0a05365fa3fa31936083da8b04"
+      "source_performance_sha256": "15ea909ecd335aae43aa9e718f95b5d31541b30212cb19c46a94120f966b5380",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/full-int8-tp2-1344-124-none-student-seed7/performance.json"
     },
     {
-      "method": "veda",
+      "method": "full",
       "width": 1344,
       "height": 768,
       "frames": 124,
@@ -74,7 +118,7 @@
       "precision": "int8",
       "actual_steps": 8,
       "seed": 7,
-      "seconds": 43.3850723169744,
+      "seconds": 64.78435667138547,
       "formal_repetitions": 1,
       "offload": "none",
       "parallel": "native TP",
@@ -85,10 +129,52 @@
         "UnquantizedLinearMethod": 6,
         "NPUInt8OnlineLinearMethod": 260
       },
-      "source_performance_sha256": "08d23344351e1b3945b4a34ccaad20145d4ce827830dc22fbc4cb941cc423796"
+      "source_performance_sha256": "f991fd8b9324b515113d6dbe99494b0223ebb9befe0be523718f2c46850e3120",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/full-int8-tp4-1344-124-none-student-1793462264337645505/performance.json"
     },
     {
       "method": "full",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 35.872941514477134,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "0b04cc51d350762b54294181d27af4828d0bd558d73a732d59413ed6e76ccdc1",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/full-int8-tp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
       "width": 1344,
       "height": 768,
       "frames": 124,
@@ -96,7 +182,1039 @@
       "precision": "int8",
       "actual_steps": 8,
       "seed": 7,
-      "seconds": 196.31261389702559,
+      "seconds": 146.81265651155263,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 56,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "61a34e12dbe4b58a5eeff11075b0b8dec4f74a7250b621ef2077bd558e0b390a",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vsa-int8-tp1-1344-124-text-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 93.57258966285735,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "94e4b69de99dbaed6a311f24d3a0a98cccbf600c99bc1bd2a8f3cb4e4c841a45",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vsa-int8-tp2-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 53.46868947148323,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "f8639275fe7c7eea35ab32f72c01574362cb9b27cc31e53dba2ebd5a2adfbfad",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vsa-int8-tp4-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 30.395897365175188,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "105965ff380aed338f6e02674d4fc6cb1ed849cea59b5d488636a29b0c7399e0",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vsa-int8-tp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 1,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 97.39943704009056,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 56,
+        "NPUInt8OnlineLinearMethod": 210
+      },
+      "source_performance_sha256": "2628ea160a035eb4b94a22bb7645250c546d75dfff21f956eaa114fe5a9e6b34",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/veda-int8-tp1-1344-124-text-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 69.6591678885743,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "6371027eee5cc85c74f4b2374e9c179c287195400f9a44903794e2d2541c4b85",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/veda-int8-tp2-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 43.37773583456874,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "5d5e85871b8d0f39f6691f2d058d9e1423b8dccd57873f148e004d906fcfd811",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/veda-int8-tp4-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 25.334683735854924,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "0c9c237ebb0e9814e9ff71a80a09e7087e8f27b3e55f7a2a7425a849dbf8e9ca",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/veda-int8-tp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 1,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 216.90960944257677,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 356,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "69d83c1716059acd58dc44124135252ff120bc0aff8e01e37e78bc7adc872bb0",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vdn-int8-tp1-1344-124-text-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 136.0174015276134,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 306,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "cdaaa8e393527f106735bf3544feb18c6ad0e13a2b299290894dd708c314bd19",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vdn-int8-tp2-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 79.26328081823885,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 306,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "5463d23165011b64e8e75477a931a6868fc967da256e9c23f7a9c1f939b22fee",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vdn-int8-tp4-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 44.35557402018458,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 306,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "6510a2fde257b046196efcf3a7b2afecdc2cf596ca615dc217a1d7980a9b0ffb",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vdn-int8-tp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 1,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 117.10970762837678,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 56,
+        "NPUInt8OnlineLinearMethod": 210
+      },
+      "source_performance_sha256": "f695b8639c54d60bd988437b60a1af55654539afb00e6fd15131f25e981e6aec",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/spark-int8-tp1-1344-124-text-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 79.41061279736459,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "8706b269e604ded6f53d9e23934db97f3f531590a30782de2ce6114e97baaa4e",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/spark-int8-tp2-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 48.872062316164374,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "5e3ad8d4ab4a08fb9ae1c3a5197b99ea98fb6a30a1ef67c4e576930eb25bdeee",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/spark-int8-tp4-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "width": 1344,
+      "height": 768,
+      "frames": 124,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 29.051949665881693,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "b570a05a1f9f7184016f2ab1932739011860935f2d13024af91073ac3f4328e0",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/spark-int8-tp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "full",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 1,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 1211.170350418426,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 56,
+        "NPUInt8OnlineLinearMethod": 210
+      },
+      "source_performance_sha256": "d4280bc80c34ad3d945b5a04640c470f0a6f1a80cf8d86b9eec64abaa34d4368",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/full-int8-tp1-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "full",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 649.7219726517797,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "d64813b27ff0ee28fd9a98ba333349d889fe791c7baad911c53c69a36f942850",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/full-int8-tp2-1344-345-text-student-1793466716165172223/performance.json"
+    },
+    {
+      "method": "full",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 328.62783144414425,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "d6f04109bc775d38e4ee65986a1fab85036b38c33a35dae54f666378b4cf23db",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/full-int8-tp4-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "full",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 178.80623986385763,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "caad8c018438f48b2db6c93e213220ccb784341e47cff64a614205810f2e43a7",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/full-int8-tp8-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 1,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 617.5480011347681,
+      "formal_repetitions": 1,
+      "offload": "layer",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260,
+        "UnquantizedHostLinearMethod": 50
+      },
+      "source_performance_sha256": "45f4fe85f692ec7400649ebab8dd0b3cfc3232768ab0f958e7f49fe3b3fbf14a",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": false,
+      "adaln_precomputed": false,
+      "formal_adaln_verified": false,
+      "measurement_origin": "reused_validated_prior_run",
+      "source_matrix_id": "unified8-v1",
+      "source_record": "benchmarks/raw/reused-unified8/vsa/performance.json"
+    },
+    {
+      "method": "vsa",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 363.99258016236126,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "5d9feb4285e4a2ae77f8747afffe7144a92211569f1fa43dc25c3aff170623e8",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vsa-int8-tp2-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 193.33003081940114,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "29d1fb6c8d9d7b445f5eb33a9be8b2009c65980ec2c893ba38e4d05aa2a82cdf",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {
+        "spark_release_temporaries": false,
+        "vsa_release_temporaries": false
+      },
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vsa-int8-tp4-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 104.71297576464713,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "842e743c3ddd4ba411ff6af00d88f1517b40c3a99a0739d49c64f95e25481f34",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vsa-int8-tp8-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 1,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 337.94739603158087,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 56,
+        "NPUInt8OnlineLinearMethod": 210
+      },
+      "source_performance_sha256": "7766f6734580a66d5cc1dc7db07954ff4c43f319e65920126b14a19c0786d05a",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/veda-int8-tp1-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 225.3103004163131,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "36e2152fa838f1311c2b1341dc555d7c81af6e81014d68edb3640b3d5cf11e29",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {
+        "spark_release_temporaries": false,
+        "vsa_release_temporaries": false
+      },
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/veda-int8-tp2-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 130.11375676002353,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "87769d42483701cd92a68ff00a39f3caaa2504fc58826cf21e308633902d3eca",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/veda-int8-tp4-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 75.92908116895705,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "c8839de6cfa417cdd25dbf30218968441375c7157325411dd66da325e5fd91c4",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/veda-int8-tp8-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 1,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 620.6711292918772,
+      "formal_repetitions": 1,
+      "offload": "layer",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 56,
+      "vae_parallel_size": 1,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 306,
+        "NPUInt8OnlineLinearMethod": 260,
+        "UnquantizedHostLinearMethod": 50
+      },
+      "source_performance_sha256": "63c4f14fab873701f20c8db1b9ec4279582a8a1c627198df1b81a4b95bc3af77",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": false,
+      "adaln_precomputed": false,
+      "formal_adaln_verified": false,
+      "measurement_origin": "reused_validated_prior_run",
+      "source_matrix_id": "unified8-v1",
+      "source_record": "benchmarks/raw/reused-unified8/vdn/performance.json"
+    },
+    {
+      "method": "vdn",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 388.5798502769321,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 306,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "e00e9170ce23cd0e19fde24c5652bd3ed271195521800a3d84e7c25bd22eaaee",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vdn-int8-tp2-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 209.84470626711845,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 306,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "9853bfd796ff251d62517185404094952d703a09085d371ece645131ce9bc2a5",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vdn-int8-tp4-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 117.2706323619932,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 306,
+        "NPUInt8OnlineLinearMethod": 310
+      },
+      "source_performance_sha256": "35826542ff24ed60e0bb9829d7b615a014e753f01d060261bf153c9832fc849f",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/vdn-int8-tp8-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 1,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 419.4366097319871,
       "formal_repetitions": 1,
       "offload": "layer",
       "parallel": "native TP",
@@ -108,8 +1226,116 @@
         "NPUInt8OnlineLinearMethod": 210,
         "UnquantizedHostLinearMethod": 50
       },
-      "source_performance_sha256": "5eb0ac5a9b3cabd45ae16cc3f89b9f3663c1a074f31bb25032bfde729c83f851"
+      "source_performance_sha256": "916832e0e68f9867f059863b7f56f86279c2df9cba393cf77c347b205b325fa4",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": false,
+      "adaln_precomputed": false,
+      "formal_adaln_verified": false,
+      "measurement_origin": "reused_validated_prior_run",
+      "source_matrix_id": "unified8-v1",
+      "source_record": "benchmarks/raw/reused-unified8/spark/performance.json"
+    },
+    {
+      "method": "spark",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 2,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 267.6114850156009,
+      "formal_repetitions": 1,
+      "offload": "text",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 28,
+      "vae_parallel_size": 2,
+      "runtime_offload_strategy": "layer_wise",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "81a73ab942a6d37b93e27fc611bdd9916fdc36b9dbedb54078851f7ea9c9ec9f",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/spark-int8-tp2-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 4,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 150.50489781145006,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 14,
+      "vae_parallel_size": 4,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "5f92c1257a7fe1a04ceb61e1b0c64e37791a805cd3902dc4c07cfd5c479e245f",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {
+        "spark_release_temporaries": false
+      },
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/spark-int8-tp4-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "width": 1344,
+      "height": 768,
+      "frames": 345,
+      "devices": 8,
+      "precision": "int8",
+      "actual_steps": 8,
+      "seed": 7,
+      "seconds": 87.01556451711804,
+      "formal_repetitions": 1,
+      "offload": "none",
+      "parallel": "native TP",
+      "attention_heads_per_rank": 7,
+      "vae_parallel_size": 8,
+      "runtime_offload_strategy": "none",
+      "runtime_linear_method_counts": {
+        "UnquantizedLinearMethod": 6,
+        "NPUInt8OnlineLinearMethod": 260
+      },
+      "source_performance_sha256": "eb937658adcd0aa474f6c82c450086b7431e32aaf7a741cf998642c871920284",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "attention_memory_options": {},
+      "dit_resident": true,
+      "adaln_precomputed": true,
+      "formal_adaln_verified": true,
+      "measurement_origin": "fresh",
+      "source_matrix_id": "resident-adaln-matrix-v2",
+      "source_record": "benchmarks/raw/resident-adaln-matrix-v2/spark-int8-tp8-1344-345-none-student-seed7/performance.json"
     }
   ],
-  "source_selection": "least offload policy; earliest qualified formal sample within policy; VAE1 TP8 pilot excluded"
+  "source_selection": "resident AdaLN campaign plus explicitly verified historical single-card layer-Offload cells; sources retained and reused cells marked"
 }

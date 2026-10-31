@@ -10,8 +10,8 @@ import gc
 
 def install_initialization_cleanup():
     from vllm_omni.diffusion.offloader.layerwise_backend import (
-        LayerwiseOffloadHook,
         LayerWiseOffloadBackend,
+        LayerwiseOffloadHook,
     )
 
     if getattr(LayerWiseOffloadBackend.enable, "_h3_initialization_cleanup", False):

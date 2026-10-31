@@ -9,6 +9,29 @@ from pathlib import Path
 METHODS = ("full", "vsa", "veda", "vdn", "spark")
 
 
+def serve_environment(a):
+    configured = getattr(a, "precompute_adaln", None)
+    if configured is None:
+        configured = (os.getenv("H3_ASCEND_PRECOMPUTE_ADALN") == "1"
+                      if "H3_ASCEND_PRECOMPUTE_ADALN" in os.environ
+                      else a.offload in ("none", "text"))
+    if configured and a.offload not in ("none", "text"):
+        raise ValueError("Startup AdaLN preparation requires resident DiT; use --offload none/text or --no-precompute-adaln")
+    steps = getattr(a, "steps", None)
+    if steps is not None and steps < 1:
+        raise ValueError("Startup DiT steps must be positive")
+    result = {
+        "H3_ASCEND_METHOD": a.method,
+        "H3_ASCEND_PRECOMPUTE_ADALN": "1" if configured else "0",
+        # A 345-frame request can exceed the upstream 600-second RPC deadline.
+        # Keep the native failure handling, but allow a complete long request.
+        "VLLM_OMNI_DLO_DP_WAVE_TIMEOUT": os.getenv("VLLM_OMNI_DLO_DP_WAVE_TIMEOUT", "7200"),
+    }
+    if steps is not None:
+        result["H3_ASCEND_ADALN_STEPS"] = str(steps)
+    return result
+
+
 def command(a):
     if a.parallel == "ulysses" and a.method == "vdn":
         raise ValueError("upstream VDN requires native TP head sharding; use --parallel tp")
@@ -39,7 +62,7 @@ def command(a):
     tp = a.devices if a.parallel == "tp" else 1
     usp = a.devices if a.parallel == "ulysses" else 1
     encoder_tp = a.devices if a.devices in (1, 2, 4, 8) else 1
-    vae_parallel = getattr(a, "vae_parallel_size", 1) or a.devices
+    vae_parallel = getattr(a, "vae_parallel_size", 0) or a.devices
     if vae_parallel not in (1, a.devices):
         raise ValueError("H3 VAE parallel size must be one or the full device count")
     cmd = [
@@ -124,11 +147,15 @@ def main():
     s.add_argument("--few-step-source", type=Path, help="Local pinned LightX2V file; otherwise download")
     s.add_argument("--precision", choices=["bf16", "int8"], default="bf16")
     s.add_argument("--devices", type=int, default=1)
+    s.add_argument("--steps", type=int,
+                   help="Startup DiT updates for AdaLN preparation; default resolves the loaded model/LoRA schedule")
+    s.add_argument("--precompute-adaln", action=argparse.BooleanOptionalAction, default=None,
+                   help="Prepare exact schedule-bound AdaLN outputs at startup; defaults on for resident DiT")
     s.add_argument("--parallel", choices=["tp", "ulysses"], default="tp")
     s.add_argument("--offload", choices=["none", "text", "module", "layer"], default="none",
                    help="Keep weights resident by default; text offloads only the text encoder")
-    s.add_argument("--vae-parallel-size", type=int, default=1,
-                   help="Native tiled VAE decode: 1 or the full device count; 0 selects all")
+    s.add_argument("--vae-parallel-size", type=int, default=0,
+                   help="Native tiled VAE decode: default 0 uses all selected cards; 1 uses one")
     s.add_argument("--host", default="127.0.0.1")
     s.add_argument("--port", type=int, default=8000)
     s.add_argument("--predictor")
@@ -168,10 +195,11 @@ def main():
         return
     if a.action == "serve":
         cmd = command(a)
+        environment = serve_environment(a)
         if a.dry_run:
             print(
                 json.dumps(
-                    {"environment": {"H3_ASCEND_METHOD": a.method}, "argv": cmd},
+                    {"environment": environment, "argv": cmd},
                     indent=2,
                 )
             )
@@ -186,7 +214,9 @@ def main():
         if prepared:
             cmd[cmd.index("--lora-path") + 1] = prepared
         validate_assets(a.method, a.lora, a.predictor, model=a.model)
-        os.environ["H3_ASCEND_METHOD"] = a.method
+        os.environ.update(environment)
+        if a.steps is None:
+            os.environ.pop("H3_ASCEND_ADALN_STEPS", None)
         if a.method in ("vsa", "vdn") and a.precision == "bf16":
             # File-backed input-only vision masters keep long T2VA requests
             # below host-memory limits without changing active model math.

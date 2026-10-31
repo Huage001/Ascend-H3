@@ -1,0 +1,30 @@
+{
+  "request": {
+    "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+    "width": 1344,
+    "height": 768,
+    "aspect_ratio": "16:9",
+    "num_frames": 345,
+    "fps": 24,
+    "num_inference_steps": 8,
+    "seed": 7,
+    "enable_frame_interpolation": "false",
+    "return_stage_metrics": "true",
+    "extra_params": "{\"task\": \"t2va\"}",
+    "guidance_scale": 1.0
+  },
+  "headers": {
+    "date": "Sat, 31 Oct 2026 04:39:18 GMT",
+    "server": "uvicorn",
+    "x-request-id": "video_sync-99da147c02b841a7",
+    "x-model": "/cache/songhua/h3-ascend-release-20261030/models/FastH3-V2",
+    "x-inference-time-s": "615.984",
+    "x-stage-durations": "{\"queue_wait_ms\":0.6509330123662949,\"stage_0_gen_ms\":613619.4679737091}",
+    "x-peak-memory-mb": "51484.000",
+    "content-length": "39733464",
+    "content-type": "video/mp4",
+    "vary": "Origin",
+    "connection": "close"
+  },
+  "client_wall_seconds": 616.0461017284542
+}

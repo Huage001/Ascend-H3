@@ -1,0 +1,9 @@
+{
+  "method": "veda",
+  "precision": "int8",
+  "case": "1344-345",
+  "tp": 1,
+  "ready_seconds": 298.0848871031776,
+  "total_wall_seconds": 1777.951267217286,
+  "external_processes_detected": false
+}

@@ -1,0 +1,9 @@
+{
+  "method": "vdn",
+  "precision": "int8",
+  "case": "1344-345",
+  "tp": 1,
+  "ready_seconds": 354.103237866424,
+  "total_wall_seconds": 2948.031868726015,
+  "external_processes_detected": false
+}

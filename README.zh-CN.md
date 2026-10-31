@@ -6,9 +6,7 @@
 整合到同一个仓库，复用 vLLM-Omni 的模型加载、INT8 量化和 attention
 head 多卡并行。
 
-**当前仍在进行整合验收。** 自定义 CANN 算子已从源码编译通过；
-尚未将所有“方法 × 精度 × 视频规格 × 并行规模”标记为通过。
-完整 DiT block 已完成 20/20 项，注意力核心已完成 20/20 项；新 INT8 常驻优先端到端矩阵已验收 4/40。此前统一 Offload 的 40 组单卡八步记录仅作历史参考。
+**已验证范围：**1344×768、124/345 帧、1/2/4/8 卡的 INT8 端到端共 40/40 项，其中 37 项本轮新测、3 项明确标记的历史分层 Offload 实测。昇腾 910B3 与 PRO 6000 的 BF16 常驻对照包含 20 项注意力核心和 20 项完整 DiT block 测量；注意力算子保留此前已验收版本。
 
 ## 默认 768p 视频规格
 
@@ -84,28 +82,30 @@ VDN 只接受官方 stage-DMD 配置，二者不叠加其他 LoRA，也不支持
 ```bash
 export ASCEND_RT_VISIBLE_DEVICES=0
 h3-ascend serve --method full --model /models/MiniMax-H3 \
-  --precision bf16 --devices 1
+  --precision int8 --devices 1 --offload text
 ```
 
 其他注意力：
 
 ```bash
 h3-ascend serve --method vsa --model /models/FastH3-V2 \
-  --precision bf16 --devices 1
+  --precision int8 --devices 1 --offload text
 h3-ascend serve --method veda --model /models/MiniMax-H3 \
   --predictor /models/veda/predictor.safetensors \
-  --precision bf16 --devices 1
+  --precision int8 --devices 1 --offload text
 h3-ascend serve --method vdn --model /models/MiniMax-H3 \
-  --lora /models/VDN/stage-dmd-step-250 --precision bf16 --devices 1
+  --lora /models/VDN/stage-dmd-step-250 --precision int8 --devices 1 --offload text
 h3-ascend serve --method spark --model /models/MiniMax-H3 \
-  --precision bf16 --devices 1
+  --precision int8 --devices 1 --offload text
 ```
 
 同一组卡一次只启动一个服务。加入 `--dry-run` 可查看生成的原生
 vLLM-Omni 命令，不会加载权重。
 
-**INT8：** 任意方法将 `--precision bf16` 改为 `--precision int8`。
-底层使用 vLLM-Omni 原生量化配方：
+单卡示例流式加载文本编码器，INT8 DiT 常驻 NPU。原生配方只量化 DiT，
+文本编码器仍是 BF16，启动策略需要一并考虑它的显存占用。
+**BF16：** 使用 `--precision bf16`；内存不足时显式选择
+`--offload layer --no-precompute-adaln`。INT8 使用 vLLM-Omni 原生量化配方：
 
 ```json
 {"transformer":{"method":"int8"}}
@@ -127,7 +127,7 @@ h3-ascend serve --method spark --model /models/MiniMax-H3 \
 # 八卡：每个 rank 划分七个 DiT attention head。
 export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 h3-ascend serve --method full --model /models/MiniMax-H3 \
-  --precision bf16 --devices 8 --parallel tp
+  --precision int8 --devices 8 --parallel tp
 ```
 
 `--devices` 支持 1、2、4、7、8，均可整除 56 个 head。
@@ -143,8 +143,28 @@ Veda 在分片后仍使用原 checkpoint 的全局 head 编号。
 双方 attention/DiT block 对照统一 BF16，取第 0/24/49 层，每层跑三次，
 九次耗时之和除以九得到每层平均时延。
 非 VDN 方法另提供 `--parallel ulysses`；默认使用 TP。
-`--vae-parallel-size 0` 另可将原生 VAE 分块解码分配到全部选中卡，默认值为 1。
-原生 VAE 四卡、124 帧完整链路已通过；八卡仍在验收。
+原生 VAE 分块解码现在默认使用全部选中卡（`--vae-parallel-size 0`），
+可用 `--vae-parallel-size 1` 改为单个解码 rank。INT8 Full、124 帧的
+单卡、双卡、四卡、八卡 VAE 完整链路已通过；其他方法和帧数继续按矩阵验收。
+
+NPU 的 DiT 常驻模式会在服务就绪前准备 AdaLN 结果。准备过程读取实际加载的
+模型及已合并 LoRA，解析生效的 sigma 序列、DiT 更新次数及视频／音频 shift，
+并非固定八步。可用 `serve --steps N` 指定原模型或自定义学生的启动步数，
+客户端对应使用 `generate --steps N`；与蒸馏模型自带计划冲突时会报错。
+缓存容量随所需计划增长，投影沿用原生计算，AdaLN 主权重留在 CPU，准备好的
+结果保存在 NPU。四／八卡另按精确 timestep 输入缓存原生时间嵌入，避免 FP32
+归约的末位变化导致后续缓存失效；权重版本、数值环境和各 rank 命中一致性
+仍会检查。更换采样配置后重启即可重新准备；未准备的输入会走原始计算，
+可能重新搬运权重。`--no-precompute-adaln` 可关闭准备；DiT 整组件／逐层
+Offload 默认关闭此功能。
+
+Spark/VSA/VDN 的单卡 345 帧使用 `--offload layer --no-precompute-adaln`，
+保留此前已验收的原算子。端到端表以 †L 标记原生分层 Offload，‡R 标记
+从上一轮复用的同配置实测；其他格子的常驻策略按各自记录说明。
+
+启动器将原生工作进程的单次请求等待上限设为 7200 秒，避免长视频被上游默认的
+600 秒上限中止。可在启动前设置 `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` 覆盖；这只
+调整等待上限，不改变模型计算或请求计时。
 
 ## 生成两组 768p 视频
 
@@ -213,82 +233,28 @@ done
 
 ## INT8 端到端：昇腾单卡、双卡、四卡、八卡
 
-1344×768，八次实际 DiT 更新，含文本编码、视频/音频解码及 MP4 写出；模型加载、预先 LoRA merge 与预热不计时。按实际显存依次尝试常驻、仅文本编码器 Offload、整组件切换、逐层 Offload；只有记录了真实 OOM 才回退。下表只填完整请求、全部 rank 审计与独立 profile 通过的结果。
+1344×768，八次实际 DiT 更新，端到端包含文本编码、音视频解码与 MP4 写出；不含加载、提前 LoRA merge、AdaLN 准备和预热。优先让 DiT 常驻；常驻组正式请求前后逐 rank 核验 AdaLN 零未命中与零权重搬运。明确标记的单卡 345 帧组在实际显存不足后改用原生分层 Offload，并按用户要求复用配置一致、已完整验收的历史实测；逐项标记来源，不视为新测。
 
 | 帧数 | 方法 | 单卡 | 双卡 | 四卡 | 八卡 |
 | ---: | --- | ---: | ---: | ---: | ---: |
-| 124 | Full | 196.31 s †L | 117.38 s †T | 64.94 s | — |
-| 124 | VSA V2 · 80% | — | — | — | — |
-| 124 | Veda · 90% | — | — | 43.39 s | — |
-| 124 | VDN · official | — | — | — | — |
-| 124 | Spark-H3 · 90% | — | — | — | — |
-| 345 | Full | — | — | — | — |
-| 345 | VSA V2 · 80% | — | — | — | — |
-| 345 | Veda · 90% | — | — | — | — |
-| 345 | VDN · official | — | — | — | — |
-| 345 | Spark-H3 · 90% | — | — | — | — |
+| 124 | Full | 197.66 s †T | 116.03 s | 64.78 s | 35.87 s |
+| 124 | VSA V2 · 80% | 146.81 s †T | 93.57 s | 53.47 s | 30.40 s |
+| 124 | Veda · 90% | 97.40 s †T | 69.66 s | 43.38 s | 25.33 s |
+| 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
+| 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
+| 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
+| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
+| 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
+| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
+| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
 
-已验收 **4/40**。— 为待测。†T：仅文本编码器逐层 Offload；†M：整组件切换；†L：DiT 与文本编码器逐层 Offload。未标记的格子不 Offload。VAE 使用与设备数相同的原生 tile 并行；DiT head 按 56/28/14/7 分配。原生 INT8 仅量化受支持线性层，单卡过宽 AdaLN 的 BF16 回退及多卡覆盖变化保留在原始配置中。
+已覆盖 **40/40**：本轮新测 37 组，复用历史实测 3 组。†T：仅文本编码器逐层 Offload；†L：DiT 与文本编码器原生逐层 Offload，预取一层，VAE 常驻；‡R：复用 2026-10-31 的同配置原始记录。未标记格子无运行期 Offload。仅常驻组预计算 AdaLN；逐层 Offload 组不声称 DiT 常驻或 AdaLN 零搬运。VAE 并行数等于卡数，DiT head 按 56/28/14/7 分配；保留原生 INT8 覆盖规则。
 
 [INT8 E2E records](benchmarks/ascend-int8-e2e.json)
 
 <!-- END INT8 E2E MATRIX -->
 
-## 历史：统一 Offload 的单卡端到端对照
-
-**所有方法、基线和计时请求统一为 8 次实际 DiT 前向。** Full/Veda/Spark 使用固定版本的官方 LightX2V 8-step 768p LoRA（shift 6/3）；VSA 使用官方 FastH3 V2（80% 稀疏率、shift 10/3）；VDN 保留官方八步学生。Veda 保持 90% 稀疏率。各学生保留自己的训练日程，不把四步权重强行运行八步。
-
-加速比 = 同一硬件、同一分辨率/帧数/种子的 **Full BF16 八步端到端耗时 / 当前方法八步端到端耗时**。BF16 与 INT8 均使用这个 BF16 Full 分母，Full INT8 也一样。报告仅覆盖 1344×768 的 124 帧和 345 帧，单卡，BF16 / INT8；先合并 LoRA，再进行 TP 切分与量化。计时包含文本编码、全部八次去噪、音视频解码、MP4 编码和完整返回；模型加载、权重合并、预热及画面筛选不计时。
-
-VSA 已按用户要求选定共同种子 **7**，各方法正式测速使用同一个 prompt 和种子；筛选过程已记录。下表只接受这套新口径的实测值，不把旧四步结果翻倍或换算。[此前 Full 四步为基线的数据](benchmarks/archive/pre-unified8-full4-reference.json)仅作历史归档。
-
-<!-- BEGIN HIGHRES RESULTS -->
-
-全部八步；共同种子：7
-
-| 帧数 | 精度 | 方法 | 昇腾 910B3 耗时 | 昇腾加速比 | PRO 6000 耗时 | PRO 6000 加速比 |
-| ---: | --- | --- | ---: | ---: | ---: | ---: |
-| 124 | BF16 | Full + LightX2V8 | 206.71 秒 | 1.00× | 91.20 秒 | 1.00× |
-| 124 | BF16 | VSA · FastH3 V2 · 80% | 163.20 秒 | **1.27×** | 79.20 秒 | 1.15× |
-| 124 | BF16 | Veda + LightX2V8 · 90% | 113.43 秒 | **1.82×** | 53.60 秒 | 1.70× |
-| 124 | BF16 | VDN · official | 301.42 秒 | 0.69× | 102.39 秒 | **0.89×** |
-| 124 | BF16 | Spark-H3 + LightX2V8 | 132.78 秒 | **1.56×** | 61.81 秒 | 1.48× |
-| 124 | INT8 | Full + LightX2V8 | 189.57 秒 | **1.09×** | 85.06 秒 | 1.07× |
-| 124 | INT8 | VSA · FastH3 V2 · 80% | 146.89 秒 | **1.41×** | 74.92 秒 | 1.22× |
-| 124 | INT8 | Veda + LightX2V8 · 90% | 97.61 秒 | **2.12×** | 48.28 秒 | 1.89× |
-| 124 | INT8 | VDN · official | 213.95 秒 | **0.97×** | 97.74 秒 | 0.93× |
-| 124 | INT8 | Spark-H3 + LightX2V8 | 116.19 秒 | **1.78×** | 54.38 秒 | 1.68× |
-| 345 | BF16 | Full + LightX2V8 | 1179.84 秒 | 1.00× | 467.81 秒 | 1.00× |
-| 345 | BF16 | VSA · FastH3 V2 · 80% | 661.43 秒 | **1.78×** | 318.03 秒 | 1.47× |
-| 345 | BF16 | Veda + LightX2V8 · 90% | 376.99 秒 | **3.13×** | 173.62 秒 | 2.69× |
-| 345 | BF16 | VDN · official | 842.14 秒 | 1.40× | 299.42 秒 | **1.56×** |
-| 345 | BF16 | Spark-H3 + LightX2V8 | 472.93 秒 | **2.49×** | 196.73 秒 | 2.38× |
-| 345 | INT8 | Full + LightX2V8 | 1125.43 秒 | **1.05×** | 454.32 秒 | 1.03× |
-| 345 | INT8 | VSA · FastH3 V2 · 80% | 617.55 秒 | **1.91×** | 304.01 秒 | 1.54× |
-| 345 | INT8 | Veda + LightX2V8 · 90% | 338.55 秒 | **3.48×** | 157.90 秒 | 2.96× |
-| 345 | INT8 | VDN · official | 620.67 秒 | **1.90×** | 281.81 秒 | 1.66× |
-| 345 | INT8 | Spark-H3 + LightX2V8 | 419.44 秒 | **2.81×** | 182.20 秒 | 2.57× |
-
-统一 **Offload**：`omni-layer-prefetch1-vae-resident-v1`。BF16 与 INT8 的加速比都相对各自硬件的 Full BF16 八步；低于 1× 表示慢于该基线。每组对照中更高的加速比加粗，缺失或相同的值不加粗。— 为待测；旧四步或旧种子结果不进入新表。
-
-已验收：昇腾 20/20, PRO 6000 20/20.
-
-[八步原始记录](benchmarks/single-card-highres.json)
-
-<!-- END HIGHRES RESULTS -->
-
-这里是双方均为八步的完整请求加速比，不包含从 50 步降到 8 步的蒸馏收益，
-也不是单独注意力内核的加速比。注意力稀疏化不会减少 FFN、编码器、解码器和
-MP4 编码的工作，统一的 Offload 策略也始终启用。INT8 量化覆盖受支持的
-Transformer 线性层，不代表所有注意力运算都使用 INT8。昇腾的相对加速比
-更高不代表绝对耗时低于 PRO 6000，请同时比较耗时列。VSA V2 使用 80%
-稀疏率，Veda 和 Spark 使用 90%；这些行比较的是不同注意力机制和学生模型，
-不能理解为相同质量或相同稀疏率下的纯内核对照。
-
-此前端到端模块分解图保留为[历史诊断数据](benchmarks/long-video-e2e.json)；其中较宽的模块计时不进入上面的注意力核心对照。
-
-[此前统一逐层 Offload 的 BF16 八卡诊断](docs/archive/tp8-matched-offload.md)，不并入新 INT8 常驻优先矩阵。
-
+此前统一分层 Offload 的对照移至[历史单卡附录](docs/archive/matched-offload-single-card.zh-CN.md)。当前表中复用的格子仍链接到未改动的原始记录。
 
 ## 效果展示与验证范围
 
