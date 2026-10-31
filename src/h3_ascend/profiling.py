@@ -1,7 +1,8 @@
 """Idle-time, opt-in device-event profiling, separate from formal latency runs.
 
-Create CONTROL/start only after all timed requests finish. The worker writes
-CONTROL/ready after installing hooks. No profiling hook runs before that.
+Create CONTROL/start only after all timed requests finish. Each DiT worker
+writes CONTROL/ready-PID.json after installing hooks; CONTROL/ready remains
+for single-worker compatibility. No profiling hook runs before that.
 """
 
 import json
@@ -10,6 +11,20 @@ import threading
 import time
 import weakref
 from pathlib import Path
+
+_FORWARD_MODELS = []
+
+
+def register_live_model(model):
+    """Remember an actually executed model, including deserialized TP workers."""
+    if not any(reference() is model for reference in _FORWARD_MODELS):
+        _FORWARD_MODELS.append(weakref.ref(model))
+
+
+def _select_live_models(constructed):
+    executed = [reference() for reference in _FORWARD_MODELS if reference() is not None]
+    candidates = executed or [reference() for reference in constructed if reference() is not None]
+    return list({id(model): model for model in candidates}.values())
 
 
 def install():
@@ -54,11 +69,31 @@ def install():
                 }
             )
         )
-        models = [ref() for ref in instances if ref() is not None]
+        models = _select_live_models(instances)
+        if not models:
+            # TP launchers and helpers can import the class without hosting
+            # a DiT. The harness requires readiness from every audited worker.
+            (root / f"ignored-no-dit-{os.getpid()}.json").write_text(
+                json.dumps({"pid": os.getpid(), "model_count": 0, "ignored": True})
+            )
+            return
         if len(models) != 1:
-            (root / "error.json").write_text(json.dumps({"model_count": len(models)}))
+            (root / "error.json").write_text(
+                json.dumps({"pid": os.getpid(), "model_count": len(models)})
+            )
             return
         model = models[0]
+        from vllm.distributed import (
+            get_tensor_model_parallel_rank,
+            get_tensor_model_parallel_world_size,
+        )
+
+        rank_metadata = {
+            "pid": os.getpid(),
+            "tp_rank": get_tensor_model_parallel_rank(),
+            "tp_world_size": get_tensor_model_parallel_world_size(),
+            "local_attention_heads": [block.attn.num_heads for block in model.blocks],
+        }
         kind = next(
             (p.device.type for p in model.parameters() if p.device.type in ("cuda", "npu")), None
         )
@@ -68,6 +103,7 @@ def install():
         rows = []
         handles = []
         started = [None]
+        forward_index = [0]
 
         def span(module, category, layer):
             pending = []
@@ -109,6 +145,7 @@ def install():
         @torch.compiler.disable
         def flush(module, args, result):
             device.synchronize()
+            forward_index[0] += 1
             values = [
                 dict(category=c, layer=i, milliseconds=a.elapsed_time(b)) for c, i, a, b in rows
             ]
@@ -117,6 +154,8 @@ def install():
                 stream.write(
                     json.dumps(
                         {
+                            **rank_metadata,
+                            "profile_forward_index": forward_index[0],
                             "spans": values,
                             "instrumented": True,
                             "dit_wall_seconds": time.perf_counter() - started[0],
@@ -128,6 +167,11 @@ def install():
         handles.append(model.register_forward_hook(flush))
         # Keep handles alive; the server exits after the separate profiling run.
         model._h3_profile_handles = handles
-        (root / "ready").write_text(json.dumps({"pid": os.getpid(), "device": str(device)}))
+        ready = {**rank_metadata, "device": str(device)}
+        ready_file = root / f"ready-{os.getpid()}.json"
+        staged = ready_file.with_suffix(".tmp")
+        staged.write_text(json.dumps(ready))
+        staged.replace(ready_file)
+        (root / "ready").write_text(json.dumps(ready))
 
     threading.Thread(target=watch, daemon=True, name="h3-profile-idle-control").start()

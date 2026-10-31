@@ -19,11 +19,21 @@ def install():
     @torch.compiler.disable
     def forward(self, *args, **kwargs):
         if not hasattr(self, "_h3_audit_counts"):
+            from h3_ascend.profiling import register_live_model
+
+            register_live_model(self)
             root = Path(directory)
             root.mkdir(parents=True, exist_ok=True)
             from vllm_omni.diffusion.offloader.config import resolve_offload
 
             policy = resolve_offload(self.od_config)
+            from vllm.distributed import (
+                get_tensor_model_parallel_rank,
+                get_tensor_model_parallel_world_size,
+            )
+
+            tp_rank = get_tensor_model_parallel_rank()
+            tp_size = get_tensor_model_parallel_world_size()
             hooks = []
             for block in self.blocks:
                 registry = getattr(block, "_hook_registry", None)
@@ -50,6 +60,10 @@ def install():
                 "pin_memory": policy.pin_memory,
                 "block_hooks": hooks,
                 "linear_methods": linears,
+                "tp_rank": tp_rank,
+                "tp_world_size": tp_size,
+                "local_attention_heads": [block.attn.num_heads for block in self.blocks],
+                "total_attention_heads": [block.attn.total_num_heads for block in self.blocks],
             }, indent=2))
             self._h3_audit_counts = [0] * len(self.blocks)
             self._h3_audit_gates = [None] * len(self.blocks)

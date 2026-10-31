@@ -1,4 +1,4 @@
-"""One CLI for the four workloads, five attention paths, BF16 and INT8."""
+"""One CLI for the two 768p workloads, five attention paths, BF16 and INT8."""
 
 import argparse
 import json
@@ -126,7 +126,8 @@ def main():
     s.add_argument("--dry-run", action="store_true")
     r = sub.add_parser("generate")
     r.add_argument("--url", default="http://127.0.0.1:8000")
-    r.add_argument("--case", choices=["672-124", "672-345", "1344-124", "1344-345"], required=True)
+    r.add_argument("--case", choices=["1344-124", "1344-345"], default="1344-124",
+                   help="Native 768p workload (default: 124 frames)")
     r.add_argument("--prompt-file", type=Path, required=True)
     r.add_argument("--output", type=Path, required=True)
     r.add_argument("--steps", type=int, help="Override the profile step count")

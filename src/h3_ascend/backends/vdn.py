@@ -240,7 +240,7 @@ def fused_features(branch, proj, tokens, grid):
     engine = os.environ.get("H3_ASCEND_VDN_TEMPORAL", "auto")
     if engine not in ("auto", "native", "ge"):
         raise ValueError("H3_ASCEND_VDN_TEMPORAL must be auto, native or ge")
-    if engine == "native" or (engine == "auto" and grid != (37, 12, 21)):
+    if engine in ("auto", "native"):
         spatial = (
             F.conv2d(
                 tokens.reshape(f, h, w, channels).permute(0, 3, 1, 2),

@@ -19,7 +19,7 @@
   "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
   "host_allocator_config": "pinned_max_round_threshold_mb:64",
   "allocator_note": "Large pinned CPU masters use requested size instead of power-of-two rounding. Residency/prefetch, weight values and timed computations are unchanged.",
-  "validation_status": "Current unified8-v1: all ten single-card 1344x768/345-frame eight-forward cases accepted at seed7, covering Full, FastH3 V2 VSA, Veda, VDN and Spark in BF16/INT8. The 124-frame cases remain in progress. Each accepted case has a video/audio check, audited warmup, further warmup, uninstrumented formal request and independent eight-forward profile.",
+  "validation_status": "All 20 unified8-v1 single-card cases accepted: five methods, BF16/INT8, 1344x768,124/345 native frames, eight actual forwards at seed7. Each case passed audited warmup, further warmup, one uninstrumented formal request, a separate eight-forward profile and video/audio checks. This does not qualify every parallel or conditioning configuration.",
   "cuda_runtime": "13.0",
   "int8_kernel": "native vLLM TritonInt8ScaledMMLinearKernel",
   "int8_dispatch_environment": {

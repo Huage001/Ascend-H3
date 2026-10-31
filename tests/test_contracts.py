@@ -53,8 +53,6 @@ class Contracts(unittest.TestCase):
 
     def test_native_frame_requests(self):
         for case, size, frames in [
-            ("672-124", (672, 384), 124),
-            ("672-345", (672, 384), 345),
             ("1344-124", (1344, 768), 124),
             ("1344-345", (1344, 768), 345),
         ]:
@@ -72,13 +70,13 @@ class Contracts(unittest.TestCase):
             HeadShard(42, 28)
 
     def test_guidance_retains_model_policy_unless_explicit(self):
-        self.assertNotIn("guidance_scale", request_fields("672-124", "A park."))
-        fields = request_fields("672-124", "A park.", guidance_scale=1.0)
+        self.assertNotIn("guidance_scale", request_fields("1344-124", "A park."))
+        fields = request_fields("1344-124", "A park.", guidance_scale=1.0)
         self.assertEqual(fields["guidance_scale"], 1.0)
 
     def test_layout_rejects_bad_prefix(self):
         with self.assertRaises(ValueError):
-            VideoLayout((37, 12, 21), 7, prefix_segments=(3, 2))
+            VideoLayout((37, 24, 42), 7, prefix_segments=(3, 2))
 
     def test_int8_uses_native_quantization(self):
         for method in ("full", "vsa", "veda", "vdn", "spark"):

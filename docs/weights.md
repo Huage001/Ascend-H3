@@ -95,10 +95,8 @@ ln -s minimax_h3_t2va_veda_8nfe_600step_preview_fp8.safetensors \
 ```
 
 The FP8 storage is decoded by the bundle loader; prediction retains the
-original FP32 scoring arithmetic. The 672×384 case rebuilds valid token tiles
-for that geometry while reusing the published head-shape choices; it is outside
-the plan's 1344×768 search geometry. 小分辨率沿用 head 的 tile 形状选择，
-重新构建有效 token 布局；不宣称已重新搜索或微调。
+original FP32 scoring arithmetic. The supported 1344×768 workloads use the
+published per-head tile plans at their original spatial search geometry.
 
 ## VDN student
 

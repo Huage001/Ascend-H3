@@ -34,46 +34,6 @@
   "records": [
     {
       "scope": "qkv_ready_attention_dispatch",
-      "width": 672,
-      "height": 384,
-      "frames": 124,
-      "npu_vsa": 1.1358185585968752,
-      "npu_veda": 1.3396161990501352,
-      "gpu_veda": 0.8380031006193603,
-      "gpu_spark": 0.8750264109497086,
-      "npu_spark": null,
-      "sparsity_nominal": 0.9
-    },
-    {
-      "scope": "complete_vdn_attention_module_including_projections",
-      "width": 672,
-      "height": 384,
-      "frames": 124,
-      "npu_vdn128": 0.4883802359480249,
-      "gpu_vdn128": 0.6083189089476058
-    },
-    {
-      "scope": "qkv_ready_attention_dispatch",
-      "width": 672,
-      "height": 384,
-      "frames": 345,
-      "npu_vsa": 1.5903557105442485,
-      "npu_veda": 2.516841474873446,
-      "gpu_veda": 2.4721594339798436,
-      "gpu_spark": 1.894492298436544,
-      "npu_spark": null,
-      "sparsity_nominal": 0.9
-    },
-    {
-      "scope": "complete_vdn_attention_module_including_projections",
-      "width": 672,
-      "height": 384,
-      "frames": 345,
-      "npu_vdn128": 0.8540475934574704,
-      "gpu_vdn128": 1.0418177174199756
-    },
-    {
-      "scope": "qkv_ready_attention_dispatch",
       "width": 1344,
       "height": 768,
       "frames": 124,

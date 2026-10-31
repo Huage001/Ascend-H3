@@ -31,9 +31,8 @@ Without `H3_ASCEND_METHOD`, importing the package changes no backend.
   The default retains all 128 state coordinates. Newton inversion is
   numerically approximate and is not advertised as bitwise Cholesky.
   The automatic temporal-convolution policy also uses a BF16 Conv2D output
-  for most geometries before FP32 activation/normalization, introducing an
+  at the supported 768p geometry before FP32 activation/normalization, introducing an
   earlier rounding boundary than the upstream FP32 temporal-tap loop.
-  The short 672×384 case keeps the FP32 tap calculation in a compiled graph.
 
 ## Quantization boundary
 

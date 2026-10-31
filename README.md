@@ -8,20 +8,18 @@ INT8 transformer quantization and native tensor parallel attention heads.
 
 **Integration validation is in progress.** The source operators have compiled
 successfully; this branch is not yet a qualified release of every
-method × precision × workload × parallel configuration. The single-card end-to-end matrix is being remeasured against eight-step Full H3.
+method × precision × workload × parallel configuration. All 40 matched-Offload single-card end-to-end cases have passed against eight-step Full BF16. Resident attention/DiT-block measurements on both devices and Ascend 1/2/4/8-card end-to-end measurements with Offload only where necessary are in progress; the existing Offload tables remain a diagnostic reference.
 
-## Workloads
+## Default 768p workloads
 
 | Case | Width × height | Native output frames | Latent video grid |
 | --- | --- | --- | --- |
-| `672-124` | 672×384 | 124 | 37×12×21 |
-| `672-345` | 672×384 | 345 | 102×12×21 |
 | `1344-124` | 1344×768 | 124 | 37×24×42 |
 | `1344-345` | 1344×768 | 345 | 102×24×42 |
 
 Output FPS is 24. Requests use explicit frame counts, with frame interpolation
 disabled. The long case is the agreed native 345-frame workload; it is not
-cropped to 341 frames. BF16 and INT8 use the same four geometries.
+cropped to 341 frames. BF16 and INT8 use these two 1344×768 workloads. Omitting `--case` selects `1344-124`.
 
 ## Installation
 
@@ -132,6 +130,11 @@ For **four-card inference**, use native tensor parallel head sharding:
 export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
 h3-ascend serve --method spark --model /models/MiniMax-H3 \
   --precision int8 --devices 4 --parallel tp
+
+# Eight cards: seven DiT attention heads per rank.
+export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+h3-ascend serve --method full --model /models/MiniMax-H3 \
+  --precision bf16 --devices 8 --parallel tp
 ```
 
 `--devices` supports 1, 2, 4, 7 and 8, which divide 56 heads. Veda retains
@@ -145,13 +148,13 @@ the same pinned Omni implementation and policy. This is an explicit memory
 policy, not a different resident-layer count for each algorithm. Optional
 `--parallel ulysses` is exposed for non-VDN paths; TP remains the default.
 
-## Generate the four cases
+## Generate the two 768p cases
 
 Create a UTF-8 prompt file, start a server, then use its matching step count:
 
 ```bash
 printf '%s\n' 'A cyclist rides through a green park, cinematic tracking shot.' > prompt.txt
-for CASE in 672-124 672-345 1344-124 1344-345; do
+for CASE in 1344-124 1344-345; do
   h3-ascend generate --case "$CASE" --prompt-file prompt.txt \
     --method full --seed 7 --output "outputs/${CASE}.mp4"
 done
@@ -178,16 +181,16 @@ All methods: eight forwards; common seed: 7
 
 | Frames | Precision | Method | Ascend 910B3 time | Ascend speedup | PRO 6000 time | PRO 6000 speedup |
 | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| 124 | BF16 | Full + LightX2V8 | 206.71 s | 1.00× | — | — |
-| 124 | BF16 | VSA · FastH3 V2 · 80% | 163.20 s | 1.27× | — | — |
-| 124 | BF16 | Veda + LightX2V8 · 90% | 113.43 s | 1.82× | — | — |
-| 124 | BF16 | VDN · official | 301.42 s | 0.69× | — | — |
-| 124 | BF16 | Spark-H3 + LightX2V8 | 132.78 s | 1.56× | — | — |
-| 124 | INT8 | Full + LightX2V8 | 189.57 s | 1.09× | — | — |
-| 124 | INT8 | VSA · FastH3 V2 · 80% | 146.89 s | 1.41× | — | — |
-| 124 | INT8 | Veda + LightX2V8 · 90% | 97.61 s | 2.12× | — | — |
-| 124 | INT8 | VDN · official | 213.95 s | 0.97× | — | — |
-| 124 | INT8 | Spark-H3 + LightX2V8 | 116.19 s | 1.78× | — | — |
+| 124 | BF16 | Full + LightX2V8 | 206.71 s | 1.00× | 91.20 s | 1.00× |
+| 124 | BF16 | VSA · FastH3 V2 · 80% | 163.20 s | **1.27×** | 79.20 s | 1.15× |
+| 124 | BF16 | Veda + LightX2V8 · 90% | 113.43 s | **1.82×** | 53.60 s | 1.70× |
+| 124 | BF16 | VDN · official | 301.42 s | 0.69× | 102.39 s | **0.89×** |
+| 124 | BF16 | Spark-H3 + LightX2V8 | 132.78 s | **1.56×** | 61.81 s | 1.48× |
+| 124 | INT8 | Full + LightX2V8 | 189.57 s | **1.09×** | 85.06 s | 1.07× |
+| 124 | INT8 | VSA · FastH3 V2 · 80% | 146.89 s | **1.41×** | 74.92 s | 1.22× |
+| 124 | INT8 | Veda + LightX2V8 · 90% | 97.61 s | **2.12×** | 48.28 s | 1.89× |
+| 124 | INT8 | VDN · official | 213.95 s | **0.97×** | 97.74 s | 0.93× |
+| 124 | INT8 | Spark-H3 + LightX2V8 | 116.19 s | **1.78×** | 54.38 s | 1.68× |
 | 345 | BF16 | Full + LightX2V8 | 1179.84 s | 1.00× | 467.81 s | 1.00× |
 | 345 | BF16 | VSA · FastH3 V2 · 80% | 661.43 s | **1.78×** | 318.03 s | 1.47× |
 | 345 | BF16 | Veda + LightX2V8 · 90% | 376.99 s | **3.13×** | 173.62 s | 2.69× |
@@ -201,7 +204,7 @@ All methods: eight forwards; common seed: 7
 
 Matched **Offload**: `omni-layer-prefetch1-vae-resident-v1`. Both BF16 and INT8 ratios use same-hardware BF16 Full8; values below 1× are slower than that baseline. The higher speedup in each completed hardware pair is bold; ties and missing values are not. — means pending; old four-step or old-seed data cannot enter this table.
 
-Validated: Ascend 20/20, PRO 6000 10/20.
+Validated: Ascend 20/20, PRO 6000 20/20.
 
 [Raw eight-step records](benchmarks/single-card-highres.json)
 
@@ -225,6 +228,42 @@ axis. Module spans include waits and are not isolated kernel compute.
 One formal request per cell; no statistical error bars are claimed.
 [Measured figure data](benchmarks/long-video-e2e.json) ·
 [SVG](docs/figures/long-video-e2e.svg) · [PDF](docs/figures/long-video-e2e.pdf).
+
+
+<!-- BEGIN TP8 SCALING -->
+
+## Eight-card scaling: same method and precision
+
+Here speedup is **same-method, same-precision one-card time / eight-card time**, separate from the Full BF16 algorithm gains above. All requests use eight updates, seed7, 1344×768 and the same Offload policy. Native TP assigns seven of 56 DiT heads to each rank; the text encoder also uses native TP. One-card references come from the qualified matrix. Selected cards are guarded; whole-host CPU isolation is not claimed.
+
+| Frames | Precision | Method | One card | Eight cards | TP8 / TP1 speedup | Attention p95 max/mean |
+| ---: | --- | --- | ---: | ---: | ---: | ---: |
+| 124 | BF16 | Full + LightX2V8 | 206.71 s | — | — | — |
+| 124 | BF16 | VSA V2 · 80% | 163.20 s | — | — | — |
+| 124 | BF16 | Veda · 90% | 113.43 s | — | — | — |
+| 124 | BF16 | VDN · official | 301.42 s | — | — | — |
+| 124 | BF16 | Spark-H3 · 90% | 132.78 s | — | — | — |
+| 124 | INT8 | Full + LightX2V8 | 189.57 s | — | — | — |
+| 124 | INT8 | VSA V2 · 80% | 146.89 s | — | — | — |
+| 124 | INT8 | Veda · 90% | 97.61 s | — | — | — |
+| 124 | INT8 | VDN · official | 213.95 s | — | — | — |
+| 124 | INT8 | Spark-H3 · 90% | 116.19 s | — | — | — |
+| 345 | BF16 | Full + LightX2V8 | 1179.84 s | 232.85 s | 5.07× | 1.068 |
+| 345 | BF16 | VSA V2 · 80% | 661.43 s | — | — | — |
+| 345 | BF16 | Veda · 90% | 376.99 s | — | — | — |
+| 345 | BF16 | VDN · official | 842.14 s | — | — | — |
+| 345 | BF16 | Spark-H3 · 90% | 472.93 s | — | — | — |
+| 345 | INT8 | Full + LightX2V8 | 1125.43 s | — | — | — |
+| 345 | INT8 | VSA V2 · 80% | 617.55 s | — | — | — |
+| 345 | INT8 | Veda · 90% | 338.55 s | — | — | — |
+| 345 | INT8 | VDN · official | 620.67 s | — | — | — |
+| 345 | INT8 | Spark-H3 · 90% | 419.44 s | — | — | — |
+
+Validated 1/20; — means pending. Balance uses a separate profile: compute attention-dispatcher max/mean across eight ranks for every step/block, then take p95; one is balanced. VDN dispatcher spans cover its softmax subbranch; complete hybrid-module distributions are retained separately in the raw records.
+
+[Raw scaling records](benchmarks/tp8-scaling.json)
+
+<!-- END TP8 SCALING -->
 
 
 ## Qualitative results and validation

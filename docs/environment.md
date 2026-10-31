@@ -132,7 +132,7 @@ it does not substitute FP8. Three real GPU checks, including H3 QKV and
 the 96,768-output projection, matched quantized FP32 GEMM/dequantization
 references bitwise in their tested BF16 outputs. See the
 [primitive receipt](../benchmarks/cuda-int8-triton-smoke.json). Full INT8 1344×768 / 345-frame video, audio, formal timing and independent
-profiling have also passed; the remaining INT8 combinations are in progress.
+profiling have also passed; all ten reported CUDA INT8 combinations now pass.
 The primitive checks are not comparisons with the unquantized BF16 model.
 
 The explicit CUDA reference launcher initializes Miowtion's official pinned
@@ -140,8 +140,9 @@ SM120 FA4 provider before Omni can import `flash_attn.cute`. The provider's
 source and dependency hashes remain checked; import-order handling does not
 replace or modify its compute kernels. Earlier Full, Veda and Spark BF16
 four-step long-video runs are historical; they do not qualify the new
-eight-step matrix. Current eight-step Full and VSA BF16/INT8 long-video
-requests have passed; the remaining CUDA matrix is still in progress.
+eight-step matrix. All 20 current eight-step CUDA cases have passed: five methods, BF16/INT8,
+1344×768 at both 124 and 345 frames. See the validation ledger for the separate
+multi-card qualification scope.
 The official Triton VSA
 provider is `fastvideo-kernel==0.3.4`, matching the pinned Omni `[vsa]` extra;
 its tile64 GPU check also passed. The token refiner remains dense, and VSA

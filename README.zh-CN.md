@@ -8,19 +8,17 @@ head 多卡并行。
 
 **当前仍在进行整合验收。** 自定义 CANN 算子已从源码编译通过；
 尚未将所有“方法 × 精度 × 视频规格 × 并行规模”标记为通过。
-下文性能表仅收录本仓库八步配置的实测验收结果；早期配置单独归档。
+统一 Offload 的 40 组单卡八步实测已全部验收。接下来测量双方权重常驻的 attention/DiT block 时延，以及仅在必要时 Offload 的昇腾单卡、双卡、四卡、八卡端到端时延；现有 Offload 表作为诊断参考。早期配置单独归档。
 
-## 四组视频规格
+## 默认 768p 视频规格
 
 | case | 空间分辨率 | 原生输出帧数 | 视频 token 网格 |
 | --- | --- | --- | --- |
-| `672-124` | 672×384 | 124 | 37×12×21 |
-| `672-345` | 672×384 | 345 | 102×12×21 |
 | `1344-124` | 1344×768 | 124 | 37×24×42 |
 | `1344-345` | 1344×768 | 345 | 102×24×42 |
 
 输出 24 FPS。请求直接指定帧数，关闭插帧。长视频保留原生 345 帧，
-不裁剪成 341 帧。BF16 和 INT8 均使用这四组规格。
+不裁剪成 341 帧。BF16 和 INT8 均使用这两组 1344×768 规格；省略 `--case` 时默认生成 124 帧。
 
 ## 安装与编译
 
@@ -125,6 +123,11 @@ VDN 状态计算保留各自规定的精度，不能将其描述成“注意力�
 export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
 h3-ascend serve --method spark --model /models/MiniMax-H3 \
   --precision int8 --devices 4 --parallel tp
+
+# 八卡：每个 rank 划分七个 DiT attention head。
+export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+h3-ascend serve --method full --model /models/MiniMax-H3 \
+  --precision bf16 --devices 8 --parallel tp
 ```
 
 `--devices` 支持 1、2、4、7、8，均可整除 56 个 head。
@@ -137,13 +140,13 @@ Veda 在分片后仍使用原 checkpoint 的全局 head 编号。
 实现和相同策略，避免为不同方法设置不同的常驻层数。
 非 VDN 方法另提供 `--parallel ulysses`；默认使用 TP。
 
-## 生成四组视频
+## 生成两组 768p 视频
 
 先启动服务，再创建 UTF-8 prompt 文件并发送请求：
 
 ```bash
 printf '%s\n' 'A cyclist rides through a green park, cinematic tracking shot.' > prompt.txt
-for CASE in 672-124 672-345 1344-124 1344-345; do
+for CASE in 1344-124 1344-345; do
   h3-ascend generate --case "$CASE" --prompt-file prompt.txt \
     --method full --seed 7 --output "outputs/${CASE}.mp4"
 done
@@ -168,16 +171,16 @@ VSA 已按用户要求选定共同种子 **7**，各方法正式测速使用同�
 
 | 帧数 | 精度 | 方法 | 昇腾 910B3 耗时 | 昇腾加速比 | PRO 6000 耗时 | PRO 6000 加速比 |
 | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| 124 | BF16 | Full + LightX2V8 | 206.71 秒 | 1.00× | — | — |
-| 124 | BF16 | VSA · FastH3 V2 · 80% | 163.20 秒 | 1.27× | — | — |
-| 124 | BF16 | Veda + LightX2V8 · 90% | 113.43 秒 | 1.82× | — | — |
-| 124 | BF16 | VDN · official | 301.42 秒 | 0.69× | — | — |
-| 124 | BF16 | Spark-H3 + LightX2V8 | 132.78 秒 | 1.56× | — | — |
-| 124 | INT8 | Full + LightX2V8 | 189.57 秒 | 1.09× | — | — |
-| 124 | INT8 | VSA · FastH3 V2 · 80% | 146.89 秒 | 1.41× | — | — |
-| 124 | INT8 | Veda + LightX2V8 · 90% | 97.61 秒 | 2.12× | — | — |
-| 124 | INT8 | VDN · official | 213.95 秒 | 0.97× | — | — |
-| 124 | INT8 | Spark-H3 + LightX2V8 | 116.19 秒 | 1.78× | — | — |
+| 124 | BF16 | Full + LightX2V8 | 206.71 秒 | 1.00× | 91.20 秒 | 1.00× |
+| 124 | BF16 | VSA · FastH3 V2 · 80% | 163.20 秒 | **1.27×** | 79.20 秒 | 1.15× |
+| 124 | BF16 | Veda + LightX2V8 · 90% | 113.43 秒 | **1.82×** | 53.60 秒 | 1.70× |
+| 124 | BF16 | VDN · official | 301.42 秒 | 0.69× | 102.39 秒 | **0.89×** |
+| 124 | BF16 | Spark-H3 + LightX2V8 | 132.78 秒 | **1.56×** | 61.81 秒 | 1.48× |
+| 124 | INT8 | Full + LightX2V8 | 189.57 秒 | **1.09×** | 85.06 秒 | 1.07× |
+| 124 | INT8 | VSA · FastH3 V2 · 80% | 146.89 秒 | **1.41×** | 74.92 秒 | 1.22× |
+| 124 | INT8 | Veda + LightX2V8 · 90% | 97.61 秒 | **2.12×** | 48.28 秒 | 1.89× |
+| 124 | INT8 | VDN · official | 213.95 秒 | **0.97×** | 97.74 秒 | 0.93× |
+| 124 | INT8 | Spark-H3 + LightX2V8 | 116.19 秒 | **1.78×** | 54.38 秒 | 1.68× |
 | 345 | BF16 | Full + LightX2V8 | 1179.84 秒 | 1.00× | 467.81 秒 | 1.00× |
 | 345 | BF16 | VSA · FastH3 V2 · 80% | 661.43 秒 | **1.78×** | 318.03 秒 | 1.47× |
 | 345 | BF16 | Veda + LightX2V8 · 90% | 376.99 秒 | **3.13×** | 173.62 秒 | 2.69× |
@@ -191,7 +194,7 @@ VSA 已按用户要求选定共同种子 **7**，各方法正式测速使用同�
 
 统一 **Offload**：`omni-layer-prefetch1-vae-resident-v1`。BF16 与 INT8 的加速比都相对各自硬件的 Full BF16 八步；低于 1× 表示慢于该基线。每组对照中更高的加速比加粗，缺失或相同的值不加粗。— 为待测；旧四步或旧种子结果不进入新表。
 
-已验收：昇腾 20/20, PRO 6000 10/20.
+已验收：昇腾 20/20, PRO 6000 20/20.
 
 [八步原始记录](benchmarks/single-card-highres.json)
 
@@ -212,6 +215,42 @@ Transformer 线性层，不代表所有注意力运算都使用 INT8。昇腾的
 模块区间包含等待，不代表纯内核计算时间。每格一次正式请求，不声称统计误差范围。
 [图表实测数据](benchmarks/long-video-e2e.json) ·
 [SVG](docs/figures/long-video-e2e.svg) · [PDF](docs/figures/long-video-e2e.pdf)。
+
+
+<!-- BEGIN TP8 SCALING -->
+
+## 八卡扩展性：同方法、同精度的 8 卡相对 1 卡
+
+本表的比值为**同方法、同精度单卡耗时 / 八卡耗时**，与上表相对 Full BF16 的算法加速比区分。全部八步、seed7、1344×768，使用同一 Offload 策略。原生 TP 将 56 个 DiT head 分成每卡 7 个；文本编码器也使用原生 TP。单卡参考来自已验收矩阵；选中卡无其他计算进程，但不声称整台主机 CPU 隔离。
+
+| 帧数 | 精度 | 方法 | 单卡耗时 | 八卡耗时 | 8 卡相对 1 卡 | 注意力 p95 最大/均值 |
+| ---: | --- | --- | ---: | ---: | ---: | ---: |
+| 124 | BF16 | Full + LightX2V8 | 206.71 s | — | — | — |
+| 124 | BF16 | VSA V2 · 80% | 163.20 s | — | — | — |
+| 124 | BF16 | Veda · 90% | 113.43 s | — | — | — |
+| 124 | BF16 | VDN · official | 301.42 s | — | — | — |
+| 124 | BF16 | Spark-H3 · 90% | 132.78 s | — | — | — |
+| 124 | INT8 | Full + LightX2V8 | 189.57 s | — | — | — |
+| 124 | INT8 | VSA V2 · 80% | 146.89 s | — | — | — |
+| 124 | INT8 | Veda · 90% | 97.61 s | — | — | — |
+| 124 | INT8 | VDN · official | 213.95 s | — | — | — |
+| 124 | INT8 | Spark-H3 · 90% | 116.19 s | — | — | — |
+| 345 | BF16 | Full + LightX2V8 | 1179.84 s | 232.85 s | 5.07× | 1.068 |
+| 345 | BF16 | VSA V2 · 80% | 661.43 s | — | — | — |
+| 345 | BF16 | Veda · 90% | 376.99 s | — | — | — |
+| 345 | BF16 | VDN · official | 842.14 s | — | — | — |
+| 345 | BF16 | Spark-H3 · 90% | 472.93 s | — | — | — |
+| 345 | INT8 | Full + LightX2V8 | 1125.43 s | — | — | — |
+| 345 | INT8 | VSA V2 · 80% | 617.55 s | — | — | — |
+| 345 | INT8 | Veda · 90% | 338.55 s | — | — | — |
+| 345 | INT8 | VDN · official | 620.67 s | — | — | — |
+| 345 | INT8 | Spark-H3 · 90% | 419.44 s | — | — | — |
+
+已验收 1/20。— 为待完成。负载指标来自独立 profiling：逐步、逐层计算八个 rank 的 attention dispatcher 最大耗时/平均耗时，再取 p95；1 表示均衡。VDN 的 dispatcher 仅覆盖 softmax 子分支，完整混合注意力的分布另存于原始记录。
+
+[原始扩展性记录](benchmarks/tp8-scaling.json)
+
+<!-- END TP8 SCALING -->
 
 
 ## 效果展示与验证范围
