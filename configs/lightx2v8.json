@@ -1,0 +1,12 @@
+{
+  "repo_id": "lightx2v/Minimax-h3-Turbo",
+  "revision": "30f485ed874aa44c8183348ad361c5eabad318da",
+  "filename": "minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors",
+  "sha256": "9b0efe3613b43a84e30febaa43af27432ea9d0711eac7bba904b2556b175f6d4",
+  "bytes": 1383677808,
+  "steps": 8,
+  "video_shift": 6.0,
+  "audio_shift": 3.0,
+  "rank": 128,
+  "alpha": 128
+}

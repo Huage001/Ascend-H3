@@ -1,0 +1,23 @@
+diff --git a/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py b/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py
+--- a/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py
++++ b/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py
+@@ -1377,9 +1377,16 @@
+             required_gates = set()
+             for i in range(self.transformer.arch.num_layers):
+                 prefix = f"blocks.{i}.attn.to_gate_compress."
+-                required_gates.update(
+-                    {name for name in parameter_names if name.startswith(prefix)} or {prefix + "weight"}
+-                )
++                gate_names = {name for name in parameter_names if name.startswith(prefix)}
++                # Online INT8 creates scales after loading the BF16 source.
++                # Only serialized checkpoints are required to supply scales.
++                from vllm_omni.quantization.int8_config import DiffusionInt8Config
++
++                gate = self.transformer.blocks[i].attn.to_gate_compress
++                quant = getattr(getattr(gate, "quant_method", None), "quant_config", None)
++                if isinstance(quant, DiffusionInt8Config) and not quant.is_checkpoint_int8_serialized:
++                    gate_names.discard(prefix + "weight_scale")
++                required_gates.update(gate_names or {prefix + "weight"})
+             if missing_gates := required_gates - transformer_loaded:
+                 raise ValueError(f"FastH3 V2 checkpoint is missing compression gates: {sorted(missing_gates)}")
+         return loaded_with_prefix

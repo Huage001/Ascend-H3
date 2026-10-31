@@ -12,8 +12,8 @@ import statistics
 from pathlib import Path
 
 HARDWARE = ("Ascend 910B3", "RTX PRO 6000")
-METHODS = (("full", False), ("vsa", False), ("veda", False), ("spark", False))
-LABELS = ("Full + LightX2V", "VSA · FastH3 V2 · 80%", "Veda + LightX2V · 90%", "Spark-H3 + LightX2V")
+METHODS = (("full", False), ("vsa", False), ("veda", False), ("vdn", False), ("spark", False))
+LABELS = ("Full + LightX2V8", "VSA · FastH3 V2 · 80%", "Veda + LightX2V8 · 90%", "VDN · official", "Spark-H3 + LightX2V8")
 
 
 def validate(data):
@@ -21,16 +21,20 @@ def validate(data):
         raise ValueError("Figure requires 1344×768, 345 native frames, one card")
     rows = {}
     policies = set()
+    seeds = set()
     for row in data["records"]:
         key = (row["hardware"], row["precision"], row["method"], row["baseline"])
         if key in rows:
             raise ValueError(f"Duplicate record: {key}")
         if not row["validated"] or row["contention_detected"]:
             raise ValueError(f"Invalid or contaminated request: {key}")
+        if row.get("matrix_id") != "unified8-v1" or not isinstance(row.get("benchmark_seed"), int):
+            raise ValueError(f"A newly measured unified8 request and recorded seed are required: {key}")
+        seeds.add(row["benchmark_seed"])
         samples = row["e2e_seconds"]
         if not samples or any(not math.isfinite(x) or x <= 0 for x in samples):
             raise ValueError(f"End-to-end measurements required: {key}")
-        expected = 8 if row["method"] == "vsa" else 4
+        expected = 8
         if row["method"] == "vsa" and (
             row.get("student_profile") != "fasth3-v2"
             or row.get("nominal_video_sparsity") != .8
@@ -38,6 +42,9 @@ def validate(data):
             raise ValueError(f"Figure requires the V2 student and 80% VSA, not legacy v1: {key}")
         if row["actual_steps"] != expected:
             raise ValueError(f"Wrong model/schedule: {key}")
+        student = "fasth3-v2" if row["method"] == "vsa" else "vdn-official8" if row["method"] == "vdn" else "lightx2v8"
+        if row.get("student_profile") != student:
+            raise ValueError(f"Wrong eight-step student: {key}")
         profile = row["profile"]
         spans = (profile["attention_seconds"], profile["ffn_seconds"])
         if any(not math.isfinite(x) or x < 0 for x in spans):
@@ -56,6 +63,8 @@ def validate(data):
         raise ValueError(f"Incomplete matrix; missing={sorted(expected - set(rows))}")
     if len(policies) != 1:
         raise ValueError("Both hardware platforms and precisions must use the same Offload policy")
+    if len(seeds) != 1:
+        raise ValueError("All methods and hardware platforms must use the same reviewed seed")
     return rows, policies.pop()
 
 
@@ -86,10 +95,10 @@ def render(data, output):
         top.text(0, .40, f"{baseline / 60:.2f} min", fontsize=29, fontfamily="DejaVu Serif")
         top.text(.56, .40, f"{fastest / 60:.2f} min", fontsize=29, color="#126f66",
                  fontfamily="DejaVu Serif")
-        top.text(0, .08, "Full · BF16 · 4 steps", color="#64645e", fontsize=9)
+        top.text(0, .08, "Full · BF16 · 8 steps", color="#64645e", fontsize=9)
         best_label = LABELS[[m for m, _ in METHODS].index(best["method"])]
         top.text(.56, .08, f"{best_label} · {best['precision'].upper()}", color="#126f66", fontsize=9)
-        top.text(.56, -.17, f"{baseline / fastest:.2f}× vs BF16 Full4", color="#126f66", fontsize=9)
+        top.text(.56, -.17, f"{baseline / fastest:.2f}× vs BF16 Full8", color="#126f66", fontsize=9)
         xmax = max(r["profile"]["dit_wall_seconds"] / r["profile"]["actual_forwards"] for r in candidates) * 1000 / 50
         for row_index, precision in enumerate(("bf16", "int8"), 1):
             ax = fig.add_subplot(grids[row_index, col], facecolor="#fffdf8")
@@ -127,11 +136,11 @@ def render(data, output):
         colors, ("Attention module", "FFN", "Other DiT work incl. unhidden Offload"))],
         loc="lower left", bbox_to_anchor=(.05, .052), ncol=3, frameon=False, fontsize=9)
     fig.text(.055, .039, "Headline times: median uninstrumented request → completed MP4; "
-             f"{sample_note}. Reference: same-device, same-precision Full4. "
+             f"{sample_note}. Reference: same-device, same-precision Full8. "
              "Q = same-method BF16 / INT8.", fontsize=8, color="#626257")
     fig.text(.055, .028, f"Bars: separate DiT profiling, normalized over actual forwards × 50 blocks; no E2E extrapolation. "
              f"Offload policy: {policy}.", fontsize=8, color="#626257")
-    fig.text(.055, .015, "VSA V2: 8 forwards, 80% sparsity; Full/Veda/Spark: 4 forwards. Different-step E2E configurations. VDN documented separately.", fontsize=8, color="#626257")
+    fig.text(.055, .015, "All five methods and Full baseline: eight actual forwards, one common reviewed seed. Each student retains its trained schedule.", fontsize=8, color="#626257")
     output.parent.mkdir(parents=True, exist_ok=True)
     for suffix in ("png", "svg", "pdf"):
         fig.savefig(output.with_suffix("." + suffix), dpi=190, facecolor=fig.get_facecolor())

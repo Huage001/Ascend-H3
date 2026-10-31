@@ -1,0 +1,32 @@
+{
+  "matrix_id": "unified8-v1",
+  "width": 1344,
+  "height": 768,
+  "frames": [
+    124,
+    345
+  ],
+  "methods": [
+    "full",
+    "vsa",
+    "veda",
+    "vdn",
+    "spark"
+  ],
+  "precisions": [
+    "bf16",
+    "int8"
+  ],
+  "devices": 1,
+  "actual_steps": 8,
+  "reference": "same hardware, precision, resolution, frames and seed: Full + official LightX2V8",
+  "offload_policy": "omni-layer-prefetch1-vae-resident-v1",
+  "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+  "seed": 7,
+  "seed_status": "visually reviewed seed7 selected; one cyclist with disclosed shot changes",
+  "candidate_seeds": [
+    7,
+    123
+  ],
+  "formal_repetitions": 1
+}

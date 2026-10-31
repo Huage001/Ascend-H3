@@ -8,7 +8,7 @@ INT8 transformer quantization and native tensor parallel attention heads.
 
 **Integration validation is in progress.** The source operators have compiled
 successfully; this branch is not yet a qualified release of every
-method × precision × workload × parallel configuration. The single-card end-to-end matrix is being remeasured against four-step Full H3.
+method × precision × workload × parallel configuration. The single-card end-to-end matrix is being remeasured against eight-step Full H3.
 
 ## Workloads
 
@@ -48,11 +48,11 @@ require these custom CANN extensions. Keep the editable checkout available.
 
 | Method | Required model assets | Computation |
 | --- | --- | --- |
-| `full` | H3 base; LightX2V 4-step by default, or a community LoRA | Dense attention |
+| `full` | H3 base; LightX2V 8-step by default, or a community LoRA | Dense attention |
 | `vsa` | Complete official FastH3 V2 student, including all 50 trained compression gates | 8 forwards, 80% video sparsity; logical KV64, selected KV blocks paired into KV128 on chip |
-| `veda` | H3 base + LightX2V 4-step + official trained Veda predictor | Dynamic per-head Veda block routes, nominal 90% sparsity |
+| `veda` | H3 base + LightX2V 8-step + official trained Veda predictor | Dynamic per-head Veda block routes, nominal 90% sparsity |
 | `vdn` | H3 base + official VDN stage-DMD checkpoint directory | Local softmax plus 128-dimensional learned DeltaNet branch |
-| `spark` | H3 base + LightX2V 4-step | Spark-H3 hierarchical partition and joint exact/proxy softmax, nominal 90% exact-branch sparsity |
+| `spark` | H3 base + LightX2V 8-step | Spark-H3 hierarchical partition and joint exact/proxy softmax, nominal 90% exact-branch sparsity |
 
 Download models under their original licenses. Weights are not redistributed.
 Different distilled students have different schedules and learned rules;
@@ -60,7 +60,7 @@ swapping attention on arbitrary weights does not guarantee matching quality.
 VSA requires nonzero trained gates. VDN requires its learned branch weights.
 Download and preparation commands are in [model assets](docs/weights.md).
 
-Full, Veda and Spark enable the pinned **LightX2V four-step LoRA** by default.
+Full, Veda and Spark enable the pinned **LightX2V eight-step LoRA** by default.
 Use `--no-few-step-lora` to run the original many-step model. A prepared
 community `--lora /models/style` is fused together with LightX2V before loading
 finishes; disable the default student when explicitly selecting another
@@ -73,8 +73,8 @@ only its complete official stage-DMD checkpoint. Neither accepts an additional c
 ```bash
 # Optional: provide the exact pinned LightX2V source locally instead of downloading.
 h3-ascend serve --method full --model /models/MiniMax-H3 --devices 1 \
-  --few-step-source /models/minimax_h3_fl2v_turbo_4step_v1.0_768p_bf16.safetensors
-# Optional original 50-step model; the reporting baseline is Full four-step.
+  --few-step-source /models/minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors
+# Optional original 50-step model; the reporting baseline is Full eight-step.
 h3-ascend serve --method full --model /models/MiniMax-H3 --devices 1 --no-few-step-lora
 # General already-scaled Diffusers community LoRA, with no forced step schedule.
 h3-ascend prepare-lora --source /models/style.safetensors --output /models/style
@@ -157,8 +157,8 @@ for CASE in 672-124 672-345 1344-124 1344-345; do
 done
 ```
 
-Pass the server's `--method` to the client: defaults are four steps for
-Full/Veda/Spark, eight for VSA V2 and VDN. For the optional original many-step model, use
+Pass the server's `--method` to the client: all five methods
+(Full/VSA/Veda/VDN/Spark) default to eight actual forwards. For the optional original many-step model, use
 `generate --method full --no-few-step-lora` (50 steps), matching the server.
 An explicit `--steps` remains available for a separately prepared community
 student. `--guidance-scale` is optional; omission preserves native policy.
@@ -166,77 +166,51 @@ No Refine stage is added. The client saves the MP4 and a JSON timing receipt.
 
 ## End-to-end performance
 
-The single-card matrix is in progress. Only the measured rows below are
-qualified; missing entries remain pending. Every attention speedup uses **Full + LightX2V, four steps** on
-the same hardware and at the same precision, resolution and frame count.
-Quantization gain is reported separately as the same method's BF16 / INT8
-end-to-end time. The earlier 50-step reference run was cancelled at the user's
-request and is not used in the new comparison.
+**All methods, the baseline and timed requests use eight actual DiT forwards.** Full/Veda/Spark use the pinned official LightX2V 8-step 768p LoRA (shifts 6/3); VSA uses official FastH3 V2 (80% sparsity, shifts 10/3); VDN retains its official eight-step student. Veda remains at 90% sparsity. Each student keeps its trained schedule; four-step weights are not stretched to eight steps.
 
-LoRA fusion, model loading and JIT warmup finish before timing. The timer
-includes fresh prompt encoding, all actual denoising updates, video/audio
-decoding, MP4 encoding and delivery. Full/Veda/Spark use the pinned LightX2V
-four-step student; VSA now uses the complete official FastH3 V2 eight-step student.
-Its ratio against Full4 is a comparison of complete configured systems with different
-step counts, not an equal-step attention-only speedup. Old VSA v1 measurements
-are [archived](benchmarks/archive/fasth3-v1-four-step-highres.json) and are not V2 results.
-VDN requires its official eight-step configuration and is documented separately,
-not included in the current measured performance matrix. These students are not claimed to produce
-identical quality, and the table makes no 50-to-four-step distillation claim.
+Speedup is **Full eight-step end-to-end time / candidate eight-step end-to-end time**, at the same hardware, precision, geometry, frame count and seed. Reporting covers single-card 1344×768 at 124/345 frames, BF16 and INT8. LoRAs merge before TP slicing and quantization. Timing includes prompt encoding, all eight updates, audio/video decoding, MP4 encoding and complete delivery; loading, fusion, warmup and visual screening are excluded.
 
-Memory-constrained cases are measured with **Offload**, not listed as OOM.
-For each cross-device pair, PRO 6000 and Ascend 910B3 must use the same explicit
-resident/prefetch policy, including encoder and decoder residency. The shared Offload
-policy is stated below the combined comparison table. BF16 and INT8
-measurements identify their actual quantized modules and fallback layers.
-The 1344×768, 345-frame figure compares both devices and both precisions.
-Attention/FFN breakdowns come from a separate profiling run; they never replace
-measured end-to-end time. Historical operator timings remain in raw benchmark
-files for provenance and are not headline video speedups.
-
-Speedups are reported only at **1344×768, 124/345 frames**. The 672×384
-workloads remain supported for inference and functional validation.
+At the user's request, VSA seed screening selected common seed **7**. Every method uses the same prompt and seed for formal timing, with the screening disclosed. The table accepts only newly measured results; old four-step measurements are not doubled or converted. [Earlier Full4-reference results](benchmarks/archive/pre-unified8-full4-reference.json) are historical only.
 
 <!-- BEGIN HIGHRES RESULTS -->
 
-1344×768 · single card · Full/Veda/Spark 4 steps, VSA V2 8 steps · seed 42 · **one formal complete request per measured device/case**:
+All methods: eight forwards; common seed: 7
 
 | Frames | Precision | Method | Ascend 910B3 time | Ascend speedup | PRO 6000 time | PRO 6000 speedup |
 | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| 124 | BF16 | Full + LightX2V · 4 | 121.04 s | 1.00× | — | — |
-| 124 | BF16 | VSA · FastH3 V2 · 8 · 80% | — | — | — | — |
-| 124 | BF16 | Veda + LightX2V · 4 · 90% | 69.86 s | 1.73× | — | — |
-| 124 | BF16 | Spark-H3 + LightX2V · 4 | 78.15 s | 1.55× | — | — |
-| 124 | INT8 | Full + LightX2V · 4 | 111.90 s | 1.00× | — | — |
-| 124 | INT8 | VSA · FastH3 V2 · 8 · 80% | — | — | — | — |
-| 124 | INT8 | Veda + LightX2V · 4 · 90% | 61.78 s | 1.81× | — | — |
-| 124 | INT8 | Spark-H3 + LightX2V · 4 | 71.41 s | 1.57× | — | — |
-| 345 | BF16 | Full + LightX2V · 4 | 648.97 s | 1.00× | 250.88 s | 1.00× |
-| 345 | BF16 | VSA · FastH3 V2 · 8 · 80% | — | — | — | — |
-| 345 | BF16 | Veda + LightX2V · 4 · 90% | 225.29 s | **2.88×** | 103.06 s | 2.43× |
-| 345 | BF16 | Spark-H3 + LightX2V · 4 | 276.45 s | **2.35×** | 115.23 s | 2.18× |
-| 345 | INT8 | Full + LightX2V · 4 | 603.84 s | 1.00× | 243.86 s | 1.00× |
-| 345 | INT8 | VSA · FastH3 V2 · 8 · 80% | — | — | — | — |
-| 345 | INT8 | Veda + LightX2V · 4 · 90% | 203.77 s | **2.96×** | 95.43 s | 2.56× |
-| 345 | INT8 | Spark-H3 + LightX2V · 4 | 247.17 s | **2.44×** | 107.27 s | 2.27× |
+| 124 | BF16 | Full + LightX2V8 | — | — | — | — |
+| 124 | BF16 | VSA · FastH3 V2 · 80% | — | — | — | — |
+| 124 | BF16 | Veda + LightX2V8 · 90% | — | — | — | — |
+| 124 | BF16 | VDN · official | — | — | — | — |
+| 124 | BF16 | Spark-H3 + LightX2V8 | — | — | — | — |
+| 124 | INT8 | Full + LightX2V8 | — | — | — | — |
+| 124 | INT8 | VSA · FastH3 V2 · 80% | — | — | — | — |
+| 124 | INT8 | Veda + LightX2V8 · 90% | — | — | — | — |
+| 124 | INT8 | VDN · official | — | — | — | — |
+| 124 | INT8 | Spark-H3 + LightX2V8 | — | — | — | — |
+| 345 | BF16 | Full + LightX2V8 | — | — | — | — |
+| 345 | BF16 | VSA · FastH3 V2 · 80% | — | — | — | — |
+| 345 | BF16 | Veda + LightX2V8 · 90% | — | — | — | — |
+| 345 | BF16 | VDN · official | — | — | — | — |
+| 345 | BF16 | Spark-H3 + LightX2V8 | — | — | — | — |
+| 345 | INT8 | Full + LightX2V8 | — | — | — | — |
+| 345 | INT8 | VSA · FastH3 V2 · 80% | — | — | — | — |
+| 345 | INT8 | Veda + LightX2V8 · 90% | — | — | — | — |
+| 345 | INT8 | VDN · official | — | — | — | — |
+| 345 | INT8 | Spark-H3 + LightX2V8 | — | — | — | — |
 
-All records use matched **Offload** (`omni-layer-prefetch1-vae-resident-v1`). Each speedup is relative to Full four-step on the same hardware and precision. VSA V2 retains eight forwards, so its ratio compares complete configurations with different step counts. The higher speedup in each completed pair is bold; ties and incomplete pairs are unmarked. — means pending; old VSA v1 four-step numbers are not V2 results.
+Matched **Offload**: `omni-layer-prefetch1-vae-resident-v1`. Ratios use same-device/same-precision Full8. The higher speedup in each completed hardware pair is bold; ties and missing values are not. — means pending; old four-step or old-seed data cannot enter this table.
 
-Fully validated: Ascend 12/16 cases; PRO 6000 6/16 cases. Remaining cases are in progress; warmups and failed attempts are excluded.
+Validated: Ascend 0/20, PRO 6000 0/20.
 
-[Raw high-resolution records and independent profiles](benchmarks/single-card-highres.json).
+[Raw eight-step records](benchmarks/single-card-highres.json)
 
 <!-- END HIGHRES RESULTS -->
 
-[Measurement and figure protocol](docs/benchmark-protocol.md).
 
 ## Qualitative results and validation
 
-Ascend 910B3 only: **1344×768, 345 frames, 24 FPS (14.375 seconds, approximately 14.4 seconds)**, with audio.
-
-Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt, seed 42 and the same Offload policy.
-
-Full, Veda and Spark use four steps. **VSA V2 and VDN retain their official eight steps.** VSA V2 samples are being regenerated; the old VSA v1 samples are archived, not relabeled as V2.
+Ascend 910B3 only: 1344×768, 345 native frames, 24 FPS (14.375 seconds, approximately 14.4 seconds), with audio. All five methods use eight forwards; BF16 is on the left and native W8A8 INT8 on the right. Samples use the reviewed common seed **7**; the remaining videos are being regenerated; earlier four-step or seed42 videos are not relabeled.
 
 > A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.
 
@@ -246,48 +220,48 @@ Full, Veda and Spark use four steps. **VSA V2 and VDN retain their official eigh
 <tr>
 <td>
 
-**Full + LightX2V · 4 steps**
+**Full + LightX2V8 · 8 steps**
 
-https://github.com/user-attachments/assets/cd6c4619-7cef-42fc-abc2-eebea5ed4b9b
-
-</td>
-<td>
-
-**Full + LightX2V · 4 steps**
-
-https://github.com/user-attachments/assets/e0039d68-b50b-4f65-8714-07d4cfc3855a
-
-</td>
-</tr>
-<tr>
-<td>
-
-**VSA · FastH3 V2 · 8 steps · 80%**
-
-New video pending validation.
+New-seed eight-step video pending validation.
 
 </td>
 <td>
 
-**VSA · FastH3 V2 · 8 steps · 80%**
+**Full + LightX2V8 · 8 steps**
 
-New video pending validation.
+New-seed eight-step video pending validation.
 
 </td>
 </tr>
 <tr>
 <td>
 
-**Veda + LightX2V · 4 steps**
+**VSA · FastH3 V2 · 80% · 8 steps**
 
-https://github.com/user-attachments/assets/c2e08051-3753-495b-bb69-7ed8b7208b2a
+https://github.com/user-attachments/assets/4a03fd28-4c88-4b46-b3aa-7dcb4ec4b1c1
 
 </td>
 <td>
 
-**Veda + LightX2V · 4 steps**
+**VSA · FastH3 V2 · 80% · 8 steps**
 
-https://github.com/user-attachments/assets/ef130119-c58f-4cff-86c2-706524bbb550
+New-seed eight-step video pending validation.
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Veda + LightX2V8 · 90% · 8 steps**
+
+New-seed eight-step video pending validation.
+
+</td>
+<td>
+
+**Veda + LightX2V8 · 90% · 8 steps**
+
+New-seed eight-step video pending validation.
 
 </td>
 </tr>
@@ -296,41 +270,39 @@ https://github.com/user-attachments/assets/ef130119-c58f-4cff-86c2-706524bbb550
 
 **VDN · official student · 8 steps**
 
-https://github.com/user-attachments/assets/bc743b7a-8587-46ea-9707-a93e514befa8
+New-seed eight-step video pending validation.
 
 </td>
 <td>
 
 **VDN · official student · 8 steps**
 
-https://github.com/user-attachments/assets/6144e35d-1a10-4d6c-91d0-55f469bae653
+New-seed eight-step video pending validation.
 
 </td>
 </tr>
 <tr>
 <td>
 
-**Spark-H3 + LightX2V · 4 steps**
+**Spark-H3 + LightX2V8 · 8 steps**
 
-https://github.com/user-attachments/assets/6ebfcaed-b023-42d5-b850-e86897c0209d
+New-seed eight-step video pending validation.
 
 </td>
 <td>
 
-**Spark-H3 + LightX2V · 4 steps**
+**Spark-H3 + LightX2V8 · 8 steps**
 
-https://github.com/user-attachments/assets/aba1d8ee-c178-4cd2-bb63-5e4a4c9f979e
+New-seed eight-step video pending validation.
 
 </td>
 </tr>
 </table>
 <!-- END QUALITATIVE GALLERY -->
 
-VSA V2 uses **80% video sparsity** (20% keep budget); Veda retains **90%** (10% keep budget); text/audio prefixes retain the native dense policy, with block-rounding differences in the effective fraction.
+Common seed **7** was selected after reviewing 16 uniformly spaced frames, including the last frame, from two candidates: seed7 has one cyclist; seed123 retains two. Shot changes remain. Screening is user-requested and did not select the fastest timing; this screening request is excluded from formal measurements.
 
-[Validated videos and pending V2 samples](examples/videos/qualitative-1344-345.json). Completed videos passed dimensions, 345-frame, audio and finite-output checks. [Old VSA v1 gallery provenance](examples/videos/qualitative-1344-345-fasth3-v1-archive.json).
-
-The same prompt and seed do not establish pixel or perceptual equivalence across students. VDN uses a full 128-dimensional numerical inverse approximation; temporal-convolution rounding is described in [architecture](docs/architecture.md). Earlier VSA samples exhibited brightness dips, documented in [temporal diagnostics](benchmarks/vsa-temporal-sample-check.json); no flicker-free claim is made.
+[New sample metadata and progress](examples/videos/qualitative-1344-345.json); [earlier seed/configuration archive](examples/videos/archive/qualitative-pre-unified8-seed42.json). Seed screening is user-requested and excluded from timing. Different students are not asserted to have pixel or perceptual equivalence.
 
 The initial integration targets batch-one T2VA without reference videos.
 See [architecture](docs/architecture.md), [validation status](docs/validation.md)

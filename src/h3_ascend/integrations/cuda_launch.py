@@ -16,6 +16,9 @@ def main():
     fa4, _, _ = _load_fa4(os.environ["MIOWTION_ROOT"])
     if fa4._modules() is None or not fa4.fa4_sm8x.installed():
         raise RuntimeError(f"Official SM120 FA4 initialization failed: {fa4.unavailable_reason()}")
+    from h3_ascend.integrations.host_memory import install_initialization_cleanup
+
+    install_initialization_cleanup()
     runpy.run_module("vllm_omni.entrypoints.cli.main", run_name="__main__", alter_sys=True)
 
 

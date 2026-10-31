@@ -31,7 +31,7 @@ class Contracts(unittest.TestCase):
 
     def test_student_contracts(self):
         for method in ("full", "veda", "spark"):
-            self.assertEqual(step_count(method), 4)
+            self.assertEqual(step_count(method), 8)
             self.assertEqual(step_count(method, False), 50)
             self.assertEqual(launch_adapter(method, False, None), None)
         self.assertEqual(step_count("vsa"), 8)

@@ -1,0 +1,31 @@
+{
+  "matrix_id": "unified8-v1",
+  "seed": 7,
+  "visually_approved": true,
+  "review": "16 uniformly spaced frames including frame344; suitable single-cyclist sample, with shot changes disclosed.",
+  "selection_requested_by_user": true,
+  "screening_not_timed": true,
+  "actual_steps": 8,
+  "frames": 345,
+  "width": 1344,
+  "height": 768,
+  "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
+  "candidates": [
+    {
+      "seed": 7,
+      "chosen": true,
+      "reason": "Single cyclist in 16 uniformly sampled frames including the final frame. Some camera/shot changes remain; selected as a more suitable showcase.",
+      "video_sha256": "ffa3f70ad466f454d60fb65ffd680baf5117938375b1941f180ce5ac8b635490",
+      "bytes": 37321233,
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/seed-selection/vsa-v2-bf16-seed7-1344-345"
+    },
+    {
+      "seed": 123,
+      "chosen": false,
+      "reason": "Two cyclists remain; rejected for the requested single-cyclist showcase.",
+      "video_sha256": "6ab04e0eec2b2fec15f217d47a5678f1e108b5625c2882c27f166eac2a9e50a5",
+      "bytes": 32491848,
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/seed-selection/vsa-v2-bf16-seed123-1344-345"
+    }
+  ]
+}

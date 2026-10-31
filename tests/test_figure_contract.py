@@ -18,12 +18,13 @@ def fixture():
         for precision in ("bf16", "int8"):
             for method, baseline in figure.METHODS:
                 rows.append({
+                    "matrix_id": "unified8-v1", "benchmark_seed": 7,
                     "hardware": hardware, "precision": precision, "method": method,
-                    "baseline": baseline, "actual_steps": 8 if method == "vsa" else 4, "validated": True,
-                    "student_profile": "fasth3-v2" if method == "vsa" else "lightx2v4",
+                    "baseline": baseline, "actual_steps": 8, "validated": True,
+                    "student_profile": "fasth3-v2" if method == "vsa" else "vdn-official8" if method == "vdn" else "lightx2v8",
                     "nominal_video_sparsity": .8 if method == "vsa" else .9,
                     "contention_detected": False, "offload": True, "offload_policy": "test",
-                    "e2e_seconds": [60.0], "profile": {"actual_forwards": 8 if method == "vsa" else 4,
+                    "e2e_seconds": [60.0], "profile": {"actual_forwards": 8,
                         "dit_wall_seconds": 40.0, "attention_seconds": 20.0, "ffn_seconds": 10.0},
                 })
     return {"width": 1344, "height": 768, "frames": 345, "devices": 1, "records": rows}
@@ -32,7 +33,7 @@ def fixture():
 class FigureContracts(unittest.TestCase):
     def test_complete_native_student_matrix(self):
         rows, policy = figure.validate(fixture())
-        self.assertEqual(len(rows), 16)
+        self.assertEqual(len(rows), 20)
         self.assertEqual(policy, "test")
 
     def test_invalid_comparison_cannot_render(self):
@@ -44,6 +45,9 @@ class FigureContracts(unittest.TestCase):
         legacy = copy.deepcopy(base)
         next(row for row in legacy["records"] if row["method"] == "vsa")["student_profile"] = "fasth3-v1"
         cases.append(legacy)
+        wrong_seed = copy.deepcopy(base)
+        wrong_seed["records"][0]["benchmark_seed"] = 123
+        cases.append(wrong_seed)
         for field, value in (("actual_steps", 50), ("offload_policy", "other"),
                              ("contention_detected", True), ("devices", 2)):
             bad = copy.deepcopy(base)

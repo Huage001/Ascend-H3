@@ -14,11 +14,11 @@ def step_count(method, few_step_lora=True):
         if not few_step_lora:
             raise ValueError(f"{method} requires its own official student")
         return 8
-    return 4 if few_step_lora else 50
+    return 8 if few_step_lora else 50
 
 
 def lightx_path():
-    return cache_root() / "models/lightx2v4-prepared"
+    return cache_root() / "models/lightx2v8-prepared"
 
 
 def prepare_lightx(source=None):
@@ -26,7 +26,7 @@ def prepare_lightx(source=None):
     from h3_ascend.integrations.lora import MANIFEST, prepare
 
     target = lightx_path()
-    spec = json.loads((source_root() / "configs/lightx2v4.json").read_text())
+    spec = json.loads((source_root() / "configs/lightx2v8.json").read_text())
     if (target / MANIFEST).is_file():
         config = json.loads((target / MANIFEST).read_text())
         if config.get("source_sha256") != spec["sha256"]:
@@ -58,7 +58,7 @@ def launch_adapter(method, few_step_lora, lora, *, prepare_assets=False, source=
         return str(default)
     # Static composition: no adapter dispatch or extra GEMM during inference.
     identity = hashlib.sha256(str(Path(lora).resolve()).encode()).hexdigest()[:20]
-    stack = cache_root() / "models" / ("lightx2v4-plus-" + identity)
+    stack = cache_root() / "models" / ("lightx2v8-plus-" + identity)
     if prepare_assets:
         from h3_ascend.integrations.lora import MANIFEST
 

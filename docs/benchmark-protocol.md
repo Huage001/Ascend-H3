@@ -10,35 +10,32 @@ processes to obtain a result.
 
 ## Reference and students
 
-The attention speedup is **same-device, same-precision Full + LightX2V,
-four steps / candidate end-to-end time**. Quantization gain is the same
-method's BF16 / INT8 end-to-end time. All candidates run the same
-resolution and native frame count. No 50/4 multiplier is applied. The earlier
-50-step baseline was cancelled at the user's request.
+**Every method and baseline performs eight actual DiT forwards.** Speedup is
+same-device, same-precision **Full + LightX2V8 end-to-end time / candidate
+eight-step end-to-end time**, at the same geometry, frame count, prompt and
+selected common seed. No 50/8 or 4/8 multiplier is applied. Earlier Full4 and
+seed42 results are archived and cannot enter this matrix.
 
-| Row | LoRA / learned assets | Actual updates |
-| --- | --- | ---: |
-| Full (baseline) | Pinned LightX2V v1.0 768p | 4 |
-| VSA V2 | Complete official FastH3 V2 checkpoint, shifts 10/3 | 8 |
-| Veda | LightX2V + official trained predictor | 4 |
-| Spark-H3 | LightX2V | 4 |
+| Method | LoRA / learned assets | Actual forwards | Video / audio shifts |
+| --- | --- | ---: | --- |
+| Full baseline | Pinned official LightX2V 8-step v1.0 768p | 8 | 6 / 3 |
+| VSA V2 | Complete official FastH3 V2 with 50 trained gates | 8 | 10 / 3 |
+| Veda | LightX2V8 + official trained predictor | 8 | 6 / 3 |
+| VDN | Official stage-DMD-step-250 student, full 128-dimensional state | 8 | 12 / 3 |
+| Spark-H3 | LightX2V8 | 8 | 6 / 3 |
 
-VSA V2 uses **80% nominal video-block sparsity** (20% keep budget); Veda
-retains **90%** (10% keep budget) on both hardware platforms and precisions.
-VSA V2 against Full4 is a different-step end-to-end configuration comparison,
-not an equal-step attention-only acceleration. Legacy VSA v1 four-step results
-are archived separately; they must not be labeled V2.
-Text/audio global prefixes retain their native dense policy. Block rounding,
-padding and mandatory diagonal handling can change the effective block
-fraction slightly. These results do not use the earlier 97% experiments.
+Keep each student's trained sigma positions and shifts. Do not stretch a
+four-step checkpoint into an eight-step run. VSA V2 uses 80% nominal video
+sparsity; Veda and Spark's exact branch retain their 90% defaults. Native
+text/audio and prefix rules remain unchanged; block rounding can change the
+effective fraction.
 
-VDN retains its official eight-step student in the inference implementation.
-It is documented separately and excluded from the four-step candidate figure;
-forcing it to four steps would violate its released configuration.
-
-Different students and attention mechanisms can produce different videos.
-A speedup does not assert perceptual equivalence. Keep the generated MP4s,
-exact checkpoint identities, schedules and known quality limitations.
+At the user's request, VSA long videos were visually screened with new seeds;
+common seed **7** was chosen. [Selection evidence](../benchmarks/seed-selection-unified8.json). Store every candidate and the selection
+record. Screening is excluded from timing. After selection, all methods and
+both hardware platforms use the same prompt and seed for every warmup,
+formal request and profile. Different students are not asserted to have
+identical perceptual quality. Do not choose the fastest timing sample.
 
 ## Matched Offload
 
@@ -67,8 +64,7 @@ mean every operation, encoder or VAE is INT8.
 Finish checkpoint loading, all static LoRA merges, INT8 weight conversion and
 JIT warmup before timing. Run an audited warmup to verify finite DiT outputs,
 all 50 blocks, actual weight dtypes and all 50 VSA gates. Remove the audit hooks
-and restore the original forward before a further untimed warmup. Every student retains its trained schedule during warmup: eight forwards for
-VSA V2, four for Full/Veda/Spark.
+and restore the original forward before a further untimed warmup. Every student retains all eight actual forwards during every warmup.
 
 Measure from fresh prompt submission to complete MP4 receipt and file write.
 Include text encoding, all denoising updates, audio/video decode, MP4 encoding,
@@ -84,7 +80,8 @@ frame count, audio track and process ownership before accepting the result.
 contaminated runs and mismatched Offload policies. Its input records carry:
 
 ```text
-hardware, precision, method, baseline, actual_steps,
+matrix_id="unified8-v1", benchmark_seed, student_profile,
+hardware, precision, method, baseline, actual_steps=8,
 validated, contention_detected, offload, offload_policy,
 e2e_seconds: [individual uninstrumented request times],
 profile: {actual_forwards, dit_wall_seconds, attention_seconds, ffn_seconds}
@@ -99,7 +96,7 @@ copy-stream time to compute time when they overlap.
 Bars show average measured DiT milliseconds per block, normalized by the
 actual number of profiled forwards and 50 blocks. Headline minutes and speedups
 come only from complete, uninstrumented requests. All headline results require an actual complete request at the recorded
-student schedule; VSA V2 must have eight forwards, including its separate profile.
+student schedule: all methods require eight forwards, including the separate profile.
 
 ```bash
 python scripts/plot_long_video.py --input benchmarks/long-video-e2e.json \
@@ -108,3 +105,13 @@ python scripts/plot_long_video.py --input benchmarks/long-video-e2e.json \
 
 The JSON and final figure are populated only after actual measurements finish.
 There are no placeholder performance numbers.
+
+## Loading memory fixes
+
+The FastH3 V2 compatibility patch excludes only automatically generated online
+INT8 gate scales from the list of tensors required in the BF16 checkpoint.
+Actual trained gate weights and serialized quantization scales remain mandatory.
+CUDA initialization may collect unreachable objects and trim unused host pages
+before constructing each pinned CPU master. This runs only during offloader
+construction, outside measured requests; it changes no tensor values, master
+dtypes, residency or prefetch policy. Failed attempts stay in the raw archive.

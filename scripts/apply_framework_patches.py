@@ -10,6 +10,7 @@ PATCHES = (
     "vllm-omni-vsa-layerwise-fusion.patch",
     "vllm-omni-h3-encoder-host-load.patch",
     "vllm-omni-h3-community-lora-schedule.patch",
+    "vllm-omni-fasth3-v2-online-int8-gates.patch",
 )
 
 

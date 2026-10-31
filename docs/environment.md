@@ -97,7 +97,7 @@ The FLA wheel is checked against its fixed SHA256 before installation.
 
 ## Current matched NVIDIA reference
 
-The four-step end-to-end comparison uses a separate Torch 2.13 / CUDA 13.0,
+The eight-step end-to-end comparison uses a separate Torch 2.13 / CUDA 13.0,
 vLLM 0.32 and the same pinned Omni source, not the historical Torch 2.12
 attention-only timing environment. Exact package versions and the patched
 pipeline digest are recorded in

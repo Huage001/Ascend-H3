@@ -16,21 +16,21 @@ hf download MiniMaxAI/MiniMax-H3 --include 'model_index.json' 'FL2VA/*' \
   --local-dir /models/MiniMax-H3
 ```
 
-## Default four-step Full / Veda / Spark
+## Default eight-step Full / Veda / Spark
 
 The launcher defaults to the pinned official
 [LightX2V Minimax-h3-Turbo](https://huggingface.co/lightx2v/Minimax-h3-Turbo)
-`minimax_h3_fl2v_turbo_4step_v1.0_768p_bf16.safetensors`, revision
+`minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors`, revision
 `30f485ed874aa44c8183348ad361c5eabad318da`, SHA256
-`1bdabc2e9fce20b1db563b96bcf6e46adcad4c1964f423676436bf266cc7416c`.
-The contract is four steps, video shift 6, audio shift 3, alpha=rank=128.
+`9b0efe3613b43a84e30febaa43af27432ea9d0711eac7bba904b2556b175f6d4`.
+The contract is eight actual forwards, video shift 6, audio shift 3, alpha=rank=128.
 Download is automatic, or provide `serve --few-step-source FILE`.
 The source's PEFT default-namespace keys are normalized and alpha/rank is
 folded into the adapter once. Weights merge before TP and INT8 quantization.
 
 ```bash
 hf download lightx2v/Minimax-h3-Turbo \
-  minimax_h3_fl2v_turbo_4step_v1.0_768p_bf16.safetensors \
+  minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors \
   --revision 30f485ed874aa44c8183348ad361c5eabad318da --local-dir /models/lightx2v
 # Original model: disable the default student at both endpoints.
 h3-ascend serve --method full --model /models/MiniMax-H3 --no-few-step-lora
@@ -44,8 +44,9 @@ Diffusers H3 conversion, or `peft` for default-namespace matrices with declared
 alpha metadata. Partial Q/K/V adapters are supported. Omit `--steps` for style
 adapters; a separately distilled student can pin `--steps`, `--video-shift`,
 `--audio-shift`. Do not combine two different distilled schedules.
-A legacy eight-step Turbo adapter remains an explicit optional input; it is
-not substituted for the default LightX2V four-step source.
+Older four-step LightX2V and historical eight-step adapters are not defaults.
+Current Full/Veda/Spark all use the exact pinned 8-step 768p source in
+`configs/lightx2v8.json`; VSA and VDN retain their own official eight-step students.
 
 ## FastH3 V2 VSA: eight forwards, 80% sparsity
 
