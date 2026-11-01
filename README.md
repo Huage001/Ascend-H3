@@ -138,13 +138,22 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 **Choose a method** · Keep the command above and change `--method`, `--model`,
 and any required arguments:
 
-| Method | `--model` | Additional arguments |
-| --- | --- | --- |
-| `full` | `/models/MiniMax-H3` | — |
-| `vsa` | `/models/FastH3-V2` | — |
-| `veda` | `/models/MiniMax-H3` | `--predictor /models/veda/predictor.safetensors` |
-| `vdn` | `/models/MiniMax-H3` | `--lora /models/VDN/stage-dmd-step-250` |
-| `spark` | `/models/MiniMax-H3` | — |
+<table>
+  <thead>
+    <tr>
+      <th width="120">Method</th>
+      <th width="240"><code>--model</code></th>
+      <th width="440">Additional arguments</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>full</code></td><td><code>/models/MiniMax-H3</code></td><td>—</td></tr>
+    <tr><td><code>vsa</code></td><td><code>/models/FastH3-V2</code></td><td>—</td></tr>
+    <tr><td><code>veda</code></td><td><code>/models/MiniMax-H3</code></td><td><code>--predictor /models/veda/predictor.safetensors</code></td></tr>
+    <tr><td><code>vdn</code></td><td><code>/models/MiniMax-H3</code></td><td><code>--lora /models/VDN/stage-dmd-step-250</code></td></tr>
+    <tr><td><code>spark</code></td><td><code>/models/MiniMax-H3</code></td><td>—</td></tr>
+  </tbody>
+</table>
 
 **Multiple NPUs** · Select the devices and use tensor parallelism:
 
