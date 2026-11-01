@@ -222,18 +222,6 @@ prepared files are hash-checked. All selected adapters merge before TP slicing
 and INT8 quantization. There are no request-time LoRA matrix multiplications.
 See [model preparation](docs/weights.md) for source formats and fixed schedules.
 
-## Attention on Ascend
-
-Each backend follows a distinct NPU execution path. VSA, Veda and Spark use
-custom Ascend C kernels alongside native operations; VDN uses native CANN
-attention, TorchAir and NPU Graph. See the [integration design](docs/architecture.md)
-for implementation details and precision boundaries.
-
-[![VSA, Veda, VDN and Spark-H3 attention paths on Ascend](docs/figures/attention-paths.svg)](docs/figures/attention-paths.svg)
-
-*Simplified inference paths. Green arrows indicate routing and block selection;
-click the figure to view it at full size.*
-
 <a id="serve"></a>
 
 ## Start a server
