@@ -244,6 +244,13 @@ Runs from block input to block output, including projections, normalization, RoP
 | 345 | VDN · official | 1534.19 ms | 647.19 ms | **1.96×** | 1.63× |
 | 345 | Spark-H3 · 90% | 1028.43 ms | 393.06 ms | **2.92×** | 2.68× |
 
+### BF16 latency at a glance
+
+The charts visualize both tables above: attention core on the left and complete
+DiT block on the right, for 124 and 345 frames. Bar labels show mean latency and
+speedup against the Full baseline on the same device; these are layer measurements,
+not end-to-end generation times.
+
 ![BF16 attention core and DiT block comparison](docs/figures/bf16-three-layer.png)
 
 [All nine-run records and input identity checks](benchmarks/bf16-three-layer.json).
