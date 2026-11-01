@@ -131,9 +131,9 @@ for implementation details and precision boundaries.
 
 ![Veda attention on Ascend](docs/figures/attention-veda.svg)
 
-![Spark-H3 attention on Ascend](docs/figures/attention-spark.svg)
-
 ![VDN attention on Ascend](docs/figures/attention-vdn.svg)
+
+![Spark-H3 attention on Ascend](docs/figures/attention-spark.svg)
 
 <a id="serve"></a>
 
