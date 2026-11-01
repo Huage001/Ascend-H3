@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="850" height="1810" viewBox="0 0 850 1810" role="img" aria-labelledby="title desc">
+<title id="title">Ascend-H3 attention on NPU</title>
+<desc id="desc">Four attention implementations: VSA, Veda, Spark and VDN. VSA, Veda and Spark use custom Ascend C operators alongside native operations. VDN combines NPU-native attention, TorchAir and NPU Graph optimizations.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M 0 0 L 8 4 L 0 8 z" fill="#a0afc0"/></marker></defs>
+<rect x="0" y="0" width="850" height="1810" rx="0" fill="#f4f7fa" stroke="none" stroke-width="1"/>
+<rect x="0" y="0" width="850" height="214" rx="0" fill="#102a43" stroke="none" stroke-width="1"/>
+<rect x="70" y="48" width="8" height="78" rx="4" fill="#4ed1c3" stroke="none" stroke-width="1"/>
+<text x="99" y="72" fill="#89adbf" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="700" letter-spacing="2.2">ASCEND-H3  /  ATTENTION ARCHITECTURE</text>
+<text x="98" y="126" fill="#ffffff" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="42" font-weight="700" >Four paths, tailored for Ascend</text>
+<text x="100" y="168" fill="#b5c8d5" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="20" font-weight="400" >A concise view of the attention core and its NPU execution</text>
+<rect x="70" y="242" width="710" height="125" rx="16" fill="#ffffff" stroke="#dfe7ef" stroke-width="1"/>
+<text x="99" y="273" fill="#608097" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="700" letter-spacing="1.4">SHARED PIPELINE</text>
+<text x="99" y="301" fill="#203c54" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="21" font-weight="600" >vLLM-Omni DiT  →  attention backend  →  output projection</text>
+<rect x="98" y="319" width="364" height="32" rx="16" fill="#eaf4f8" stroke="none" stroke-width="1"/>
+<text x="280.0" y="341" fill="#326c8f" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="0.5">BF16 Q / K / V AFTER PROJECTION</text>
+<rect x="70" y="395" width="710" height="316" rx="20" fill="#ffffff" stroke="#dfe7ef" stroke-width="1"/>
+<rect x="70" y="395" width="6" height="316" rx="3" fill="#087e82" stroke="none" stroke-width="1"/>
+<text x="98" y="437" fill="#087e82" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="700" letter-spacing="2">01</text>
+<text x="138" y="440" fill="#142e47" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="28" font-weight="700" >VSA</text>
+<text x="98" y="472" fill="#657a8d" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="17" font-weight="400" >Block-sparse attention + trained compression gate</text>
+<rect x="551" y="414" width="202" height="32" rx="16" fill="#e6f6f4" stroke="none" stroke-width="1"/>
+<text x="652.0" y="436" fill="#087e82" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="0.5">ASCEND C + NATIVE</text>
+<rect x="98" y="500" width="190" height="92" rx="12" fill="#f7f9fc" stroke="#e2e9f1" stroke-width="1"/>
+<text x="114" y="532" fill="#087e82" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Pool &amp; select</text>
+<text x="114" y="561" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >4 × 4 × 4 video tiles</text>
+<rect x="330" y="500" width="190" height="92" rx="12" fill="#e6f6f4" stroke="#e2e9f1" stroke-width="1"/>
+<text x="346" y="532" fill="#087e82" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Sparse softmax</text>
+<text x="346" y="561" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >KV64 pairs → KV128</text>
+<rect x="562" y="500" width="190" height="92" rx="12" fill="#f7f9fc" stroke="#e2e9f1" stroke-width="1"/>
+<text x="578" y="532" fill="#087e82" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Gated merge</text>
+<text x="578" y="561" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >compressed branch</text>
+<path d="M 292 546 L 323 546" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 524 546 L 555 546" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 98 621 H 752" stroke="#e7edf3"/>
+<text x="98" y="651" fill="#405b72" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="600" >Selected video blocks + compressed attention</text>
+<text x="98" y="677" fill="#6a7d8e" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="400" >Text / audio prefix uses dense CANN attention.</text>
+<rect x="70" y="731" width="710" height="316" rx="20" fill="#ffffff" stroke="#dfe7ef" stroke-width="1"/>
+<rect x="70" y="731" width="6" height="316" rx="3" fill="#536ab3" stroke="none" stroke-width="1"/>
+<text x="98" y="773" fill="#536ab3" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="700" letter-spacing="2">02</text>
+<text x="138" y="776" fill="#142e47" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="28" font-weight="700" >Veda</text>
+<text x="98" y="808" fill="#657a8d" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="17" font-weight="400" >Predictor-guided dynamic sparse attention</text>
+<rect x="551" y="750" width="202" height="32" rx="16" fill="#edf0fb" stroke="none" stroke-width="1"/>
+<text x="652.0" y="772" fill="#536ab3" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="0.5">ASCEND C + TRITON</text>
+<rect x="98" y="836" width="190" height="92" rx="12" fill="#f7f9fc" stroke="#e2e9f1" stroke-width="1"/>
+<text x="114" y="868" fill="#536ab3" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Tile &amp; predict</text>
+<text x="114" y="897" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >trained per-head model</text>
+<rect x="330" y="836" width="190" height="92" rx="12" fill="#edf0fb" stroke="#e2e9f1" stroke-width="1"/>
+<text x="346" y="868" fill="#536ab3" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Select &amp; pack</text>
+<text x="346" y="897" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >routes every call</text>
+<rect x="562" y="836" width="190" height="92" rx="12" fill="#f7f9fc" stroke="#e2e9f1" stroke-width="1"/>
+<text x="578" y="868" fill="#536ab3" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Sparse softmax</text>
+<text x="578" y="897" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >128 × 128 + restore</text>
+<path d="M 292 882 L 323 882" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 524 882 L 555 882" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 98 957 H 752" stroke="#e7edf3"/>
+<text x="98" y="987" fill="#405b72" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="600" >Per-head prediction drives block selection</text>
+<text x="98" y="1013" fill="#6a7d8e" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="400" >TP keeps the predictor’s global head identities.</text>
+<rect x="70" y="1067" width="710" height="316" rx="20" fill="#ffffff" stroke="#dfe7ef" stroke-width="1"/>
+<rect x="70" y="1067" width="6" height="316" rx="3" fill="#af6c28" stroke="none" stroke-width="1"/>
+<text x="98" y="1109" fill="#af6c28" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="700" letter-spacing="2">03</text>
+<text x="138" y="1112" fill="#142e47" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="28" font-weight="700" >Spark-H3</text>
+<text x="98" y="1144" fill="#657a8d" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="17" font-weight="400" >Hierarchical routing + exact / proxy attention</text>
+<rect x="551" y="1086" width="202" height="32" rx="16" fill="#fbf2e6" stroke="none" stroke-width="1"/>
+<text x="652.0" y="1108" fill="#af6c28" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="0.5">ASCEND C + NATIVE</text>
+<rect x="98" y="1172" width="190" height="92" rx="12" fill="#f7f9fc" stroke="#e2e9f1" stroke-width="1"/>
+<text x="114" y="1204" fill="#af6c28" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Partition</text>
+<text x="114" y="1233" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >content-aware groups</text>
+<rect x="330" y="1172" width="190" height="92" rx="12" fill="#fbf2e6" stroke="#e2e9f1" stroke-width="1"/>
+<text x="346" y="1204" fill="#af6c28" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Route &amp; proxy</text>
+<text x="346" y="1233" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >select / summarize</text>
+<rect x="562" y="1172" width="190" height="92" rx="12" fill="#f7f9fc" stroke="#e2e9f1" stroke-width="1"/>
+<text x="578" y="1204" fill="#af6c28" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Joint softmax</text>
+<text x="578" y="1233" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >exact + proxy + prefix</text>
+<path d="M 292 1218 L 323 1218" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 524 1218 L 555 1218" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 98 1293 H 752" stroke="#e7edf3"/>
+<text x="98" y="1323" fill="#405b72" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="600" >Unselected blocks contribute weighted proxies</text>
+<text x="98" y="1349" fill="#6a7d8e" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="400" >One online softmax combines all contributions.</text>
+<rect x="70" y="1403" width="710" height="316" rx="20" fill="#ffffff" stroke="#dfe7ef" stroke-width="1"/>
+<rect x="70" y="1403" width="6" height="316" rx="3" fill="#a05277" stroke="none" stroke-width="1"/>
+<text x="98" y="1445" fill="#a05277" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="700" letter-spacing="2">04</text>
+<text x="138" y="1448" fill="#142e47" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="28" font-weight="700" >VDN</text>
+<text x="98" y="1480" fill="#657a8d" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="17" font-weight="400" >Local softmax + learned DeltaNet branch</text>
+<rect x="572" y="1422" width="181" height="32" rx="16" fill="#faedf3" stroke="none" stroke-width="1"/>
+<text x="662.5" y="1444" fill="#a05277" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="0.5">NATIVE + GRAPH</text>
+<rect x="98" y="1508" width="190" height="92" rx="12" fill="#f7f9fc" stroke="#e2e9f1" stroke-width="1"/>
+<text x="114" y="1540" fill="#a05277" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Local windows</text>
+<text x="114" y="1569" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >pack complete windows</text>
+<rect x="330" y="1508" width="190" height="92" rx="12" fill="#faedf3" stroke="#e2e9f1" stroke-width="1"/>
+<text x="346" y="1540" fill="#a05277" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >CANN attention</text>
+<text x="346" y="1569" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >NPU fused operators</text>
+<rect x="98" y="1608" width="190" height="92" rx="12" fill="#f7f9fc" stroke="#e2e9f1" stroke-width="1"/>
+<text x="114" y="1640" fill="#a05277" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >DeltaNet</text>
+<text x="114" y="1669" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >learned linear branch</text>
+<rect x="330" y="1608" width="190" height="92" rx="12" fill="#faedf3" stroke="#e2e9f1" stroke-width="1"/>
+<text x="346" y="1640" fill="#a05277" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >State &amp; scan</text>
+<text x="346" y="1669" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >FP32 + NPU Graph</text>
+<path d="M 292 1554 L 323 1554" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 292 1654 L 323 1654" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="562" y="1558" width="190" height="96" rx="12" fill="#f7f9fc" stroke="#e2e9f1" stroke-width="1"/>
+<text x="578" y="1597" fill="#a05277" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="700" >Combine</text>
+<text x="578" y="1624" fill="#566b80" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" font-weight="500" >learned branches</text>
+<path d="M 524 1554 L 543 1554 L 543 1584 L 555 1584" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 524 1654 L 543 1654 L 543 1628 L 555 1628" fill="none" stroke="#a0afc0" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="72" y="1750" fill="#536b7f" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" font-weight="700" letter-spacing="1">CUSTOM OPERATORS</text>
+<text x="268" y="1750" fill="#536b7f" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="17" font-weight="400" >VSA · Veda · Spark: Ascend C kernels + native operations.</text>
+<text x="72" y="1780" fill="#536b7f" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" font-weight="700" letter-spacing="1">NATIVE + GRAPH</text>
+<text x="268" y="1780" fill="#536b7f" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="17" font-weight="400" >VDN: CANN / TorchAir / NPU Graph; no custom Ascend C.</text>
+</svg>

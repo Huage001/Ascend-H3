@@ -7,6 +7,13 @@ Without `H3_ASCEND_METHOD`, importing the package changes no backend.
 
 ## Attention paths
 
+The [attention overview](figures/ascend-attention-architecture.svg) summarizes
+these paths. Their entry points are [VSA](../src/h3_ascend/backends/vsa.py),
+[Veda](../src/h3_ascend/backends/veda.py), [Spark](../src/h3_ascend/backends/spark.py)
+and [VDN](../src/h3_ascend/backends/vdn.py). VSA, Veda and Spark use custom
+Ascend C kernels alongside other operations; VDN uses NPU-native operators,
+TorchAir and NPU Graph without a custom Ascend C extension.
+
 * **Full:** CANN fused inference attention. Explicit masks in auxiliary token
   refiners use the upstream masked SDPA path.
 * **VSA:** spatial-temporal logical blocks of 4×4×4 tokens, pooled routing,
