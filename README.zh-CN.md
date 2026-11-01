@@ -1,6 +1,28 @@
-# Ascend-H3
+<p align="center">
+  <img src="docs/assets/ascend-h3-logo.png" alt="Ascend-H3 logo" width="190">
+</p>
 
-[English](README.md)
+<h1 align="center">Ascend-H3</h1>
+
+<div align="center">
+
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![Python: 3.12](https://img.shields.io/badge/python-3.12-blue)](docs/environment.md)
+[![OS: Linux](https://img.shields.io/badge/OS-Linux-lightgrey)](docs/environment.md)
+[![Platform: Ascend 910B3](https://img.shields.io/badge/platform-Ascend%20910B3-0077C8)](docs/validation.md)
+[![Backend: vLLM-Omni](https://img.shields.io/badge/backend-vLLM--Omni-orange)](docs/environment.md)
+
+</div>
+
+<p align="center"><a href="#install">安装</a> | <a href="#models">模型</a> | <a href="#serve">启动服务</a> | <a href="#performance">性能结果</a></p>
+
+<div align="center">
+
+[English](README.md) | **简体中文** | [繁體中文](i18n/README.zh-TW.md) | [한국어](i18n/README.ko.md) | [Español](i18n/README.es.md) | [日本語](i18n/README.ja.md) | [हिन्दी](i18n/README.hi.md) | [मराठी](i18n/README.mr.md) | [Русский](i18n/README.ru.md) | [Português](i18n/README.pt.md) | [తెలుగు](i18n/README.te.md) | [Français](i18n/README.fr.md) | [Deutsch](i18n/README.de.md) | [Italiano](i18n/README.it.md) | [Tiếng Việt](i18n/README.vi.md) | [العربية](i18n/README.ar.md) | [اردو](i18n/README.ur.md) | [বাংলা](i18n/README.bn.md) | [فارسی](i18n/README.fa.md) | [Română](i18n/README.ro.md) | [Türkçe](i18n/README.tr.md)
+
+</div>
+
+![Ascend-H3 ecosystem](docs/assets/ascend-h3-ecosystem.png)
 
 将 MiniMax H3 的 Full、VSA、Veda、VDN、Spark-H3 昇腾注意力实现
 整合到同一个仓库，复用 vLLM-Omni 的模型加载、INT8 量化和 attention
@@ -17,6 +39,8 @@ head 多卡并行。
 
 输出 24 FPS。请求直接指定帧数，关闭插帧。长视频保留原生 345 帧，
 不裁剪成 341 帧。BF16 和 INT8 均使用这两组 1344×768 规格；省略 `--case` 时默认生成 124 帧。
+
+<a id="install"></a>
 
 ## 安装与编译
 
@@ -37,6 +61,8 @@ h3-ascend build --method all --soc Ascend910B3
 只编译一种方法时，将 `all` 换成 `vsa`、`veda` 或 `spark`。
 Full 和 VDN 不需要这里的自定义 CANN 扩展。当前使用源码可编辑安装，
 安装后保留 checkout 中的 `configs/` 和 `csrc/`。
+
+<a id="models"></a>
 
 ## 模型和算法
 
@@ -74,6 +100,8 @@ Veda 始终必须带官方训练好的预测网络。VSA 只接受官方 FastH3 
 采用 8 次前向、80% 视频稀疏率、视频/音频 shift 10/3，不传 `--lora`；
 VDN 只接受官方 stage-DMD 配置，二者不叠加其他 LoRA，也不支持关闭其学生模型。
 全部 LoRA 在计时前、TP 切分及 INT8 量化前合并，推理时不额外执行 LoRA 矩阵乘。
+
+<a id="serve"></a>
 
 ## 启动服务
 
@@ -230,6 +258,8 @@ done
 <!-- END BF16 LAYER RESULTS -->
 
 <!-- BEGIN INT8 E2E MATRIX -->
+
+<a id="performance"></a>
 
 ## INT8 端到端：昇腾单卡、双卡、四卡、八卡
 

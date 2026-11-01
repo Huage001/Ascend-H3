@@ -1,6 +1,28 @@
-# Ascend-H3
+<p align="center">
+  <img src="docs/assets/ascend-h3-logo.png" alt="Ascend-H3 logo" width="190">
+</p>
 
-[中文说明](README.zh-CN.md)
+<h1 align="center">Ascend-H3</h1>
+
+<div align="center">
+
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![Python: 3.12](https://img.shields.io/badge/python-3.12-blue)](docs/environment.md)
+[![OS: Linux](https://img.shields.io/badge/OS-Linux-lightgrey)](docs/environment.md)
+[![Platform: Ascend 910B3](https://img.shields.io/badge/platform-Ascend%20910B3-0077C8)](docs/validation.md)
+[![Backend: vLLM-Omni](https://img.shields.io/badge/backend-vLLM--Omni-orange)](docs/environment.md)
+
+</div>
+
+<p align="center"><a href="#install">Installation</a> | <a href="#models">Models</a> | <a href="#serve">Serve</a> | <a href="#performance">Performance</a></p>
+
+<div align="center">
+
+**English** | [简体中文](README.zh-CN.md) | [繁體中文](i18n/README.zh-TW.md) | [한국어](i18n/README.ko.md) | [Español](i18n/README.es.md) | [日本語](i18n/README.ja.md) | [हिन्दी](i18n/README.hi.md) | [मराठी](i18n/README.mr.md) | [Русский](i18n/README.ru.md) | [Português](i18n/README.pt.md) | [తెలుగు](i18n/README.te.md) | [Français](i18n/README.fr.md) | [Deutsch](i18n/README.de.md) | [Italiano](i18n/README.it.md) | [Tiếng Việt](i18n/README.vi.md) | [العربية](i18n/README.ar.md) | [اردو](i18n/README.ur.md) | [বাংলা](i18n/README.bn.md) | [فارسی](i18n/README.fa.md) | [Română](i18n/README.ro.md) | [Türkçe](i18n/README.tr.md)
+
+</div>
+
+![Ascend-H3 ecosystem](docs/assets/ascend-h3-ecosystem.png)
 
 MiniMax H3 inference on Ascend with Full, VSA, Veda, VDN and Spark-H3
 attention in one repository. The integration reuses vLLM-Omni model loading,
@@ -18,6 +40,8 @@ INT8 transformer quantization and native tensor parallel attention heads.
 Output FPS is 24. Requests use explicit frame counts, with frame interpolation
 disabled. The long case is the agreed native 345-frame workload; it is not
 cropped to 341 frames. BF16 and INT8 use these two 1344×768 workloads. Omitting `--case` selects `1344-124`.
+
+<a id="install"></a>
 
 ## Installation
 
@@ -39,6 +63,8 @@ Builds contain no model weights and run without occupying an NPU. Native
 libraries are compiled locally and kept outside the checkout. For a single
 backend, replace `all` with `vsa`, `veda` or `spark`; Full and VDN do not
 require these custom CANN extensions. Keep the editable checkout available.
+
+<a id="models"></a>
 
 ## Checkpoints and algorithm choices
 
@@ -80,6 +106,8 @@ The official PEFT source is normalized once using its declared alpha/rank;
 prepared files are hash-checked. All selected adapters merge before TP slicing
 and INT8 quantization. There are no request-time LoRA matrix multiplications.
 See [model preparation](docs/weights.md) for source formats and fixed schedules.
+
+<a id="serve"></a>
 
 ## Start a server
 
@@ -248,6 +276,8 @@ Runs from block input to block output, including projections, normalization, RoP
 <!-- END BF16 LAYER RESULTS -->
 
 <!-- BEGIN INT8 E2E MATRIX -->
+
+<a id="performance"></a>
 
 ## INT8 E2E: Ascend 1 / 2 / 4 / 8 cards
 
