@@ -33,6 +33,108 @@ INT8 transformer quantization and native tensor parallel attention heads.
 
 **Validated scope:** 40/40 INT8 E2E cells at 1344×768, 124/345 frames and 1/2/4/8 NPUs (37 fresh measurements and 3 explicitly marked historical layer-Offload cells). The resident BF16 comparison on Ascend 910B3 and PRO 6000 contains 20 attention-core and 20 complete-block measurements. The attention operators retain their validated versions.
 
+## Qualitative results and validation
+
+Ascend 910B3 only: **1344×768, 345 native frames, 24 FPS (14.375 seconds, approximately 14.4 seconds)**, with audio.
+
+All five methods use eight forwards. Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt, common seed **7** and matched Offload.
+
+> A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.
+
+<!-- BEGIN QUALITATIVE GALLERY -->
+<table>
+<tr><th width="50%">BF16</th><th width="50%">INT8 (W8A8)</th></tr>
+<tr>
+<td>
+
+**Full + LightX2V8 · 8 steps**
+
+https://github.com/user-attachments/assets/1751d9fe-3ff9-48d1-a0dd-9ed62d431d17
+
+</td>
+<td>
+
+**Full + LightX2V8 · 8 steps**
+
+https://github.com/user-attachments/assets/0514e9a0-76dd-4946-b4b8-b39ca38d7c69
+
+</td>
+</tr>
+<tr>
+<td>
+
+**VSA · FastH3 V2 · 80% · 8 steps**
+
+https://github.com/user-attachments/assets/4a03fd28-4c88-4b46-b3aa-7dcb4ec4b1c1
+
+</td>
+<td>
+
+**VSA · FastH3 V2 · 80% · 8 steps**
+
+https://github.com/user-attachments/assets/bae64455-0bbc-4708-b33e-1e1a4269e4cf
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Veda + LightX2V8 · 90% · 8 steps**
+
+https://github.com/user-attachments/assets/2c345f2b-4188-48d1-b0fc-6a44dd59800b
+
+</td>
+<td>
+
+**Veda + LightX2V8 · 90% · 8 steps**
+
+https://github.com/user-attachments/assets/bc8e2eb5-b51b-4a53-bf9b-05c432dfe62a
+
+</td>
+</tr>
+<tr>
+<td>
+
+**VDN · official · 8 steps**
+
+https://github.com/user-attachments/assets/5e4d2ced-da14-4e50-b7ac-6ff1d298d478
+
+</td>
+<td>
+
+**VDN · official · 8 steps**
+
+https://github.com/user-attachments/assets/7069c2e4-844c-497b-a824-7a26a515dce2
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Spark-H3 + LightX2V8 · 8 steps**
+
+https://github.com/user-attachments/assets/66032d79-cf29-499e-ad0e-3f1bcaa753a9
+
+</td>
+<td>
+
+**Spark-H3 + LightX2V8 · 8 steps**
+
+https://github.com/user-attachments/assets/c4a787a9-c1e9-46df-97f1-2887c7e49135
+
+</td>
+</tr>
+</table>
+<!-- END QUALITATIVE GALLERY -->
+
+VSA V2 uses 80% video sparsity; Veda uses 90%. Text and audio retain their native rules.
+
+[Parameters, SHA256 and provenance for all ten videos](examples/videos/qualitative-1344-345.json). Full decoding verifies 345 frames and audio; 16 uniform frames per clip were visually reviewed. Distinct students are not asserted to be pixel- or perceptually equivalent. VSA retains shot changes; no flicker-free guarantee is made.
+
+The initial integration targets batch-one T2VA without reference videos.
+See [architecture](docs/architecture.md), [validation status](docs/validation.md)
+and [third-party notices](THIRD_PARTY_NOTICES.md).
+
 ## Default 768p workloads
 
 <table>
@@ -297,105 +399,3 @@ Covered **40/40**: 37 fresh and 3 reused prior measurements. †T: text-encoder 
 <!-- END INT8 E2E MATRIX -->
 
 The earlier matched layer-Offload comparison is retained in the [historical single-card reference](docs/archive/matched-offload-single-card.md). Reused cells in the current table link to unchanged original records.
-
-## Qualitative results and validation
-
-Ascend 910B3 only: **1344×768, 345 native frames, 24 FPS (14.375 seconds, approximately 14.4 seconds)**, with audio.
-
-All five methods use eight forwards. Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt, common seed **7** and matched Offload.
-
-> A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.
-
-<!-- BEGIN QUALITATIVE GALLERY -->
-<table>
-<tr><th width="50%">BF16</th><th width="50%">INT8 (W8A8)</th></tr>
-<tr>
-<td>
-
-**Full + LightX2V8 · 8 steps**
-
-https://github.com/user-attachments/assets/1751d9fe-3ff9-48d1-a0dd-9ed62d431d17
-
-</td>
-<td>
-
-**Full + LightX2V8 · 8 steps**
-
-https://github.com/user-attachments/assets/0514e9a0-76dd-4946-b4b8-b39ca38d7c69
-
-</td>
-</tr>
-<tr>
-<td>
-
-**VSA · FastH3 V2 · 80% · 8 steps**
-
-https://github.com/user-attachments/assets/4a03fd28-4c88-4b46-b3aa-7dcb4ec4b1c1
-
-</td>
-<td>
-
-**VSA · FastH3 V2 · 80% · 8 steps**
-
-https://github.com/user-attachments/assets/bae64455-0bbc-4708-b33e-1e1a4269e4cf
-
-</td>
-</tr>
-<tr>
-<td>
-
-**Veda + LightX2V8 · 90% · 8 steps**
-
-https://github.com/user-attachments/assets/2c345f2b-4188-48d1-b0fc-6a44dd59800b
-
-</td>
-<td>
-
-**Veda + LightX2V8 · 90% · 8 steps**
-
-https://github.com/user-attachments/assets/bc8e2eb5-b51b-4a53-bf9b-05c432dfe62a
-
-</td>
-</tr>
-<tr>
-<td>
-
-**VDN · official · 8 steps**
-
-https://github.com/user-attachments/assets/5e4d2ced-da14-4e50-b7ac-6ff1d298d478
-
-</td>
-<td>
-
-**VDN · official · 8 steps**
-
-https://github.com/user-attachments/assets/7069c2e4-844c-497b-a824-7a26a515dce2
-
-</td>
-</tr>
-<tr>
-<td>
-
-**Spark-H3 + LightX2V8 · 8 steps**
-
-https://github.com/user-attachments/assets/66032d79-cf29-499e-ad0e-3f1bcaa753a9
-
-</td>
-<td>
-
-**Spark-H3 + LightX2V8 · 8 steps**
-
-https://github.com/user-attachments/assets/c4a787a9-c1e9-46df-97f1-2887c7e49135
-
-</td>
-</tr>
-</table>
-<!-- END QUALITATIVE GALLERY -->
-
-VSA V2 uses 80% video sparsity; Veda uses 90%. Text and audio retain their native rules.
-
-[Parameters, SHA256 and provenance for all ten videos](examples/videos/qualitative-1344-345.json). Full decoding verifies 345 frames and audio; 16 uniform frames per clip were visually reviewed. Distinct students are not asserted to be pixel- or perceptually equivalent. VSA retains shot changes; no flicker-free guarantee is made.
-
-The initial integration targets batch-one T2VA without reference videos.
-See [architecture](docs/architecture.md), [validation status](docs/validation.md)
-and [third-party notices](THIRD_PARTY_NOTICES.md).
