@@ -127,13 +127,10 @@ custom Ascend C kernels alongside native operations; VDN uses native CANN
 attention, TorchAir and NPU Graph. See the [integration design](docs/architecture.md)
 for implementation details and precision boundaries.
 
-![VSA attention on Ascend](docs/figures/attention-vsa.svg)
+[![VSA, Veda, VDN and Spark-H3 attention paths on Ascend](docs/figures/attention-paths.svg)](docs/figures/attention-paths.svg)
 
-![Veda attention on Ascend](docs/figures/attention-veda.svg)
-
-![VDN attention on Ascend](docs/figures/attention-vdn.svg)
-
-![Spark-H3 attention on Ascend](docs/figures/attention-spark.svg)
+*Simplified inference paths. Green arrows indicate routing and block selection;
+click the figure to view it at full size.*
 
 <a id="serve"></a>
 
