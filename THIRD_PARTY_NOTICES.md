@@ -1,8 +1,17 @@
 # Third-party code
 
-Original integration and Ascend adaptations are distributed under Apache-2.0.
-Vendored components retain their original licenses; the root license does not
-replace the licenses below. Model weights are not included.
+Project-authored integration and Ascend adaptation contributions in this
+distribution are offered under the PolyForm Noncommercial License 1.0.0; see
+[LICENSE](LICENSE). The license applies only to rights the project licensors
+can grant. Third-party code and its notices retain their original licenses,
+including the licenses below and any license stated in individual files.
+Model weights are not included and are governed by their own licenses.
+
+Earlier project versions were distributed under Apache-2.0. This change does
+not revoke rights previously granted under Apache-2.0. The previous root
+license is retained at [LICENSES/Ascend-H3-Apache-2.0-previous.txt](LICENSES/Ascend-H3-Apache-2.0-previous.txt).
+For uses not permitted by the applicable terms, contact
+[liusonghua@sjtu.edu.cn](mailto:liusonghua@sjtu.edu.cn).
 
 | Component | Source revision | License / location |
 | --- | --- | --- |

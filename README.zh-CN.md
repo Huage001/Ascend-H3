@@ -1,12 +1,37 @@
-# Ascend-H3
+<p align="center">
+  <img src="docs/assets/ascend-h3-logo.png" alt="Ascend-H3 logo" width="190">
+</p>
 
-[English](README.md)
+<h1 align="center">Ascend-H3</h1>
+
+<div align="center">
+
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange)](LICENSE)
+[![Python: 3.12](https://img.shields.io/badge/python-3.12-blue)](docs/environment.md)
+[![OS: Linux](https://img.shields.io/badge/OS-Linux-lightgrey)](docs/environment.md)
+[![Platform: Ascend 910B3](https://img.shields.io/badge/platform-Ascend%20910B3-0077C8)](docs/validation.md)
+[![Backend: vLLM-Omni](https://img.shields.io/badge/backend-vLLM--Omni-orange)](docs/environment.md)
+[![Email: liusonghua@sjtu.edu.cn](https://img.shields.io/badge/%E2%9C%89-Email-0077C8)](mailto:liusonghua@sjtu.edu.cn)
+
+</div>
+
+<p align="center"><a href="#install">安装</a> | <a href="#models">模型</a> | <a href="#serve">启动服务</a> | <a href="#performance">性能结果</a></p>
+
+<div align="center">
+
+[English](README.md) | **简体中文** | [繁體中文](i18n/README.zh-TW.md) | [한국어](i18n/README.ko.md) | [Español](i18n/README.es.md) | [日本語](i18n/README.ja.md) | [हिन्दी](i18n/README.hi.md) | [मराठी](i18n/README.mr.md) | [Русский](i18n/README.ru.md) | [Português](i18n/README.pt.md) | [తెలుగు](i18n/README.te.md) | [Français](i18n/README.fr.md) | [Deutsch](i18n/README.de.md) | [Italiano](i18n/README.it.md) | [Tiếng Việt](i18n/README.vi.md) | [العربية](i18n/README.ar.md) | [اردو](i18n/README.ur.md) | [বাংলা](i18n/README.bn.md) | [فارسی](i18n/README.fa.md) | [Română](i18n/README.ro.md) | [Türkçe](i18n/README.tr.md)
+
+</div>
+
+![Ascend-H3 ecosystem](docs/assets/ascend-h3-ecosystem.png)
+
+> **许可说明：**本发行版本中的项目自有贡献采用 [PolyForm Noncommercial 1.0.0 非商用许可](LICENSE)。第三方代码和模型权重适用各自的条款，之前授予的 Apache-2.0 权利不受影响，详见[第三方许可说明](THIRD_PARTY_NOTICES.md)。超出适用条款的使用可联系 [liusonghua@sjtu.edu.cn](mailto:liusonghua@sjtu.edu.cn)。
 
 将 MiniMax H3 的 Full、VSA、Veda、VDN、Spark-H3 昇腾注意力实现
 整合到同一个仓库，复用 vLLM-Omni 的模型加载、INT8 量化和 attention
-head 多卡并行。
+head 多卡并行，并支持可选的张量并行（TP）与序列并行（SP）。
 
-**已验证范围：**1344×768、124/345 帧、1/2/4/8 卡的 INT8 端到端共 40/40 项，其中 37 项本轮新测、3 项明确标记的历史分层 Offload 实测。昇腾 910B3 与 PRO 6000 的 BF16 常驻对照包含 20 项注意力核心和 20 项完整 DiT block 测量；注意力算子保留此前已验收版本。
+**已验证范围：**1344×768、124/345 帧、1/2/4/8 卡的 INT8 端到端共 40/40 项，其中 37 项本轮新测、3 项明确标记的历史分层 Offload 实测。昇腾 910B3 与 PRO 6000 的 BF16 常驻对照包含 20 项注意力核心和 20 项完整 DiT block 测量；注意力算子保留此前已验收版本。 新增 **30/30 组新测 SP 结果**，覆盖双／四／八卡的两种时长；全部 DiT 常驻，使用文本编码器 Offload 的格子单独标记。
 
 ## 默认 768p 视频规格
 
@@ -17,6 +42,8 @@ head 多卡并行。
 
 输出 24 FPS。请求直接指定帧数，关闭插帧。长视频保留原生 345 帧，
 不裁剪成 341 帧。BF16 和 INT8 均使用这两组 1344×768 规格；省略 `--case` 时默认生成 124 帧。
+
+<a id="install"></a>
 
 ## 安装与编译
 
@@ -37,6 +64,8 @@ h3-ascend build --method all --soc Ascend910B3
 只编译一种方法时，将 `all` 换成 `vsa`、`veda` 或 `spark`。
 Full 和 VDN 不需要这里的自定义 CANN 扩展。当前使用源码可编辑安装，
 安装后保留 checkout 中的 `configs/` 和 `csrc/`。
+
+<a id="models"></a>
 
 ## 模型和算法
 
@@ -74,6 +103,8 @@ Veda 始终必须带官方训练好的预测网络。VSA 只接受官方 FastH3 
 采用 8 次前向、80% 视频稀疏率、视频/音频 shift 10/3，不传 `--lora`；
 VDN 只接受官方 stage-DMD 配置，二者不叠加其他 LoRA，也不支持关闭其学生模型。
 全部 LoRA 在计时前、TP 切分及 INT8 量化前合并，推理时不额外执行 LoRA 矩阵乘。
+
+<a id="serve"></a>
 
 ## 启动服务
 
@@ -146,7 +177,7 @@ Veda 在分片后仍使用原 checkpoint 的全局 head 编号。
 `sp` 的兼容别名，默认仍为 TP。SP 支持单／双／四／八卡；TP 另支持七卡。
 原生 VAE 分块解码现在默认使用全部选中卡（`--vae-parallel-size 0`），
 可用 `--vae-parallel-size 1` 改为单个解码 rank。INT8 Full、124 帧的
-单卡、双卡、四卡、八卡 VAE 完整链路已通过；其他方法和帧数继续按矩阵验收。
+单卡、双卡、四卡、八卡 VAE 完整链路已通过；新增 SP 的五种方法、两种帧数、双／四／八卡共 30 组也已全部完成验收。
 
 NPU 的 DiT 常驻模式会在服务就绪前准备 AdaLN 结果。准备过程读取实际加载的
 模型及已合并 LoRA，解析生效的 sigma 序列、DiT 更新次数及视频／音频 shift，
@@ -172,32 +203,43 @@ Spark/VSA/VDN 的单卡 345 帧使用 `--offload layer --no-precompute-adaln`，
 ```bash
 export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
 h3-ascend serve --method spark --model /models/MiniMax-H3 \
-  --precision int8 --devices 4 --parallel sp --steps 8 --offload none
+  --precision int8 --devices 4 --parallel sp --steps 8 --offload text
 
 # VDN 保留官方学生模型与原始 128 维 linear 分支。
 h3-ascend serve --method vdn --model /models/MiniMax-H3 \
   --lora /models/VDN/stage-dmd-step-250 \
-  --precision int8 --devices 4 --parallel sp --steps 8 --offload none
+  --precision int8 --devices 4 --parallel sp --steps 8 --offload text
 ```
 
 SP 将 FFN 和残差运算按 token 行分配，保留每卡完整的 DiT 主权重。
-INT8 双／四卡且 DiT 常驻时，QKV 路径交换原生 W8A8 本来就需要的输入激活
+INT8 双／四卡的默认常驻路径交换原生 W8A8 本来就需要的输入激活
 及 FP32 缩放系数，再只计算当前 rank 负责的 heads。head 权重缓存从已合并
 LoRA、已量化的权重生成。注意力核心及 BF16 输出回传沿用原实现，不额外引入
 有损通信量化。该路径的每个 rank 在请求准备时缓存完整 RoPE 表，供所有层和步复用。
 八卡输入 AllGather 实测更慢，因此仍交换 BF16 QKV；BF16 推理和 DiT 流式
 加载也保留原路径。可用 `H3_ASCEND_INPUT_EXCHANGE=0` 在双／四卡选择原 SP 路径。
 
-VSA 保留原门控投影，门控单独重分布。VDN 的 linear 分支复用已准备好的
+VSA 保留原门控投影，门控单独重分布。启用前置投影路径时，VDN 的 linear 分支复用已准备好的
 完整序列、局部 heads 的原始 QKV，保留 BF16 分支输入、原始特征映射、求逆、
 扫描和读出。VDN 的逐位核验以同一 SP head 划分为参照；head 划分本身与单次
 完整 heads 的分支调用可能存在浮点差异。
+
+
+这些 SP 启动示例采用 `text`，便于同时请求两种帧数。实测策略是：双卡全部
+仅文本 Offload；四卡 124 帧全部 `none`，345 帧的 Full／VSA／Veda 用 `none`、
+VDN／Spark 用 `text`；八卡全部 `none`。VAE 默认使用全部选中卡，DiT 不逐层
+卸载。VDN 双卡 345 帧还须设置 `H3_ASCEND_INPUT_EXCHANGE=0`，以去掉额外
+的 head 权重缓存；模型保留原有 INT8 配方。完整启动方式见
+[SP 服务指南](docs/serving.md#sequence-parallel-inference)。
+
+<a id="performance"></a>
+<a id="sp-performance"></a>
 
 <!-- BEGIN SP E2E MATRIX -->
 
 ## 新测 INT8 SP：双卡／四卡／八卡
 
-1344×768、8 次实际 DiT 更新、seed7。每个设定为**一次带对齐检查的预热、一次正式请求**，不追加 profile 请求，30 格均为新测。计时包括文本编码、视频／音频解码与 MP4 写入，排除模型加载、提前合并 LoRA 和启动阶段的 AdaLN 准备。每格列出 SP 耗时及同卡数原 TP 耗时除以 SP 耗时的比值；这是完整链路对照，不是纯通信加速比。
+1344×768、8 次实际 DiT 更新、seed 7。每个设定为**一次带对齐检查的预热、一次正式请求**，不追加 profile 请求，30 格均为新测。计时包括文本编码、视频／音频解码与 MP4 写入，排除模型加载、提前合并 LoRA 和启动阶段的 AdaLN 准备。每格列出 SP 耗时及同卡数原 TP 耗时除以 SP 耗时的比值；这是完整链路对照，不是纯通信加速比。
 
 | 帧数 | 方法 | SP2 · 相对 TP2 | SP4 · 相对 TP4 | SP8 · 相对 TP8 |
 | ---: | --- | ---: | ---: | ---: |
@@ -285,7 +327,7 @@ done
 
 <!-- BEGIN INT8 E2E MATRIX -->
 
-## INT8 端到端：昇腾单卡、双卡、四卡、八卡
+## TP 参考：INT8 单卡、双卡、四卡、八卡
 
 1344×768，八次实际 DiT 更新，端到端包含文本编码、音视频解码与 MP4 写出；不含加载、提前 LoRA merge、AdaLN 准备和预热。优先让 DiT 常驻；常驻组正式请求前后逐 rank 核验 AdaLN 零未命中与零权重搬运。明确标记的单卡 345 帧组在实际显存不足后改用原生分层 Offload，并按用户要求复用配置一致、已完整验收的历史实测；逐项标记来源，不视为新测。
 
