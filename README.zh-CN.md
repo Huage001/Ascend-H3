@@ -6,11 +6,12 @@
 
 <div align="center">
 
-[![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange)](LICENSE)
 [![Python: 3.12](https://img.shields.io/badge/python-3.12-blue)](docs/environment.md)
 [![OS: Linux](https://img.shields.io/badge/OS-Linux-lightgrey)](docs/environment.md)
 [![Platform: Ascend 910B3](https://img.shields.io/badge/platform-Ascend%20910B3-0077C8)](docs/validation.md)
 [![Backend: vLLM-Omni](https://img.shields.io/badge/backend-vLLM--Omni-orange)](docs/environment.md)
+[![Email: liusonghua@sjtu.edu.cn](https://img.shields.io/badge/%E2%9C%89-Email-0077C8)](mailto:liusonghua@sjtu.edu.cn)
 
 </div>
 
@@ -23,6 +24,8 @@
 </div>
 
 ![Ascend-H3 ecosystem](docs/assets/ascend-h3-ecosystem.png)
+
+> **许可说明：**本发行版本中的项目自有贡献采用 [PolyForm Noncommercial 1.0.0 非商用许可](LICENSE)。第三方代码和模型权重适用各自的条款，之前授予的 Apache-2.0 权利不受影响，详见[第三方许可说明](THIRD_PARTY_NOTICES.md)。超出适用条款的使用可联系 [liusonghua@sjtu.edu.cn](mailto:liusonghua@sjtu.edu.cn)。
 
 将 MiniMax H3 的 Full、VSA、Veda、VDN、Spark-H3 昇腾注意力实现
 整合到同一个仓库，复用 vLLM-Omni 的模型加载、INT8 量化和 attention

@@ -6,11 +6,12 @@
 
 <div align="center">
 
-[![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](../LICENSE)
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange)](../LICENSE)
 [![Python: 3.12](https://img.shields.io/badge/python-3.12-blue)](../docs/environment.md)
 [![OS: Linux](https://img.shields.io/badge/OS-Linux-lightgrey)](../docs/environment.md)
 [![Platform: Ascend 910B3](https://img.shields.io/badge/platform-Ascend%20910B3-0077C8)](../docs/validation.md)
 [![Backend: vLLM-Omni](https://img.shields.io/badge/backend-vLLM--Omni-orange)](../docs/environment.md)
+[![Email: liusonghua@sjtu.edu.cn](https://img.shields.io/badge/%E2%9C%89-Email-0077C8)](mailto:liusonghua@sjtu.edu.cn)
 
 </div>
 
@@ -23,6 +24,8 @@
 </div>
 
 ![Ascend-H3 ecosystem](../docs/assets/ascend-h3-ecosystem.png)
+
+> **License:** Project-authored contributions in this distribution are offered under the [PolyForm Noncommercial License 1.0.0](../LICENSE). Third-party code and model weights have separate terms, and earlier Apache-2.0 grants remain in effect. See [third-party notices](../THIRD_PARTY_NOTICES.md). For uses not covered by the applicable terms, contact [liusonghua@sjtu.edu.cn](mailto:liusonghua@sjtu.edu.cn).
 
 > 이 완전한 README는 커밋 be5c42e03f9a에 있는 영어 README의 AI 지원 번역입니다. 구식이 될 수 있습니다. 최신 정보는 영어 버전을 참조하세요. [English](../README.md)
 
