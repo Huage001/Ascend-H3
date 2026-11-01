@@ -10,19 +10,41 @@ METHODS = ("full", "vsa", "veda", "vdn", "spark")
 
 
 def serve_environment(a):
+    sp = getattr(a, "parallel", "tp") in ("sp", "ulysses")
+    devices = getattr(a, "devices", 1)
+    eligible_input = (
+        sp
+        and devices in (2, 4)
+        and getattr(a, "precision", "bf16") == "int8"
+        and a.offload in ("none", "text")
+        and os.getenv("H3_ASCEND_CUDA_REFERENCE") != "1"
+    )
+    input_setting = os.getenv("H3_ASCEND_INPUT_EXCHANGE", "auto")
+    if input_setting not in ("auto", "0", "1"):
+        raise ValueError("H3_ASCEND_INPUT_EXCHANGE must be auto,0 or1")
+    if input_setting == "1" and not eligible_input:
+        raise ValueError("Input projection exchange requires Ascend INT8 SP2/SP4 with resident DiT")
     configured = getattr(a, "precompute_adaln", None)
     if configured is None:
-        configured = (os.getenv("H3_ASCEND_PRECOMPUTE_ADALN") == "1"
-                      if "H3_ASCEND_PRECOMPUTE_ADALN" in os.environ
-                      else a.offload in ("none", "text"))
+        configured = (
+            os.getenv("H3_ASCEND_PRECOMPUTE_ADALN") == "1"
+            if "H3_ASCEND_PRECOMPUTE_ADALN" in os.environ
+            else a.offload in ("none", "text")
+        )
     if configured and a.offload not in ("none", "text"):
-        raise ValueError("Startup AdaLN preparation requires resident DiT; use --offload none/text or --no-precompute-adaln")
+        raise ValueError(
+            "Startup AdaLN preparation requires resident DiT; use --offload none/text or --no-precompute-adaln"
+        )
     steps = getattr(a, "steps", None)
     if steps is not None and steps < 1:
         raise ValueError("Startup DiT steps must be positive")
     result = {
         "H3_ASCEND_METHOD": a.method,
         "H3_ASCEND_PRECOMPUTE_ADALN": "1" if configured else "0",
+        "H3_ASCEND_SEQUENCE_COMM": os.getenv("H3_ASCEND_SEQUENCE_COMM", "auto" if sp else "native"),
+        "H3_ASCEND_VDN_SP": "1" if sp and a.method == "vdn" and devices > 1 else "0",
+        "H3_ASCEND_VDN_SP_CACHE_VIEWS": "1" if a.offload in ("none", "text") else "0",
+        "H3_ASCEND_INPUT_EXCHANGE": "1" if eligible_input and input_setting != "0" else "0",
         # A 345-frame request can exceed the upstream 600-second RPC deadline.
         # Keep the native failure handling, but allow a complete long request.
         "VLLM_OMNI_DLO_DP_WAVE_TIMEOUT": os.getenv("VLLM_OMNI_DLO_DP_WAVE_TIMEOUT", "7200"),
@@ -33,8 +55,9 @@ def serve_environment(a):
 
 
 def command(a):
-    if a.parallel == "ulysses" and a.method == "vdn":
-        raise ValueError("upstream VDN requires native TP head sharding; use --parallel tp")
+    sp = a.parallel in ("sp", "ulysses")
+    if sp and a.devices not in (1, 2, 4, 8):
+        raise ValueError("SP supports one,two,four or eight devices")
     if a.devices not in (1, 2, 4, 7, 8):
         raise ValueError("device count must divide the 56 attention heads")
     backend = {
@@ -55,12 +78,16 @@ def command(a):
     config = {"mode": "module" if policy == "module" else "layer", "components": components}
     if policy != "module":
         config["layer_options"] = {key: layer_options[key] for key in components}
-    offload = [] if policy == "none" else [
-        "--diffusion-offload-config",
-        json.dumps(config),
-    ]
-    tp = a.devices if a.parallel == "tp" else 1
-    usp = a.devices if a.parallel == "ulysses" else 1
+    offload = (
+        []
+        if policy == "none"
+        else [
+            "--diffusion-offload-config",
+            json.dumps(config),
+        ]
+    )
+    tp = 1 if sp else a.devices
+    usp = a.devices if sp else 1
     encoder_tp = a.devices if a.devices in (1, 2, 4, 8) else 1
     vae_parallel = getattr(a, "vae_parallel_size", 0) or a.devices
     if vae_parallel not in (1, a.devices):
@@ -68,9 +95,11 @@ def command(a):
     cmd = [
         sys.executable,
         "-m",
-        ("h3_ascend.integrations.cuda_launch"
-         if os.getenv("H3_ASCEND_CUDA_REFERENCE") == "1"
-         else "vllm_omni.entrypoints.cli.main"),
+        (
+            "h3_ascend.integrations.cuda_launch"
+            if os.getenv("H3_ASCEND_CUDA_REFERENCE") == "1"
+            else "vllm_omni.entrypoints.cli.main"
+        ),
         "serve",
         a.model,
         "--omni",
@@ -105,11 +134,20 @@ def command(a):
     ]
     if os.getenv("H3_ASCEND_CUDA_REFERENCE") == "1" and a.method == "vsa":
         index = cmd.index("--diffusion-attention-backend")
-        del cmd[index:index + 2]
-        cmd += ["--diffusion-attention-config", json.dumps({"default": {
-            "backend": "FASTVIDEO_VSA", "fastvideo_vsa_provider": "triton",
-            "fastvideo_vsa_precision": "bf16",
-        }, "per_role": {"minimax_h3.token_refiner": {"backend": "FLASH_ATTN"}}})]
+        del cmd[index : index + 2]
+        cmd += [
+            "--diffusion-attention-config",
+            json.dumps(
+                {
+                    "default": {
+                        "backend": "FASTVIDEO_VSA",
+                        "fastvideo_vsa_provider": "triton",
+                        "fastvideo_vsa_precision": "bf16",
+                    },
+                    "per_role": {"minimax_h3.token_refiner": {"backend": "FLASH_ATTN"}},
+                }
+            ),
+        ]
     if a.precision == "int8":
         cmd += [
             "--diffusion-quantization-config",
@@ -142,28 +180,58 @@ def main():
     s = sub.add_parser("serve")
     s.add_argument("--method", choices=METHODS, required=True)
     s.add_argument("--model", required=True)
-    s.add_argument("--lora", help="Official VDN student, or a prepared community adapter; VSA V2 is a full checkpoint")
+    s.add_argument(
+        "--lora",
+        help="Official VDN student, or a prepared community adapter; VSA V2 is a full checkpoint",
+    )
     s.add_argument("--few-step-lora", action=argparse.BooleanOptionalAction, default=True)
-    s.add_argument("--few-step-source", type=Path, help="Local pinned LightX2V file; otherwise download")
+    s.add_argument(
+        "--few-step-source", type=Path, help="Local pinned LightX2V file; otherwise download"
+    )
     s.add_argument("--precision", choices=["bf16", "int8"], default="bf16")
     s.add_argument("--devices", type=int, default=1)
-    s.add_argument("--steps", type=int,
-                   help="Startup DiT updates for AdaLN preparation; default resolves the loaded model/LoRA schedule")
-    s.add_argument("--precompute-adaln", action=argparse.BooleanOptionalAction, default=None,
-                   help="Prepare exact schedule-bound AdaLN outputs at startup; defaults on for resident DiT")
-    s.add_argument("--parallel", choices=["tp", "ulysses"], default="tp")
-    s.add_argument("--offload", choices=["none", "text", "module", "layer"], default="none",
-                   help="Keep weights resident by default; text offloads only the text encoder")
-    s.add_argument("--vae-parallel-size", type=int, default=0,
-                   help="Native tiled VAE decode: default 0 uses all selected cards; 1 uses one")
+    s.add_argument(
+        "--steps",
+        type=int,
+        help="Startup DiT updates for AdaLN preparation; default resolves the loaded model/LoRA schedule",
+    )
+    s.add_argument(
+        "--precompute-adaln",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Prepare exact schedule-bound AdaLN outputs at startup; defaults on for resident DiT",
+    )
+    s.add_argument(
+        "--parallel",
+        type=str.lower,
+        choices=["tp", "sp", "ulysses"],
+        default="tp",
+        help="DiT TP or sequence parallelism; ulysses is a compatible alias for sp",
+    )
+    s.add_argument(
+        "--offload",
+        choices=["none", "text", "module", "layer"],
+        default="none",
+        help="Keep weights resident by default; text offloads only the text encoder",
+    )
+    s.add_argument(
+        "--vae-parallel-size",
+        type=int,
+        default=0,
+        help="Native tiled VAE decode: default 0 uses all selected cards; 1 uses one",
+    )
     s.add_argument("--host", default="127.0.0.1")
     s.add_argument("--port", type=int, default=8000)
     s.add_argument("--predictor")
     s.add_argument("--dry-run", action="store_true")
     r = sub.add_parser("generate")
     r.add_argument("--url", default="http://127.0.0.1:8000")
-    r.add_argument("--case", choices=["1344-124", "1344-345"], default="1344-124",
-                   help="Native 768p workload (default: 124 frames)")
+    r.add_argument(
+        "--case",
+        choices=["1344-124", "1344-345"],
+        default="1344-124",
+        help="Native 768p workload (default: 124 frames)",
+    )
     r.add_argument("--prompt-file", type=Path, required=True)
     r.add_argument("--output", type=Path, required=True)
     r.add_argument("--steps", type=int, help="Override the profile step count")
@@ -171,15 +239,17 @@ def main():
     r.add_argument("--few-step-lora", action=argparse.BooleanOptionalAction, default=True)
     r.add_argument("--seed", type=int, default=42)
     r.add_argument("--guidance-scale", type=float, help="Omit to retain the model's native policy")
-    legacy = sub.add_parser(
-        "prepare-lora", help="Prepare an H3 adapter for load-time fusion"
-    )
+    legacy = sub.add_parser("prepare-lora", help="Prepare an H3 adapter for load-time fusion")
     legacy.add_argument("--source", type=Path, required=True)
     legacy.add_argument("--output", type=Path, required=True)
     legacy.add_argument(
-        "--source-format", choices=["diffusers-scaled", "raw-h3", "peft"], default="diffusers-scaled"
+        "--source-format",
+        choices=["diffusers-scaled", "raw-h3", "peft"],
+        default="diffusers-scaled",
     )
-    legacy.add_argument("--steps", type=int, help="Pin a distilled schedule; omit for a general LoRA")
+    legacy.add_argument(
+        "--steps", type=int, help="Pin a distilled schedule; omit for a general LoRA"
+    )
     legacy.add_argument("--video-shift", type=float, default=12.0)
     legacy.add_argument("--audio-shift", type=float, default=3.0)
     a = p.parse_args()

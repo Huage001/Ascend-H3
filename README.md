@@ -4,7 +4,7 @@
 
 MiniMax H3 inference on Ascend with Full, VSA, Veda, VDN and Spark-H3
 attention in one repository. The integration reuses vLLM-Omni model loading,
-INT8 transformer quantization and native tensor parallel attention heads.
+INT8 transformer quantization and selectable tensor / sequence parallel inference.
 
 **Validated scope:** 40/40 INT8 E2E cells at 1344×768, 124/345 frames and 1/2/4/8 NPUs (37 fresh measurements and 3 explicitly marked historical layer-Offload cells). The resident BF16 comparison on Ascend 910B3 and PRO 6000 contains 20 attention-core and 20 complete-block measurements. The attention operators retain their validated versions.
 
@@ -151,7 +151,9 @@ platforms. New end-to-end measurements use **INT8 only**, starting with resident
 execution and marking every necessary Offload fallback. The isolated attention
 and DiT-block comparison uses BF16 on both devices: layers 0/24/49, three runs
 each, summing the nine timings and dividing by nine. Optional
-`--parallel ulysses` is exposed for non-VDN paths; TP remains the default.
+Select `--parallel tp` or `--parallel sp` for all five attention methods.
+`ulysses` remains an alias for `sp`; TP remains the default. SP supports
+1/2/4/8 cards, while TP additionally supports seven cards.
 Native tiled VAE decoding now defaults to all selected cards
 (`--vae-parallel-size 0`); use `--vae-parallel-size 1` for a single decoder rank.
 The INT8 Full / 124-frame pipeline has passed with one, two, four and eight
@@ -181,6 +183,42 @@ The launcher sets the native worker request deadline to 7200 seconds so a long
 video is not aborted by the upstream 600-second default. Set
 `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` before launch to override this limit; it changes
 waiting behavior, not model computation or the measured request duration.
+
+### Sequence parallel inference
+
+```bash
+export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
+h3-ascend serve --method spark --model /models/MiniMax-H3 \
+  --precision int8 --devices 4 --parallel sp --steps 8 --offload none
+
+# VDN keeps its official student and original 128-dimensional linear branch.
+h3-ascend serve --method vdn --model /models/MiniMax-H3 \
+  --lora /models/VDN/stage-dmd-step-250 \
+  --precision int8 --devices 4 --parallel sp --steps 8 --offload none
+```
+
+SP distributes token rows through FFN and residual operations while retaining
+replicated DiT master weights. For resident INT8 SP2/SP4, the QKV path exchanges
+the input activation and FP32 scale already required by native W8A8, then projects
+only this rank's heads. Head-local weight caches are prepared after LoRA fusion
+and quantization. Attention cores and BF16 output redistribution are unchanged;
+there is no additional lossy communication quantization. On this path every rank
+prepares a complete RoPE table once per request and shares it across layers and steps.
+SP8 retains BF16 QKV redistribution because input AllGather was slower at that
+degree. BF16 inference and DiT streaming also retain the original QKV path.
+Set `H3_ASCEND_INPUT_EXCHANGE=0` to request that reference path on SP2/SP4.
+
+VSA preserves the original gate projection and redistributes its gate separately.
+VDN reuses the full-sequence head-local raw QKV for its original linear branch,
+retaining BF16 branch inputs, original features/inverse/scans, and readout.
+VDN comparisons qualify against the same SP head partition; head partitioning
+itself can have floating-point differences from a single full-head branch call.
+
+<!-- BEGIN SP E2E MATRIX -->
+
+<!-- Fresh30 SP results are inserted here only after all guarded cases pass. -->
+
+<!-- END SP E2E MATRIX -->
 
 ## Generate the two 768p cases
 

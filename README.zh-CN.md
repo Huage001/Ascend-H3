@@ -142,7 +142,8 @@ Veda 在分片后仍使用原 checkpoint 的全局 head 编号。
 新一轮端到端**只测试 INT8**，优先常驻，必要的 Offload 回退会单独标记。
 双方 attention/DiT block 对照统一 BF16，取第 0/24/49 层，每层跑三次，
 九次耗时之和除以九得到每层平均时延。
-非 VDN 方法另提供 `--parallel ulysses`；默认使用 TP。
+五种注意力均可选择 `--parallel tp` 或 `--parallel sp`；`ulysses` 保留为
+`sp` 的兼容别名，默认仍为 TP。SP 支持单／双／四／八卡；TP 另支持七卡。
 原生 VAE 分块解码现在默认使用全部选中卡（`--vae-parallel-size 0`），
 可用 `--vae-parallel-size 1` 改为单个解码 rank。INT8 Full、124 帧的
 单卡、双卡、四卡、八卡 VAE 完整链路已通过；其他方法和帧数继续按矩阵验收。
@@ -165,6 +166,38 @@ Spark/VSA/VDN 的单卡 345 帧使用 `--offload layer --no-precompute-adaln`，
 启动器将原生工作进程的单次请求等待上限设为 7200 秒，避免长视频被上游默认的
 600 秒上限中止。可在启动前设置 `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` 覆盖；这只
 调整等待上限，不改变模型计算或请求计时。
+
+### 序列并行推理
+
+```bash
+export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
+h3-ascend serve --method spark --model /models/MiniMax-H3 \
+  --precision int8 --devices 4 --parallel sp --steps 8 --offload none
+
+# VDN 保留官方学生模型与原始 128 维 linear 分支。
+h3-ascend serve --method vdn --model /models/MiniMax-H3 \
+  --lora /models/VDN/stage-dmd-step-250 \
+  --precision int8 --devices 4 --parallel sp --steps 8 --offload none
+```
+
+SP 将 FFN 和残差运算按 token 行分配，保留每卡完整的 DiT 主权重。
+INT8 双／四卡且 DiT 常驻时，QKV 路径交换原生 W8A8 本来就需要的输入激活
+及 FP32 缩放系数，再只计算当前 rank 负责的 heads。head 权重缓存从已合并
+LoRA、已量化的权重生成。注意力核心及 BF16 输出回传沿用原实现，不额外引入
+有损通信量化。该路径的每个 rank 在请求准备时缓存完整 RoPE 表，供所有层和步复用。
+八卡输入 AllGather 实测更慢，因此仍交换 BF16 QKV；BF16 推理和 DiT 流式
+加载也保留原路径。可用 `H3_ASCEND_INPUT_EXCHANGE=0` 在双／四卡选择原 SP 路径。
+
+VSA 保留原门控投影，门控单独重分布。VDN 的 linear 分支复用已准备好的
+完整序列、局部 heads 的原始 QKV，保留 BF16 分支输入、原始特征映射、求逆、
+扫描和读出。VDN 的逐位核验以同一 SP head 划分为参照；head 划分本身与单次
+完整 heads 的分支调用可能存在浮点差异。
+
+<!-- BEGIN SP E2E MATRIX -->
+
+<!-- 仅在30组受保护的新SP测试全部通过后插入结果。 -->
+
+<!-- END SP E2E MATRIX -->
 
 ## 生成两组 768p 视频
 

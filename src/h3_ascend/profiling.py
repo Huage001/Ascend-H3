@@ -90,6 +90,7 @@ def install():
 
         rank_metadata = {
             "pid": os.getpid(),
+            **__import__("h3_ascend.parallel_runtime",fromlist=["metadata"]).metadata(model),
             "tp_rank": get_tensor_model_parallel_rank(),
             "tp_world_size": get_tensor_model_parallel_world_size(),
             "local_attention_heads": [block.attn.num_heads for block in model.blocks],

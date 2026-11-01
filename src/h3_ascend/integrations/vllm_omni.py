@@ -40,6 +40,15 @@ def register():
 
     install_adaln_precompute()
 
+    from h3_ascend.integrations.sequence_communication import (
+        install as install_sequence_communication,
+    )
+
+    install_sequence_communication()
+    from h3_ascend.integrations.input_projection import install as install_input_projection
+
+    install_input_projection()
+
     if os.getenv("H3_ASCEND_DORMANT_VISION_MMAP") == "1":
         from h3_ascend.integrations.dormant_memory import install as install_dormant_memory
 
@@ -69,6 +78,9 @@ def register():
         from h3_ascend.backends.vdn import install
 
         install()
+        from h3_ascend.integrations.vdn_sequence import install as install_vdn_sequence
+
+        install_vdn_sequence()
     else:
         register_diffusion_backend(
             E.TORCH_SDPA, "h3_ascend.integrations.vllm_omni.AscendSparseBackend"

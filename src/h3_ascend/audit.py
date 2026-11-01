@@ -67,6 +67,7 @@ def install():
                 "pin_memory": policy.pin_memory,
                 "block_hooks": hooks,
                 "linear_methods": linears,
+                **__import__("h3_ascend.parallel_runtime",fromlist=["metadata"]).metadata(self),
                 "tp_rank": tp_rank,
                 "tp_world_size": tp_size,
                 "local_attention_heads": [block.attn.num_heads for block in self.blocks],
@@ -76,7 +77,14 @@ def install():
             self._h3_audit_counts = [0] * len(self.blocks)
             self._h3_audit_gates = [None] * len(self.blocks)
             self._h3_audit_handles = []
+            self._h3_local_block_shapes = {}
+            self._h3_global_block_tokens = {}
             for i, block in enumerate(self.blocks):
+
+                def capture_input(module, inputs, keyword_inputs, index=i):
+                    self._h3_local_block_shapes[index]=list(inputs[0].shape)
+                    self._h3_global_block_tokens[index]=int(keyword_inputs['packed_total'])
+                self._h3_audit_handles.append(block.register_forward_pre_hook(capture_input,with_kwargs=True))
 
                 def count(module, inputs, output, index=i):
                     self._h3_audit_counts[index] += 1
@@ -103,6 +111,10 @@ def install():
             "pid": os.getpid(),
             "method": os.environ["H3_ASCEND_METHOD"],
             "output_shapes": [list(value.shape) for value in tensors],
+            "local_block_input_shapes": self._h3_local_block_shapes,
+            "global_block_packed_tokens": self._h3_global_block_tokens,
+            "vdn_sequence_calls": [getattr(block.attn.vdn, "_h3_vdn_sequence_calls", 0)
+                                   if block.attn.vdn is not None else 0 for block in self.blocks],
             "finite": finite,
             "block_forward_counts": [a - b for a, b in zip(self._h3_audit_counts, before)],
             "qkv_weight_dtypes": [
