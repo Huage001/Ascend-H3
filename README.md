@@ -122,12 +122,18 @@ See [model preparation](docs/weights.md) for source formats and fixed schedules.
 
 ## Attention on Ascend
 
-VSA, Veda and Spark combine custom Ascend C kernels with other NPU operations.
-VDN adapts native CANN attention and uses TorchAir and NPU Graph to optimize
-its learned branch. See the [integration design](docs/architecture.md) for the
-execution and precision boundaries.
+Each backend follows a distinct NPU execution path. VSA, Veda and Spark use
+custom Ascend C kernels alongside native operations; VDN uses native CANN
+attention, TorchAir and NPU Graph. See the [integration design](docs/architecture.md)
+for implementation details and precision boundaries.
 
-![Ascend attention architecture for VSA, Veda, Spark-H3 and VDN](docs/figures/ascend-attention-architecture.svg)
+![VSA attention on Ascend](docs/figures/attention-vsa.svg)
+
+![Veda attention on Ascend](docs/figures/attention-veda.svg)
+
+![Spark-H3 attention on Ascend](docs/figures/attention-spark.svg)
+
+![VDN attention on Ascend](docs/figures/attention-vdn.svg)
 
 <a id="serve"></a>
 
