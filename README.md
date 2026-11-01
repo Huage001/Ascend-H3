@@ -237,18 +237,30 @@ Runs from block input to block output, including projections, normalization, RoP
 
 1344×768, eight actual DiT updates, including text encoding, video/audio decoding and MP4 writing. Loading, prior LoRA merge, AdaLN preparation and warmups are excluded. Prefer resident DiT; resident rows verify zero AdaLN misses and weight transfers on every rank around the formal request. After recorded OOMs, the marked single-card 345-frame cells use native layer Offload and reuse matching, fully validated prior measurements as requested; these cells are explicitly marked rather than presented as fresh measurements.
 
-| Frames | Method | 1 card | 2 cards | 4 cards | 8 cards |
-| ---: | --- | ---: | ---: | ---: | ---: |
-| 124 | Full | 197.66 s †T | 116.03 s | 64.78 s | 35.87 s |
-| 124 | VSA V2 · 80% | 146.81 s †T | 93.57 s | 53.47 s | 30.40 s |
-| 124 | Veda · 90% | 97.40 s †T | 69.66 s | 43.38 s | 25.33 s |
-| 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
-| 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
-| 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
-| 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
+<table>
+  <thead>
+    <tr>
+      <th width="135" align="right">Frames</th>
+      <th width="135">Method</th>
+      <th width="135" align="right">1 card</th>
+      <th width="135" align="right">2 cards</th>
+      <th width="135" align="right">4 cards</th>
+      <th width="135" align="right">8 cards</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td align="right">124</td><td>Full</td><td align="right">197.66 s †T</td><td align="right">116.03 s</td><td align="right">64.78 s</td><td align="right">35.87 s</td></tr>
+    <tr><td align="right">124</td><td>VSA V2 · 80%</td><td align="right">146.81 s †T</td><td align="right">93.57 s</td><td align="right">53.47 s</td><td align="right">30.40 s</td></tr>
+    <tr><td align="right">124</td><td>Veda · 90%</td><td align="right">97.40 s †T</td><td align="right">69.66 s</td><td align="right">43.38 s</td><td align="right">25.33 s</td></tr>
+    <tr><td align="right">124</td><td>VDN · official</td><td align="right">216.91 s †T</td><td align="right">136.02 s</td><td align="right">79.26 s</td><td align="right">44.36 s</td></tr>
+    <tr><td align="right">124</td><td>Spark-H3 · 90%</td><td align="right">117.11 s †T</td><td align="right">79.41 s</td><td align="right">48.87 s</td><td align="right">29.05 s</td></tr>
+    <tr><td align="right">345</td><td>Full</td><td align="right">1211.17 s †T</td><td align="right">649.72 s †T</td><td align="right">328.63 s</td><td align="right">178.81 s</td></tr>
+    <tr><td align="right">345</td><td>VSA V2 · 80%</td><td align="right">617.55 s †L ‡R</td><td align="right">363.99 s †T</td><td align="right">193.33 s</td><td align="right">104.71 s</td></tr>
+    <tr><td align="right">345</td><td>Veda · 90%</td><td align="right">337.95 s †T</td><td align="right">225.31 s †T</td><td align="right">130.11 s</td><td align="right">75.93 s</td></tr>
+    <tr><td align="right">345</td><td>VDN · official</td><td align="right">620.67 s †L ‡R</td><td align="right">388.58 s †T</td><td align="right">209.84 s</td><td align="right">117.27 s</td></tr>
+    <tr><td align="right">345</td><td>Spark-H3 · 90%</td><td align="right">419.44 s †L ‡R</td><td align="right">267.61 s †T</td><td align="right">150.50 s</td><td align="right">87.02 s</td></tr>
+  </tbody>
+</table>
 
 Covered **40/40**: 37 fresh and 3 reused prior measurements. †T: text-encoder layer Offload only; †L: native DiT/text-encoder layer Offload with one-layer prefetch and resident VAE; ‡R: matching original measurements from 2026-10-31. Unmarked cells have no runtime Offload. Only resident rows precompute AdaLN; layer-Offload rows make no DiT-residency or zero-AdaLN-transfer claim. VAE ranks match card count; DiT heads split 56/28/14/7. Native INT8 coverage is retained.
 
