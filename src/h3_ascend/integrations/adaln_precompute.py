@@ -212,7 +212,7 @@ def runtime_stats(model):
     excluded = {id(p) for p in parameters}
     cache = model.adaln_cache
     time_cache = getattr(model.time_embedder, "_h3_input_cache", None)
-    return {
+    result = {
         "cache_hits": cache.hits, "cache_misses": cache.misses,
         "cache_bytes_npu": cache._bytes, "cache_entries": len(cache._entries),
         "weight_stage_loads": sum(p._weight_stager.loads for p in projections),
@@ -224,6 +224,16 @@ def runtime_stats(model):
                               "hits": time_cache.hits, "misses": time_cache.misses}
                              if time_cache is not None else None),
     }
+    state = getattr(model, "_h3_input_rope_state", None)
+    if state is not None:
+        result["input_projection"] = {
+            "forward": state["forward"], "rope_builds": state["rope_builds"],
+            "rope_gathers": state["rope_gathers"],
+            "full_rope_per_rank_cached": state["full_rope"] is not None,
+            "projection_calls": [block.attn._h3_input_calls for block in model.blocks],
+            "all_layers_live_qkv_bitexact": all(block.attn._h3_input_audit_steps == 8 for block in model.blocks),
+        }
+    return result
 
 
 def _idle_snapshots(model, directory):
