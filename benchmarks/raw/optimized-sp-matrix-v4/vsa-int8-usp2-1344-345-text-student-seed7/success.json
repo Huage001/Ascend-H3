@@ -1,0 +1,11 @@
+{
+  "method": "vsa",
+  "precision": "int8",
+  "case": "1344-345",
+  "tp": 1,
+  "sp": 2,
+  "parallel": "ulysses",
+  "ready_seconds": 304.09722758457065,
+  "total_wall_seconds": 1137.9133774414659,
+  "external_processes_detected": false
+}

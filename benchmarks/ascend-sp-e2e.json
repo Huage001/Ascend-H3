@@ -1,0 +1,535 @@
+{
+  "status": "complete",
+  "expected": 30,
+  "accepted": 30,
+  "source_commit": "290d7e43315da120698a1201b9f08d00b43b49b1",
+  "width": 1344,
+  "height": 768,
+  "precision": "int8",
+  "steps": 8,
+  "records": [
+    {
+      "method": "vdn",
+      "frames": 124,
+      "devices": 8,
+      "seconds": 34.91317259054631,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "181176b4497d4b8d07a4bd6f57cbaf2590a1e4e239b5a6bbde6fac485fc1dfe3",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vdn-int8-usp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "full",
+      "frames": 124,
+      "devices": 8,
+      "seconds": 28.383984700776637,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "0589f516f71028a690ca984f93be7e32a1de3e59fd918d590a8334b83157569f",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/full-int8-usp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "frames": 124,
+      "devices": 8,
+      "seconds": 17.217674841172993,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "23ceacb9ab774f48328d0dee8c413699b79b79184324e20e4f254ab175db5978",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/veda-int8-usp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "frames": 124,
+      "devices": 8,
+      "seconds": 20.780751761049032,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "616ef35c021ca9506896032244eb095f13ee457d4bab4f5d30947c96b8bbccf1",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/spark-int8-usp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "frames": 124,
+      "devices": 8,
+      "seconds": 22.194902703166008,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "98f48fe78e8cca32cc9102f3fd242d99bcc9610162849b6b7bb4b9b8fee6c3e2",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vsa-int8-usp8-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "frames": 345,
+      "devices": 8,
+      "seconds": 92.19623575732112,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "2d353c21c8a7042f3c39522cba4a4384740c0b0dc4f3adebb2df9caf1ffdb88e",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vdn-int8-usp8-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "full",
+      "frames": 345,
+      "devices": 8,
+      "seconds": 159.87732813414186,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "39d7768a3de80a7d6dfc5c3659aca05b7443e2b1cb807836a32656f6d77e061e",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/full-int8-usp8-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "frames": 345,
+      "devices": 8,
+      "seconds": 54.98353931866586,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "14804f93bd3b0f79ec9770d900374c5ddde9bfa9afba5fbd209540a6d5f0c2f5",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/veda-int8-usp8-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "frames": 345,
+      "devices": 8,
+      "seconds": 66.17725649755448,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "9c897401be10ee251651e4a031d180c31f960df6bb49e1c650911dfbf6a1d2f0",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/spark-int8-usp8-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "frames": 345,
+      "devices": 8,
+      "seconds": 83.25555360037833,
+      "offload": "none",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "bdd83cdeb3de552d5078f4498f5c69ae5b169dae623dec8929e5361266c656e5",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vsa-int8-usp8-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "frames": 124,
+      "devices": 4,
+      "seconds": 59.90356836467981,
+      "offload": "none",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "1b567bc18353940aa8723b9616c0f37b8436b4a3b3d4a0df4a42fb2590074fc8",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vdn-int8-usp4-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "full",
+      "frames": 124,
+      "devices": 4,
+      "seconds": 52.201220501214266,
+      "offload": "none",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "ced624e1d4831409ceea0401582936367c3354d3f15022cc54eef15ecbf6e876",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/full-int8-usp4-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "frames": 124,
+      "devices": 4,
+      "seconds": 29.5944685311988,
+      "offload": "none",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "339c01bf665554e765af5cf9c1286f0281685b7b91de603cbb1660cfc6581e04",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/veda-int8-usp4-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "frames": 124,
+      "devices": 4,
+      "seconds": 35.01847092527896,
+      "offload": "none",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "931b42778e573b0e0b1ec3551e3672822a50be1464efea59caaa771e73e8b632",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/spark-int8-usp4-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "frames": 124,
+      "devices": 4,
+      "seconds": 41.04804290737957,
+      "offload": "none",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "cbf3fd9631afcbee4c625a1b72acfe9634dd9cd7ed20b2ab6e3a6467a5e20c12",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vsa-int8-usp4-1344-124-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "frames": 345,
+      "devices": 4,
+      "seconds": 167.51099706906825,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "2a30e103ea342510c00f90bca9b0ae44579fc153a222ef0c753038463fd45577",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vdn-int8-usp4-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "full",
+      "frames": 345,
+      "devices": 4,
+      "seconds": 299.25641165301204,
+      "offload": "none",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "986a98c1104c08af0edc34e5bbb30ac81758dbc729a43b099d6a48d4ea81ad68",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/full-int8-usp4-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "frames": 345,
+      "devices": 4,
+      "seconds": 98.70415298175067,
+      "offload": "none",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "b10ad9614280bb5353e40cf1bf3dc7b5e9033c3723c9ad3c540d1da8930dd021",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/veda-int8-usp4-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "frames": 345,
+      "devices": 4,
+      "seconds": 120.19570808950812,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "77080a164d1583e046b648e5b4999926b097b0bb34e043dab6663254f40e4b01",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/spark-int8-usp4-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "frames": 345,
+      "devices": 4,
+      "seconds": 165.61540264170617,
+      "offload": "none",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "437de45ab2787e17a6b8f9c4c126e28921c2b5f0dde8a866ca92a28bd360d6b5",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vsa-int8-usp4-1344-345-none-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "frames": 124,
+      "devices": 2,
+      "seconds": 115.9240640848875,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "aedec9b000017136434f4250f798f1b57d964182a64fca03831c453a3fe3c7d7",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vdn-int8-usp2-1344-124-text-student-seed7/performance.json"
+    },
+    {
+      "method": "full",
+      "frames": 124,
+      "devices": 2,
+      "seconds": 106.17078498471528,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "24fd6a70cba42287fb51af3ec6be7671f7137736f9cb1180ede571af82e19e54",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/full-int8-usp2-1344-124-text-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "frames": 124,
+      "devices": 2,
+      "seconds": 59.09035429824144,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "3e99cc298779adec07d081aaaac51681122b17bec3718992cde9266f81e24932",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/veda-int8-usp2-1344-124-text-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "frames": 124,
+      "devices": 2,
+      "seconds": 67.13707385864109,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "9a123d9570e74bd4a870307749116f411143da1d9a7f63752927040a7522462f",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/spark-int8-usp2-1344-124-text-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "frames": 124,
+      "devices": 2,
+      "seconds": 83.7380316965282,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "ce1790ff16d51152a3d811efb5d1a4f77c23c4ce3e97c7965e829731036cb5dd",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vsa-int8-usp2-1344-124-text-student-seed7/performance.json"
+    },
+    {
+      "method": "vdn",
+      "frames": 345,
+      "devices": 2,
+      "seconds": 377.01133219432086,
+      "offload": "text",
+      "projection": "bf16-qkv-alltoall",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "7649d0cab95a9640e7a69b3a6a87e02c5cdaed8775052af5203dba87d20301ba",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vdn-int8-usp2-1344-345-text-student-1793560338334167881/performance.json"
+    },
+    {
+      "method": "full",
+      "frames": 345,
+      "devices": 2,
+      "seconds": 625.7224669279531,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "79283ba4b3ac94034170ea2cbffb8edf2d30ee34a752bed3ca3c2e0b7aefbfdf",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/full-int8-usp2-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "veda",
+      "frames": 345,
+      "devices": 2,
+      "seconds": 188.4020480029285,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "ae0ddb75360952a774ab0a64fbef63b90d98ab30dd8fd8379a24264170047f02",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/veda-int8-usp2-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "spark",
+      "frames": 345,
+      "devices": 2,
+      "seconds": 231.16255747061223,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "1ef633977df776bf6f34d1382b4401db2fcb8401cb9dc91bb031f5aacad3496c",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/spark-int8-usp2-1344-345-text-student-seed7/performance.json"
+    },
+    {
+      "method": "vsa",
+      "frames": 345,
+      "devices": 2,
+      "seconds": 334.3580974675715,
+      "offload": "text",
+      "projection": "native-input-int8-head-qkv",
+      "allocator_settings": {
+        "PYTORCH_NPU_ALLOC_CONF": null
+      },
+      "actual_steps": 8,
+      "warmup_requests": 1,
+      "formal_repetitions": 1,
+      "additional_lossy_communication_quantization": false,
+      "source_performance_sha256": "4795d6cb3ec942455023665615b85233769c56a76af71fa0289a950c641284ea",
+      "source_record": "benchmarks/raw/optimized-sp-matrix-v4/vsa-int8-usp2-1344-345-text-student-seed7/performance.json"
+    }
+  ],
+  "qualification": {
+    "status": "passed",
+    "candidate_seconds": 298.8276186976582,
+    "baseline_seconds": 304.25480316299945,
+    "selection": "first formal request on both sides, never fastest",
+    "original_job_intentionally_stopped_by_user": true,
+    "original_job_exit_code": "254",
+    "latency_reduction": 0.01783762954247836,
+    "formal_video_345_frames_pixel_identical": true,
+    "source": "/cache/songhua/h3-ascend-release-20261030/input-quant-exchange-v1/e2e/full-int8-usp4-1344-345-none-student-1793541986139428333",
+    "completed_data_validated_cpu_only": true,
+    "no_fabricated_original_success_marker": true
+  }
+}

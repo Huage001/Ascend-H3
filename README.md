@@ -216,7 +216,28 @@ itself can have floating-point differences from a single full-head branch call.
 
 <!-- BEGIN SP E2E MATRIX -->
 
-<!-- Fresh30 SP results are inserted here only after all guarded cases pass. -->
+## Fresh INT8 SP: 2 / 4 / 8 cards
+
+1344×768, eight actual DiT updates, seed7. Every setting uses **one audited warmup and one formal request**, with no additional profiling request. All30 cells are fresh. Timing includes text encoding, video/audio decoding and MP4 writing; model loading, prior LoRA merge and startup AdaLN preparation are excluded. Cells show SP latency and the existing TP latency divided by SP latency at the same card count. This is a complete-pipeline comparison, not a communication-only ratio.
+
+| Frames | Method | SP2 · vs TP2 | SP4 · vs TP4 | SP8 · vs TP8 |
+| ---: | --- | ---: | ---: | ---: |
+| 124 | Full | 106.17 s †T · 1.09× | 52.20 s · 1.24× | 28.38 s · 1.26× |
+| 124 | VSA V2 · 80% | 83.74 s †T · 1.12× | 41.05 s · 1.30× | 22.19 s · 1.37× |
+| 124 | Veda · 90% | 59.09 s †T · 1.18× | 29.59 s · 1.47× | 17.22 s · 1.47× |
+| 124 | VDN · official | 115.92 s †T · 1.17× | 59.90 s · 1.32× | 34.91 s · 1.27× |
+| 124 | Spark-H3 · 90% | 67.14 s †T · 1.18× | 35.02 s · 1.40× | 20.78 s · 1.40× |
+| 345 | Full | 625.72 s †T · 1.04× | 299.26 s · 1.10× | 159.88 s · 1.12× |
+| 345 | VSA V2 · 80% | 334.36 s †T · 1.09× | 165.62 s · 1.17× | 83.26 s · 1.26× |
+| 345 | Veda · 90% | 188.40 s †T · 1.20× | 98.70 s · 1.32× | 54.98 s · 1.38× |
+| 345 | VDN · official | 377.01 s †T · 1.03× | 167.51 s †T · 1.25× | 92.20 s · 1.27× |
+| 345 | Spark-H3 · 90% | 231.16 s †T · 1.16× | 120.20 s †T · 1.25× | 66.18 s · 1.31× |
+
+†T: text-encoder Offload only; †L: DiT/text layer Offload; †M: component Offload. Unmarked SP cells have no runtime Offload. TP uses its independently recorded policy in the table below, so a ratio with different Offload policies also includes that difference. The selected-card guard discards contaminated attempts and retries. VAE ranks match card count. SP2/SP4 reuse native input quantization where enabled; each raw record identifies its selected projection route. SP8 and streaming paths retain BF16 QKV transport. Attention cores are unchanged.
+
+[Fresh30 records and source identity](benchmarks/ascend-sp-e2e.json)
+
+Resident-DiT BF16-QKV exception: **VDN · official / SP2 / 345**. For this setting, prefix the corresponding launch command with `H3_ASCEND_INPUT_EXCHANGE=0` and use its recorded Offload option. This removes the extra head-projection weight cache; model linears remain INT8.
 
 <!-- END SP E2E MATRIX -->
 

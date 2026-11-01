@@ -1,0 +1,11 @@
+{
+  "method": "spark",
+  "precision": "int8",
+  "case": "1344-124",
+  "tp": 1,
+  "sp": 8,
+  "parallel": "ulysses",
+  "ready_seconds": 332.0954099567607,
+  "total_wall_seconds": 485.8474661260843,
+  "external_processes_detected": false
+}

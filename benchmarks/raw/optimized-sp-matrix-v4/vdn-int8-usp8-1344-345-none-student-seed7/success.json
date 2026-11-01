@@ -1,0 +1,11 @@
+{
+  "method": "vdn",
+  "precision": "int8",
+  "case": "1344-345",
+  "tp": 1,
+  "sp": 8,
+  "parallel": "ulysses",
+  "ready_seconds": 348.1068018479273,
+  "total_wall_seconds": 669.07852821704,
+  "external_processes_detected": false
+}

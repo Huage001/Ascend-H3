@@ -1,0 +1,11 @@
+{
+  "method": "veda",
+  "precision": "int8",
+  "case": "1344-124",
+  "tp": 1,
+  "sp": 2,
+  "parallel": "ulysses",
+  "ready_seconds": 266.1025942796841,
+  "total_wall_seconds": 518.2925969781354,
+  "external_processes_detected": false
+}

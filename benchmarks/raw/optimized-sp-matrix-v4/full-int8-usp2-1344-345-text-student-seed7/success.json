@@ -1,0 +1,11 @@
+{
+  "method": "full",
+  "precision": "int8",
+  "case": "1344-345",
+  "tp": 1,
+  "sp": 2,
+  "parallel": "ulysses",
+  "ready_seconds": 354.1107347169891,
+  "total_wall_seconds": 1766.0069024059922,
+  "external_processes_detected": false
+}
