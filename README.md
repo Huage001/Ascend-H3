@@ -35,10 +35,20 @@ INT8 transformer quantization and native tensor parallel attention heads.
 
 ## Default 768p workloads
 
-| Case | Width × height | Native output frames | Latent video grid |
-| --- | --- | --- | --- |
-| `1344-124` | 1344×768 | 124 | 37×24×42 |
-| `1344-345` | 1344×768 | 345 | 102×24×42 |
+<table>
+  <thead>
+    <tr>
+      <th width="200">Case</th>
+      <th width="200">Width × height</th>
+      <th width="200">Native output frames</th>
+      <th width="200">Latent video grid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>1344-124</code></td><td>1344×768</td><td>124</td><td>37×24×42</td></tr>
+    <tr><td><code>1344-345</code></td><td>1344×768</td><td>345</td><td>102×24×42</td></tr>
+  </tbody>
+</table>
 
 Output FPS is 24. Requests use explicit frame counts, with frame interpolation
 disabled. The long case is the agreed native 345-frame workload; it is not
