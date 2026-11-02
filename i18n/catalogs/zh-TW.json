@@ -82,7 +82,9 @@
     "7fad2bb9304c25b7": "SP2/SP4 啟用時沿用原生 W8A8 輸入量化，再計算本卡 heads 的 QKV；SP8 保留 BF16 QKV 通訊。**VDN／SP2／345 幀**以 `H3_ASCEND_INPUT_EXCHANGE=0` 保留 BF16 QKV 路徑，避免額外 head 權重快取；模型線性層仍為 INT8。注意力核心不變。參閱 [SP 啟動與記憶體設定](docs/serving.md#sequence-parallel-inference)。",
     "a942d236b7dd7e1a": "先前統一逐層 Offload 對照保留於[歷史單卡參考](docs/archive/matched-offload-single-card.md)，耗時 JSON 保留原始紀錄連結。",
     "eb994062e65bb7de": "僅展示昇騰 910B3：**1344×768、124 原生幀、24 FPS（5.1667 秒，約 5.17 秒）**，含音頻。",
-    "1555f11b24255faf": "五種方法均執行 8 次實際前向。左列為 BF16，右列為原生 W8A8 INT8。所有樣例使用單卡、相同 prompt、一致的 Offload 策略。"
+    "1555f11b24255faf": "五種方法均執行 8 次實際前向。左列為 BF16，右列為原生 W8A8 INT8。所有樣例使用單卡、相同 prompt、一致的 Offload 策略。",
+    "1ef93036e7583a5c": "## 致謝",
+    "a026a2e95e9eafe8": "感謝 [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/)、[Veda](https://veda-sparse.github.io/)、[VDN](https://openvdn.github.io/)、[Spark-H3](https://zechengtang.github.io/Spark-H3/) 團隊分享研究成果、程式碼和模型資源，為本專案的昇騰適配提供了基礎。"
   },
   "navigation": [
     "安裝與編譯",

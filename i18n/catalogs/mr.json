@@ -82,7 +82,9 @@
     "7fad2bb9304c25b7": "SP2/SP4 सक्षम असताना native W8A8 input quantization पुन्हा वापरून स्थानिक heads चे QKV काढतात. SP8 BF16 QKV communication कायम ठेवतो. **VDN／SP2／345 frames** मध्ये `H3_ASCEND_INPUT_EXCHANGE=0` वापरून BF16 path ठेवला जातो व अतिरिक्त head-weight cache टाळला जातो; linear layers INT8 राहतात. Attention cores बदललेले नाहीत. [SP settings](docs/serving.md#sequence-parallel-inference) पहा.",
     "a942d236b7dd7e1a": "पूर्वीची समान layer-Offload तुलना [ऐतिहासिक single-NPU reference](docs/archive/matched-offload-single-card.md) मध्ये आहे. Timing JSON मूळ records चे links ठेवतो.",
     "eb994062e65bb7de": "Ascend 910B3 फक्त: **1344×768, 124 नेटिव्ह फ्रेम, 24 FPS (5.1667 सेकंद, अंदाजे 5.17 सेकंद)**, ऑडिओसह.",
-    "1555f11b24255faf": "सर्व पाच पद्धती आठ फॉरवर्ड वापरतात. डावीकडे: BF16. उजवीकडे: मूळ W8A8 INT8. सर्व नमुने एक कार्ड, समान प्रॉम्प्ट, जुळलेले ऑफलोड वापरतात."
+    "1555f11b24255faf": "सर्व पाच पद्धती आठ फॉरवर्ड वापरतात. डावीकडे: BF16. उजवीकडे: मूळ W8A8 INT8. सर्व नमुने एक कार्ड, समान प्रॉम्प्ट, जुळलेले ऑफलोड वापरतात.",
+    "1ef93036e7583a5c": "## आभार",
+    "a026a2e95e9eafe8": "संशोधन, कोड आणि मॉडेल संसाधने सामायिक करून हे Ascend रूपांतर शक्य करणाऱ्या [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) च्या संघांचे आम्ही आभार मानतो."
   },
   "navigation": [
     "स्थापना",

@@ -82,7 +82,9 @@
     "7fad2bb9304c25b7": "SP2/SP4 réutilisent la quantification d’entrée W8A8 native lorsqu’elle est activée, puis projettent les QKV des têtes locales. SP8 garde les échanges QKV BF16. **VDN／SP2／345 images** utilise `H3_ASCEND_INPUT_EXCHANGE=0` pour garder ce chemin BF16 et éviter le cache supplémentaire des poids par tête ; les couches linéaires restent INT8. Les cœurs d’attention sont inchangés. Voir les [réglages SP](docs/serving.md#sequence-parallel-inference).",
     "a942d236b7dd7e1a": "L’ancien comparatif avec déchargement identique par couche reste dans la [référence historique sur un NPU](docs/archive/matched-offload-single-card.md). Les JSON de temps conservent les liens vers les mesures originales.",
     "eb994062e65bb7de": "Ascend 910B3 uniquement : **1344 × 768, 124 images natives, 24 FPS (5,1667 secondes, environ 5,17 secondes)**, avec audio.",
-    "1555f11b24255faf": "Les cinq méthodes utilisent huit avant. À gauche : BF16. À droite : W8A8 natif INT8. Tous les échantillons utilisent une carte, la même invite, le déchargement correspondant."
+    "1555f11b24255faf": "Les cinq méthodes utilisent huit avant. À gauche : BF16. À droite : W8A8 natif INT8. Tous les échantillons utilisent une carte, la même invite, le déchargement correspondant.",
+    "1ef93036e7583a5c": "## Remerciements",
+    "a026a2e95e9eafe8": "Nous remercions les équipes de [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) pour le partage de leurs recherches, de leur code et des ressources de leurs modèles, qui ont rendu possible cette adaptation à Ascend."
   },
   "navigation": [
     "Mise en place",

@@ -82,7 +82,9 @@
     "7fad2bb9304c25b7": "SP2/SP4 reutilizează cuantizarea nativă W8A8 a intrării când este activată și calculează QKV pentru heads locali. SP8 păstrează comunicarea QKV BF16. **VDN／SP2／345 cadre** folosește `H3_ASCEND_INPUT_EXCHANGE=0` pentru ruta BF16 fără cache suplimentar de greutăți per head; straturile liniare rămân INT8. Nucleele attention nu se schimbă. Consultați [setările SP](docs/serving.md#sequence-parallel-inference).",
     "a942d236b7dd7e1a": "Comparația anterioară cu Offload pe straturi identic rămâne în [referința istorică pe o NPU](docs/archive/matched-offload-single-card.md). JSON-urile de timp păstrează legături către înregistrările originale.",
     "eb994062e65bb7de": "Numai Ascend 910B3: **1344×768, 124 cadre native, 24 FPS (5,1667 secunde, aproximativ 5,17 secunde)**, cu sunet.",
-    "1555f11b24255faf": "Toate cele cinci metode folosesc opt atacanți. Stânga: BF16. Dreapta: nativ W8A8 INT8. Toate mostrele folosesc un singur card, același prompt, descărcare potrivită."
+    "1555f11b24255faf": "Toate cele cinci metode folosesc opt atacanți. Stânga: BF16. Dreapta: nativ W8A8 INT8. Toate mostrele folosesc un singur card, același prompt, descărcare potrivită.",
+    "1ef93036e7583a5c": "## Mulțumiri",
+    "a026a2e95e9eafe8": "Mulțumim echipelor [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) pentru cercetările, codul și resursele modelelor puse la dispoziție, care au făcut posibilă această adaptare pentru Ascend."
   },
   "navigation": [
     "Instalare",

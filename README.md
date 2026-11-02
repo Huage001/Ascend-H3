@@ -414,3 +414,7 @@ SP2/SP4 reuse native W8A8 input quantization before head-local QKV projection wh
 
 
 The earlier matched layer-Offload comparison is retained in the [historical single-card reference](docs/archive/matched-offload-single-card.md). The timing JSON retains links to unchanged original records.
+
+## Acknowledgements
+
+We thank the teams behind [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), and [Spark-H3](https://zechengtang.github.io/Spark-H3/) for sharing their research, code and model assets, which made this Ascend adaptation possible.

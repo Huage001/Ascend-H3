@@ -82,7 +82,9 @@
     "7fad2bb9304c25b7": "SP2/SP4 riutilizzano, quando attiva, la quantizzazione d’ingresso W8A8 nativa e proiettano QKV per le teste locali. SP8 mantiene scambi QKV BF16. **VDN／SP2／345 fotogrammi** usa `H3_ASCEND_INPUT_EXCHANGE=0` per mantenere il percorso BF16 senza cache aggiuntiva dei pesi per testa; gli strati lineari restano INT8. I nuclei di attenzione non cambiano. Vedere le [impostazioni SP](docs/serving.md#sequence-parallel-inference).",
     "a942d236b7dd7e1a": "Il precedente confronto con Offload per strato identico resta nel [riferimento storico su una NPU](docs/archive/matched-offload-single-card.md). I JSON dei tempi mantengono i collegamenti ai record originali.",
     "eb994062e65bb7de": "Solo Ascend 910B3: **1344×768, 124 fotogrammi nativi, 24 FPS (5,1667 secondi, circa 5,17 secondi)**, con audio.",
-    "1555f11b24255faf": "Tutti e cinque i metodi utilizzano otto attaccanti. A sinistra: BF16. A destra: W8A8 nativo INT8. Tutti gli esempi utilizzano una scheda, lo stesso prompt, Offload abbinato."
+    "1555f11b24255faf": "Tutti e cinque i metodi utilizzano otto attaccanti. A sinistra: BF16. A destra: W8A8 nativo INT8. Tutti gli esempi utilizzano una scheda, lo stesso prompt, Offload abbinato.",
+    "1ef93036e7583a5c": "## Ringraziamenti",
+    "a026a2e95e9eafe8": "Ringraziamo i team di [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) per aver condiviso ricerche, codice e risorse dei modelli, rendendo possibile questo adattamento ad Ascend."
   },
   "navigation": [
     "Installazione",
