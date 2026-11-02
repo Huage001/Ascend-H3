@@ -349,7 +349,10 @@ Runs from block input to block output, including projections, normalization, RoP
 The charts visualize both tables above: attention core on the left and complete
 DiT block on the right, for 124 and 345 frames. Bar labels show mean latency and
 speedup against the Full baseline on the same device; these are layer measurements,
-not end-to-end generation times.
+not end-to-end generation times. Within each panel, latency bars extend to the
+right and speedup bars extend left from the right-hand zero axis; the dashed
+line marks 1×. RTX PRO 6000 is the upper teal bar, and Ascend 910B3 is the lower
+orange bar.
 
 ![BF16 attention core and DiT block comparison](docs/figures/bf16-three-layer.png)
 

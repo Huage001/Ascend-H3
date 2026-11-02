@@ -33,6 +33,19 @@ Only accepted core records may populate `benchmarks/bf16-three-layer.json`'s
 `core_ms` fields. A missing core result remains pending; never substitute a
 module measurement or estimate it by subtraction.
 
+### Reproduce the BF16 latency and speedup figure
+
+```bash
+python scripts/plot_bf16_layers.py
+```
+
+The script reads `benchmarks/bf16-three-layer.json` and writes PNG/SVG to
+`docs/figures/bf16-three-layer`. Each panel places latency on the left and
+Full-relative speedup on a separate reversed axis on the right. Speedup bars
+start at the right-hand zero and extend left; all four panels use the same
+0–8× scale and a dashed 1× line. PRO 6000 is upper/teal and Ascend is lower/orange.
+The script validates every speedup against the same device's Full latency.
+
 ## Current INT8 end-to-end protocol
 
 Start with resident execution (`--offload none`); preserve any OOM evidence and

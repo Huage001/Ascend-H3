@@ -341,6 +341,9 @@ done
 | 345 | VDN · official | 1534.19 ms | 647.19 ms | **1.96×** | 1.63× |
 | 345 | Spark-H3 · 90% | 1028.43 ms | 393.06 ms | **2.92×** | 2.68× |
 
+每个子图左侧是向右延伸的时延柱，右侧是从右轴零点向左延伸的加速比柱，虚线表示 1×。
+PRO 6000 为上方青绿色柱，昇腾 910B3 为下方橙色柱；加速比仍相对各自设备的 Full 基线。
+
 ![BF16 attention core and DiT block comparison](docs/figures/bf16-three-layer.png)
 
 [原始九次数据及输入校验信息](benchmarks/bf16-three-layer.json)。
