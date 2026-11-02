@@ -6,7 +6,7 @@
   "duration_seconds": 5.166666666666667,
   "hardware": "Ascend 910B3",
   "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
-  "seed": 7,
+  "seed": null,
   "steps": 8,
   "layout": {
     "columns": [
@@ -147,13 +147,13 @@
       "frames": 124,
       "fps": 24,
       "duration_seconds": 5.166666666666667,
-      "seed": 7,
+      "seed": 42,
       "steps": 8,
       "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
-      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/unified8/e2e/vsa-bf16-single-1344-124-student-seed7",
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/gallery-retake-20261102/vsa-bf16-seed42-1344-124",
       "selected_file": "video.mp4",
-      "bytes": 12920847,
-      "sha256": "8fb90eb070ed2e3e1277eda110b49f56ddc8b3d48b26752022c294b35d1e789c",
+      "bytes": 9228307,
+      "sha256": "2ab419be29e5d8216a268190fa1f9bf54769a3756d9bd9a9f097ad855b1272f0",
       "student_profile": "fasth3-v2",
       "nominal_video_sparsity": 0.8,
       "devices": 1,
@@ -161,9 +161,8 @@
       "full_decode_passed": true,
       "audio_codec": "aac",
       "video_codec": "h264",
-      "visual_review": "Eight uniformly sampled frames including final frame123 reviewed",
-      "matches_formal_request_video": true,
-      "visual_observation": "Close side tracking shot of one cyclist; sampled frames remain coherent.",
+      "visual_review": "Eight sampled frames including final frame123 reviewed",
+      "matches_formal_request_video": false,
       "visual_review_samples": [
         0,
         17,
@@ -174,11 +173,9 @@
         105,
         123
       ],
-      "mp4": "https://github.com/user-attachments/assets/778a882a-5e8a-46ef-92c5-a24719fe1fd7",
-      "not_formal_timing_sample": false,
-      "source_campaign": "unified8-v1",
-      "source_performance_sha256": "6382bfc8b245212a3081179db7999125a9277f72ab6be53365a464170dd0d2a3",
-      "source_success_sha256": "a20b7c5c7bffb70500cac28cc43df74ce7968343b84af61179df39c37a65b9f3",
+      "mp4": "https://github.com/user-attachments/assets/47802ca4-31f4-46d9-a479-aef7075e3c41",
+      "not_formal_timing_sample": true,
+      "source_campaign": "gallery-retake-20261102",
       "request": {
         "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
         "width": 1344,
@@ -187,14 +184,22 @@
         "num_frames": 124,
         "fps": 24,
         "num_inference_steps": 8,
-        "seed": 7,
+        "seed": 42,
         "enable_frame_interpolation": "false",
         "return_stage_metrics": "true",
         "extra_params": "{\"task\": \"t2va\"}",
         "guidance_scale": 1.0
       },
       "processing": "Original MP4 bytes; no cropping, trimming or re-encoding.",
-      "student_config": "configs/fasth3-v2.json"
+      "student_config": "configs/fasth3-v2.json",
+      "audio_checks": {
+        "peak": 0.7312171459197998,
+        "rms": 0.1102824175112896,
+        "clipped_fraction": 0.0,
+        "duration_seconds": 5.184
+      },
+      "source_success_sha256": "7aeecb2fd5e76918172e6691d1261c2665f9847443dce07b0ade3abc7ae7b433",
+      "generation_ssh_port": 32193
     },
     {
       "method": "vsa",
@@ -205,13 +210,13 @@
       "frames": 124,
       "fps": 24,
       "duration_seconds": 5.166666666666667,
-      "seed": 7,
+      "seed": 42,
       "steps": 8,
       "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
-      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/unified8/e2e/vsa-int8-single-1344-124-student-seed7",
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/gallery-retake-20261102/vsa-int8-seed42-1344-124",
       "selected_file": "video.mp4",
-      "bytes": 13129719,
-      "sha256": "76629ae697ffba53758136765db84a3a42faa05c6af6a2c2c861eb52586d38f8",
+      "bytes": 10305294,
+      "sha256": "500b88271d2e1426f514f0a3ec86fcf64d091a38dd8721d4d8c8f7cd9bbd328a",
       "student_profile": "fasth3-v2",
       "nominal_video_sparsity": 0.8,
       "devices": 1,
@@ -219,9 +224,8 @@
       "full_decode_passed": true,
       "audio_codec": "aac",
       "video_codec": "h264",
-      "visual_review": "Eight uniformly sampled frames including final frame123 reviewed",
-      "matches_formal_request_video": true,
-      "visual_observation": "Close side tracking shot of one cyclist; sampled frames remain coherent.",
+      "visual_review": "Eight sampled frames including final frame123 reviewed",
+      "matches_formal_request_video": false,
       "visual_review_samples": [
         0,
         17,
@@ -232,11 +236,9 @@
         105,
         123
       ],
-      "mp4": "https://github.com/user-attachments/assets/5567de11-f619-44f3-b369-7459fe45b105",
-      "not_formal_timing_sample": false,
-      "source_campaign": "unified8-v1",
-      "source_performance_sha256": "3b403679c63c2f65b320ed1bc53a310e280b80362a51012ce2bc9ccb443eb5a6",
-      "source_success_sha256": "442727f303b7376fc20cff94f49109bb039b4ae2910a17cc21fd884a74760c0d",
+      "mp4": "https://github.com/user-attachments/assets/db092234-12a4-48d6-ac34-4271f97d6631",
+      "not_formal_timing_sample": true,
+      "source_campaign": "gallery-retake-20261102",
       "request": {
         "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
         "width": 1344,
@@ -245,14 +247,22 @@
         "num_frames": 124,
         "fps": 24,
         "num_inference_steps": 8,
-        "seed": 7,
+        "seed": 42,
         "enable_frame_interpolation": "false",
         "return_stage_metrics": "true",
         "extra_params": "{\"task\": \"t2va\"}",
         "guidance_scale": 1.0
       },
       "processing": "Original MP4 bytes; no cropping, trimming or re-encoding.",
-      "student_config": "configs/fasth3-v2.json"
+      "student_config": "configs/fasth3-v2.json",
+      "audio_checks": {
+        "peak": 0.6115975975990295,
+        "rms": 0.11476430147934395,
+        "clipped_fraction": 0.0,
+        "duration_seconds": 5.184
+      },
+      "source_success_sha256": "236131a6c1e0f27f075d7806b7d0b11213e4b73d02469a13c815e7279196b1e7",
+      "generation_ssh_port": 32193
     },
     {
       "method": "veda",
@@ -263,13 +273,13 @@
       "frames": 124,
       "fps": 24,
       "duration_seconds": 5.166666666666667,
-      "seed": 7,
+      "seed": 42,
       "steps": 8,
       "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
-      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/unified8/e2e/veda-bf16-single-1344-124-student-seed7",
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/gallery-retake-20261102/veda-bf16-seed42-1344-124",
       "selected_file": "video.mp4",
-      "bytes": 15866327,
-      "sha256": "b14e14827f492745e2553ee88d9eaac5c0df295e98906d20d09545122cd5246c",
+      "bytes": 10362697,
+      "sha256": "1a89af8f02e80e54e2bc5d12b80c887180ab017b2ab48ec6cabe2b1de622e93c",
       "student_profile": "lightx2v8",
       "nominal_video_sparsity": 0.9,
       "devices": 1,
@@ -277,9 +287,8 @@
       "full_decode_passed": true,
       "audio_codec": "aac",
       "video_codec": "h264",
-      "visual_review": "Eight uniformly sampled frames including final frame123 reviewed",
-      "matches_formal_request_video": true,
-      "visual_observation": "One cyclist approaching on a tree-lined park path.",
+      "visual_review": "Eight sampled frames including final frame123 reviewed",
+      "matches_formal_request_video": false,
       "visual_review_samples": [
         0,
         17,
@@ -290,11 +299,9 @@
         105,
         123
       ],
-      "mp4": "https://github.com/user-attachments/assets/9948d9f9-ad79-4266-9cbf-2749dc02d344",
-      "not_formal_timing_sample": false,
-      "source_campaign": "unified8-v1",
-      "source_performance_sha256": "78692b7178b6f259d511d890b277e40b77f51d675fb58941e1533915055b2077",
-      "source_success_sha256": "8310fcf9b3435df0b2dcdd39043e0e91ddd11f13895c746530126de3e8dcb6fb",
+      "mp4": "https://github.com/user-attachments/assets/f7120a47-795a-47b0-9ce6-7e2ef732106e",
+      "not_formal_timing_sample": true,
+      "source_campaign": "gallery-retake-20261102",
       "request": {
         "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
         "width": 1344,
@@ -303,14 +310,22 @@
         "num_frames": 124,
         "fps": 24,
         "num_inference_steps": 8,
-        "seed": 7,
+        "seed": 42,
         "enable_frame_interpolation": "false",
         "return_stage_metrics": "true",
         "extra_params": "{\"task\": \"t2va\"}",
         "guidance_scale": 1.0
       },
       "processing": "Original MP4 bytes; no cropping, trimming or re-encoding.",
-      "student_config": "configs/lightx2v8.json"
+      "student_config": "configs/lightx2v8.json",
+      "audio_checks": {
+        "peak": 0.8076434135437012,
+        "rms": 0.1699953450773978,
+        "clipped_fraction": 0.0,
+        "duration_seconds": 5.184
+      },
+      "source_success_sha256": "5cdff75cf8d6fe4a5e4357681831a61b1b5e1f224114365e3751e1ce2b82c314",
+      "generation_ssh_port": 32193
     },
     {
       "method": "veda",
@@ -321,13 +336,13 @@
       "frames": 124,
       "fps": 24,
       "duration_seconds": 5.166666666666667,
-      "seed": 7,
+      "seed": 42,
       "steps": 8,
       "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
-      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/unified8/e2e/veda-int8-single-1344-124-student-seed7",
+      "raw_directory": "/cache/songhua/h3-ascend-release-20261030/gallery-retake-20261102/veda-int8-seed42-1344-124",
       "selected_file": "video.mp4",
-      "bytes": 16465217,
-      "sha256": "980786630f13abacd717ba0f36efba71340110870001725f95fc394b0e438a67",
+      "bytes": 10964772,
+      "sha256": "0ef2a9feff8bff4e10debe816f0483e79ad17c2978842b84b0f053b6472c204a",
       "student_profile": "lightx2v8",
       "nominal_video_sparsity": 0.9,
       "devices": 1,
@@ -335,9 +350,8 @@
       "full_decode_passed": true,
       "audio_codec": "aac",
       "video_codec": "h264",
-      "visual_review": "Eight uniformly sampled frames including final frame123 reviewed",
-      "matches_formal_request_video": true,
-      "visual_observation": "One cyclist approaching on a tree-lined park path.",
+      "visual_review": "Eight sampled frames including final frame123 reviewed",
+      "matches_formal_request_video": false,
       "visual_review_samples": [
         0,
         17,
@@ -348,11 +362,9 @@
         105,
         123
       ],
-      "mp4": "https://github.com/user-attachments/assets/03cfb9ec-66be-4ed9-8fd8-171a6672836a",
-      "not_formal_timing_sample": false,
-      "source_campaign": "unified8-v1",
-      "source_performance_sha256": "f790485c8c47dee9634ef5d33fc6d63114c017bcf8487ab75c81325fd86be64c",
-      "source_success_sha256": "6607bbba201105a82e4757f979f17d696b8112deb42dc6959859fb3b9463afb4",
+      "mp4": "https://github.com/user-attachments/assets/fd7a11f1-7a7d-45ab-a9c2-2d1fb15d620a",
+      "not_formal_timing_sample": true,
+      "source_campaign": "gallery-retake-20261102",
       "request": {
         "prompt": "A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
         "width": 1344,
@@ -361,14 +373,22 @@
         "num_frames": 124,
         "fps": 24,
         "num_inference_steps": 8,
-        "seed": 7,
+        "seed": 42,
         "enable_frame_interpolation": "false",
         "return_stage_metrics": "true",
         "extra_params": "{\"task\": \"t2va\"}",
         "guidance_scale": 1.0
       },
       "processing": "Original MP4 bytes; no cropping, trimming or re-encoding.",
-      "student_config": "configs/lightx2v8.json"
+      "student_config": "configs/lightx2v8.json",
+      "audio_checks": {
+        "peak": 0.7651751637458801,
+        "rms": 0.16648959960017404,
+        "clipped_fraction": 0.0,
+        "duration_seconds": 5.184
+      },
+      "source_success_sha256": "97209f00bae25c160dc79d0d7bd23eebf75b44e01ce47c1620059db08f8ca603",
+      "generation_ssh_port": 32193
     },
     {
       "method": "vdn",
@@ -601,5 +621,17 @@
       "student_config": "configs/lightx2v8.json"
     }
   ],
-  "quality_note": "Same prompt and seed7, original accepted eight-forward requests. Full audio/video decode passed; eight uniformly sampled frames including final frame123 were visually reviewed. Different trained students and precisions are not asserted to be pixel- or perceptually equivalent."
+  "quality_note": "Original seed7 examples retained for Full, VDN and Spark; Veda and VSA BF16/INT8 regenerated with seed42 at user request. Eight actual forwards, 124 native frames and full audio/video decode verified. Replacement showcase clips do not replace or alter benchmark measurements. Seed and provenance are recorded per case; perceptual equivalence is not asserted.",
+  "seeds_by_case": {
+    "full-bf16": 7,
+    "full-int8": 7,
+    "vsa-bf16": 42,
+    "vsa-int8": 42,
+    "veda-bf16": 42,
+    "veda-int8": 42,
+    "vdn-bf16": 7,
+    "vdn-int8": 7,
+    "spark-bf16": 7,
+    "spark-int8": 7
+  }
 }

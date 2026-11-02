@@ -2,7 +2,6 @@
   "language": "ro",
   "name": "Română",
   "messages": {
-    "c0ebd296ffa66112": "Toate cele cinci metode folosesc opt atacanți. Stânga: BF16. Dreapta: nativ W8A8 INT8. Toate mostrele folosesc un singur card, același prompt, semințe comune **7** și descărcare potrivită.",
     "f0dc8d4df4421774": "> Un biciclist merge de-a lungul unei cărări liniștite în parc verde, filmare de urmărire cinematografică lină, lumină naturală.",
     "13bf8623731636b1": "**Complet + LightX2V8 · 8 pași**",
     "55e5d0d8d8510203": "**VSA · FastH3 V2 · 80% · 8 pași**",
@@ -82,7 +81,8 @@
     "b954cd7d3f0970b0": "Timpi SP și identitatea surselor",
     "7fad2bb9304c25b7": "SP2/SP4 reutilizează cuantizarea nativă W8A8 a intrării când este activată și calculează QKV pentru heads locali. SP8 păstrează comunicarea QKV BF16. **VDN／SP2／345 cadre** folosește `H3_ASCEND_INPUT_EXCHANGE=0` pentru ruta BF16 fără cache suplimentar de greutăți per head; straturile liniare rămân INT8. Nucleele attention nu se schimbă. Consultați [setările SP](docs/serving.md#sequence-parallel-inference).",
     "a942d236b7dd7e1a": "Comparația anterioară cu Offload pe straturi identic rămâne în [referința istorică pe o NPU](docs/archive/matched-offload-single-card.md). JSON-urile de timp păstrează legături către înregistrările originale.",
-    "eb994062e65bb7de": "Numai Ascend 910B3: **1344×768, 124 cadre native, 24 FPS (5,1667 secunde, aproximativ 5,17 secunde)**, cu sunet."
+    "eb994062e65bb7de": "Numai Ascend 910B3: **1344×768, 124 cadre native, 24 FPS (5,1667 secunde, aproximativ 5,17 secunde)**, cu sunet.",
+    "1555f11b24255faf": "Toate cele cinci metode folosesc opt atacanți. Stânga: BF16. Dreapta: nativ W8A8 INT8. Toate mostrele folosesc un singur card, același prompt, descărcare potrivită."
   },
   "navigation": [
     "Instalare",

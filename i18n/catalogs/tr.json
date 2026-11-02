@@ -2,7 +2,6 @@
   "language": "tr",
   "name": "Türkçe",
   "messages": {
-    "c0ebd296ffa66112": "Beş yöntemin tümü sekiz ileriyi kullanır. Sol: BF16. Sağ: yerel W8A8 INT8. Tüm örnekler tek bir kart, aynı komut istemi, ortak tohum **7** ve eşleşen Boşaltma kullanır.",
     "f0dc8d4df4421774": "> Bir bisikletçi sessiz, yeşil bir park yolunda ilerliyor, pürüzsüz sinematik izleme çekimi, doğal gün ışığı.",
     "13bf8623731636b1": "**Tam + LightX2V8 · 8 adım**",
     "55e5d0d8d8510203": "**VSA · FastH3 V2 · %80 · 8 adım**",
@@ -82,7 +81,8 @@
     "b954cd7d3f0970b0": "SP süre kayıtları ve kaynak kimliği",
     "7fad2bb9304c25b7": "SP2/SP4 etkin olduğunda yerel W8A8 giriş nicemlemesini yeniden kullanıp yalnızca kendi heads QKV’sini hesaplar. SP8 BF16 QKV iletişimini korur. **VDN／SP2／345 kare**, ek head ağırlık önbelleğinden kaçınmak için `H3_ASCEND_INPUT_EXCHANGE=0` ile BF16 yolunu kullanır; doğrusal katmanlar INT8 kalır. Attention çekirdekleri değişmez. [SP ayarlarına](docs/serving.md#sequence-parallel-inference) bakın.",
     "a942d236b7dd7e1a": "Önceki eş Offload katman karşılaştırması [geçmiş tek NPU referansında](docs/archive/matched-offload-single-card.md) tutulur. Süre JSON’ları özgün kayıtlara bağlantıları korur.",
-    "eb994062e65bb7de": "Yalnızca Ascend 910B3: **1344×768, 124 yerel kare, 24 FPS (5,1667 saniye, yaklaşık 5,17 saniye)**, sesli."
+    "eb994062e65bb7de": "Yalnızca Ascend 910B3: **1344×768, 124 yerel kare, 24 FPS (5,1667 saniye, yaklaşık 5,17 saniye)**, sesli.",
+    "1555f11b24255faf": "Beş yöntemin tümü sekiz ileriyi kullanır. Sol: BF16. Sağ: yerel W8A8 INT8. Tüm örnekler tek bir kart, aynı komut istemi, eşleşen Boşaltma kullanır."
   },
   "navigation": [
     "Kurulum",

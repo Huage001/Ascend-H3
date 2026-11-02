@@ -17,7 +17,7 @@ frames; the complete single-card matrix is recorded below; the separately reques
 | Matched dormant-vision initialization | Exact file-backed CPU storage for 27 unused input-vision blocks in VSA/VDN BF16 on both platforms; active DiT/text offload unchanged. Both long-video methods pass all four requests on both platforms |
 | NPU VDN temporary memory | Complete-window KV gather batching bounds workspace without excluding keys; complete eight-forward BF16/INT8 long requests pass. Native bitwise equivalence for changed CANN call shapes is not asserted |
 | Unified8 single-card matrix | All 40 cases accepted: 20 Ascend and 20 PRO 6000, five methods × BF16/INT8 × 124/345 frames at 1344×768. Every row uses eight actual forwards and seed7 |
-| Current qualitative gallery | Ten original Ascend seed7 videos at 1344×768 / 124 native frames / 24 FPS / eight updates; five methods × BF16/INT8. Original/transfer/formal-output SHA256 matches and full audio/video decode pass. Eight sampled frames including final frame123 reviewed. All 21 language READMEs show the same ten native MP4 players in five rows and two columns |
+| Current qualitative gallery | Ten Ascend videos (seed7 for Full/VDN/Spark; seed42 retakes for Veda/VSA) at 1344×768 / 124 native frames / 24 FPS / eight updates; five methods × BF16/INT8. Original/transfer SHA256 matches; showcase retakes are separate from timing and full audio/video decode pass. Eight sampled frames including final frame123 reviewed. All 21 language READMEs show the same ten native MP4 players in five rows and two columns |
 
 A source build, unit check or server launch does not establish a complete
 video result. Accept a row only after actual eight-forward/all-50-block audit,

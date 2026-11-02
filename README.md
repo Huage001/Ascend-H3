@@ -37,7 +37,7 @@ INT8 transformer quantization and selectable tensor / sequence parallel inferenc
 
 Ascend 910B3 only: **1344×768, 124 native frames, 24 FPS (5.1667 seconds, approximately 5.17 seconds)**, with audio.
 
-All five methods use eight forwards. Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt, common seed **7** and matched Offload.
+All five methods use eight forwards. Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt and matched Offload.
 
 > A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.
 
@@ -65,14 +65,14 @@ https://github.com/user-attachments/assets/b848532f-adcf-407b-99d8-23befe85ae18
 
 **VSA · FastH3 V2 · 80% · 8 steps**
 
-https://github.com/user-attachments/assets/778a882a-5e8a-46ef-92c5-a24719fe1fd7
+https://github.com/user-attachments/assets/47802ca4-31f4-46d9-a479-aef7075e3c41
 
 </td>
 <td>
 
 **VSA · FastH3 V2 · 80% · 8 steps**
 
-https://github.com/user-attachments/assets/5567de11-f619-44f3-b369-7459fe45b105
+https://github.com/user-attachments/assets/db092234-12a4-48d6-ac34-4271f97d6631
 
 </td>
 </tr>
@@ -81,14 +81,14 @@ https://github.com/user-attachments/assets/5567de11-f619-44f3-b369-7459fe45b105
 
 **Veda + LightX2V8 · 90% · 8 steps**
 
-https://github.com/user-attachments/assets/9948d9f9-ad79-4266-9cbf-2749dc02d344
+https://github.com/user-attachments/assets/f7120a47-795a-47b0-9ce6-7e2ef732106e
 
 </td>
 <td>
 
 **Veda + LightX2V8 · 90% · 8 steps**
 
-https://github.com/user-attachments/assets/03cfb9ec-66be-4ed9-8fd8-171a6672836a
+https://github.com/user-attachments/assets/fd7a11f1-7a7d-45ab-a9c2-2d1fb15d620a
 
 </td>
 </tr>

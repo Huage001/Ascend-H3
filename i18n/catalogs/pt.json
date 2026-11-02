@@ -2,7 +2,6 @@
   "language": "pt",
   "name": "Português",
   "messages": {
-    "c0ebd296ffa66112": "Todos os cinco métodos usam oito atacantes. Esquerda: BF16. À direita: W8A8 nativo INT8. Todas as amostras usam um cartão, o mesmo prompt, seed comum **7** e descarregamento correspondente.",
     "f0dc8d4df4421774": "> Um ciclista anda por um caminho tranquilo de um parque verde, filmagem suave e luz natural.",
     "13bf8623731636b1": "**Completo + LightX2V8 · 8 etapas**",
     "55e5d0d8d8510203": "**VSA · FastH3 V2 · 80% · 8 etapas**",
@@ -82,7 +81,8 @@
     "b954cd7d3f0970b0": "Tempos SP e identificação das fontes",
     "7fad2bb9304c25b7": "SP2/SP4 reutilizam a quantização W8A8 nativa da entrada quando ativada e projetam QKV das cabeças locais. SP8 mantém comunicação QKV BF16. **VDN／SP2／345 quadros** usa `H3_ASCEND_INPUT_EXCHANGE=0` para manter a rota BF16 e evitar o cache extra de pesos das cabeças; as camadas lineares continuam INT8. Os núcleos de atenção não mudam. Veja os [ajustes SP](docs/serving.md#sequence-parallel-inference).",
     "a942d236b7dd7e1a": "O comparativo anterior com Offload por camada igual permanece na [referência histórica de uma NPU](docs/archive/matched-offload-single-card.md). Os JSON de tempo preservam os links para os registros originais.",
-    "eb994062e65bb7de": "Somente Ascend 910B3: **1344×768, 124 quadros nativos, 24 FPS (5,1667 segundos, aproximadamente 5,17 segundos)**, com áudio."
+    "eb994062e65bb7de": "Somente Ascend 910B3: **1344×768, 124 quadros nativos, 24 FPS (5,1667 segundos, aproximadamente 5,17 segundos)**, com áudio.",
+    "1555f11b24255faf": "Todos os cinco métodos usam oito atacantes. Esquerda: BF16. À direita: W8A8 nativo INT8. Todas as amostras usam um cartão, o mesmo prompt, descarregamento correspondente."
   },
   "navigation": [
     "Instalação",

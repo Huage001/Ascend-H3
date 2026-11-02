@@ -4,7 +4,7 @@
   "7569ceccab36b897": "**Validated scope:** 40/40 INT8 E2E cells at 1344×768, 124/345 frames and 1/2/4/8 NPUs (37 fresh measurements and 3 previously validated layer-Offload measurements). The resident BF16 comparison on Ascend 910B3 and PRO 6000 contains 20 attention-core and 20 complete-block measurements. The attention operators retain their validated versions. An additional **30/30 fresh SP cells** cover both frame counts on 2/4/8 NPUs; all selected SP cells keep the DiT resident, with text-encoder Offload marked where used.",
   "34fe36bf1096b38b": "## Watch the Fair Comparison",
   "eb994062e65bb7de": "Ascend 910B3 only: **1344×768, 124 native frames, 24 FPS (5.1667 seconds, approximately 5.17 seconds)**, with audio.",
-  "c0ebd296ffa66112": "All five methods use eight forwards. Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt, common seed **7** and matched Offload.",
+  "1555f11b24255faf": "All five methods use eight forwards. Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt and matched Offload.",
   "f0dc8d4df4421774": "> A cyclist rides along a quiet green park path, smooth cinematic tracking shot, natural daylight.",
   "13bf8623731636b1": "**Full + LightX2V8 · 8 steps**",
   "55e5d0d8d8510203": "**VSA · FastH3 V2 · 80% · 8 steps**",
