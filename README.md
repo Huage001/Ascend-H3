@@ -25,7 +25,7 @@
 
 ![Ascend-H3 ecosystem](docs/assets/ascend-h3-ecosystem.png)
 
-> **License:** Project-authored contributions in this distribution are offered under the [PolyForm Noncommercial License 1.0.0](LICENSE). Third-party code and model weights have separate terms, and earlier Apache-2.0 grants remain in effect. See [third-party notices](THIRD_PARTY_NOTICES.md). For uses not covered by the applicable terms, contact [liusonghua@sjtu.edu.cn](mailto:liusonghua@sjtu.edu.cn).
+> **License:** Project-authored contributions in this distribution are offered under the [PolyForm Noncommercial License 1.0.0](LICENSE). Third-party code and model weights have separate terms. See [third-party notices](THIRD_PARTY_NOTICES.md). For uses not covered by the applicable terms, contact [liusonghua@sjtu.edu.cn](mailto:liusonghua@sjtu.edu.cn).
 
 MiniMax H3 inference on Ascend with Full, VSA, Veda, VDN and Spark-H3
 attention in one repository. The integration reuses vLLM-Omni model loading,
