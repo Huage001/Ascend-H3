@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+"""Reject staged README drift without inspecting unstaged local edits."""
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+
+
+def git(*args):
+    return subprocess.check_output(["git", *args])
+
+
+def relevant(name):
+    return name in {"README.md", "README.zh-CN.md", "scripts/sync_readmes.py"} or name.startswith("i18n/")
+
+
+changed = git("diff", "--cached", "--name-only", "--diff-filter=ACDMR").decode().splitlines()
+if any(relevant(name) for name in changed):
+    with tempfile.TemporaryDirectory(prefix="ascend-h3-readmes-") as directory:
+        root = Path(directory)
+        for name in git("ls-files", "--cached").decode().splitlines():
+            if relevant(name):
+                destination = root / name
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(git("show", ":" + name))
+        result = subprocess.run([sys.executable, str(root / "scripts/sync_readmes.py"), "--check"])
+        if result.returncode:
+            sys.exit("README sync failed: regenerate and stage every changed translation/catalog before committing.")
