@@ -238,43 +238,44 @@ VDN／Spark 用 `text`；八卡全部 `none`。VAE 默认使用全部选中卡�
 
 <!-- BEGIN PARALLEL SCALING -->
 
-## INT8 并行加速比：TP 与 SP
+## INT8 并行时延与加速比：TP 与 SP
 
-1344×768、8 次实际 DiT 更新、seed 7。**加速比 = 同方法单卡端到端耗时 ÷ 多卡端到端耗时**，精度和帧数保持一致。TP 与 SP 共用已测的同方法单卡基线（1.00×），表内仅显示相对单卡的加速比。
+1344×768、8 次实际 DiT 更新、seed 7。**加速比 = 同方法单卡端到端耗时 ÷ 多卡端到端耗时**，精度和帧数保持一致。TP 与 SP 共用已测的同方法单卡基线。单卡列保留基线时延；多卡格子显示**端到端时延（秒）及相对单卡的加速比**。
 
 <table>
   <thead>
     <tr>
       <th rowspan="2">帧数</th>
       <th rowspan="2">方法</th>
+      <th rowspan="2" width="120" align="right">单卡时延</th>
       <th colspan="2" align="center">2 卡</th>
       <th colspan="2" align="center">4 卡</th>
       <th colspan="2" align="center">8 卡</th>
     </tr>
     <tr>
-      <th width="105" align="right">TP</th>
-      <th width="105" align="right">SP</th>
-      <th width="105" align="right">TP</th>
-      <th width="105" align="right">SP</th>
-      <th width="105" align="right">TP</th>
-      <th width="105" align="right">SP</th>
+      <th width="120" align="right">TP</th>
+      <th width="120" align="right">SP</th>
+      <th width="120" align="right">TP</th>
+      <th width="120" align="right">SP</th>
+      <th width="120" align="right">TP</th>
+      <th width="120" align="right">SP</th>
     </tr>
   </thead>
   <tbody>
-    <tr><td align="right">124</td><td>Full</td><td align="right">1.70×</td><td align="right">1.86× †T</td><td align="right">3.05×</td><td align="right">3.79×</td><td align="right">5.51×</td><td align="right">6.96×</td></tr>
-    <tr><td align="right">124</td><td>VSA V2 · 80%</td><td align="right">1.57×</td><td align="right">1.75× †T</td><td align="right">2.75×</td><td align="right">3.58×</td><td align="right">4.83×</td><td align="right">6.61×</td></tr>
-    <tr><td align="right">124</td><td>Veda · 90%</td><td align="right">1.40×</td><td align="right">1.65× †T</td><td align="right">2.25×</td><td align="right">3.29×</td><td align="right">3.84×</td><td align="right">5.66×</td></tr>
-    <tr><td align="right">124</td><td>VDN · official</td><td align="right">1.59×</td><td align="right">1.87× †T</td><td align="right">2.74×</td><td align="right">3.62×</td><td align="right">4.89×</td><td align="right">6.21×</td></tr>
-    <tr><td align="right">124</td><td>Spark-H3 · 90%</td><td align="right">1.47×</td><td align="right">1.74× †T</td><td align="right">2.40×</td><td align="right">3.34×</td><td align="right">4.03×</td><td align="right">5.64×</td></tr>
-    <tr><td align="right">345</td><td>Full</td><td align="right">1.86× †T</td><td align="right">1.94× †T</td><td align="right">3.69×</td><td align="right">4.05×</td><td align="right">6.77×</td><td align="right">7.58×</td></tr>
-    <tr><td align="right">345</td><td>VSA V2 · 80%</td><td align="right">1.70× †T</td><td align="right">1.85× †T</td><td align="right">3.19×</td><td align="right">3.73×</td><td align="right">5.90×</td><td align="right">7.42×</td></tr>
-    <tr><td align="right">345</td><td>Veda · 90%</td><td align="right">1.50× †T</td><td align="right">1.79× †T</td><td align="right">2.60×</td><td align="right">3.42×</td><td align="right">4.45×</td><td align="right">6.15×</td></tr>
-    <tr><td align="right">345</td><td>VDN · official</td><td align="right">1.60× †T</td><td align="right">1.65× †T</td><td align="right">2.96×</td><td align="right">3.71× †T</td><td align="right">5.29×</td><td align="right">6.73×</td></tr>
-    <tr><td align="right">345</td><td>Spark-H3 · 90%</td><td align="right">1.57× †T</td><td align="right">1.81× †T</td><td align="right">2.79×</td><td align="right">3.49× †T</td><td align="right">4.82×</td><td align="right">6.34×</td></tr>
+    <tr><td align="right">124</td><td>Full</td><td align="right">197.66 s †T</td><td align="right">116.03 s<br>(1.70×)</td><td align="right">106.17 s †T<br>(1.86×)</td><td align="right">64.78 s<br>(3.05×)</td><td align="right">52.20 s<br>(3.79×)</td><td align="right">35.87 s<br>(5.51×)</td><td align="right">28.38 s<br>(6.96×)</td></tr>
+    <tr><td align="right">124</td><td>VSA V2 · 80%</td><td align="right">146.81 s †T</td><td align="right">93.57 s<br>(1.57×)</td><td align="right">83.74 s †T<br>(1.75×)</td><td align="right">53.47 s<br>(2.75×)</td><td align="right">41.05 s<br>(3.58×)</td><td align="right">30.40 s<br>(4.83×)</td><td align="right">22.19 s<br>(6.61×)</td></tr>
+    <tr><td align="right">124</td><td>Veda · 90%</td><td align="right">97.40 s †T</td><td align="right">69.66 s<br>(1.40×)</td><td align="right">59.09 s †T<br>(1.65×)</td><td align="right">43.38 s<br>(2.25×)</td><td align="right">29.59 s<br>(3.29×)</td><td align="right">25.33 s<br>(3.84×)</td><td align="right">17.22 s<br>(5.66×)</td></tr>
+    <tr><td align="right">124</td><td>VDN · official</td><td align="right">216.91 s †T</td><td align="right">136.02 s<br>(1.59×)</td><td align="right">115.92 s †T<br>(1.87×)</td><td align="right">79.26 s<br>(2.74×)</td><td align="right">59.90 s<br>(3.62×)</td><td align="right">44.36 s<br>(4.89×)</td><td align="right">34.91 s<br>(6.21×)</td></tr>
+    <tr><td align="right">124</td><td>Spark-H3 · 90%</td><td align="right">117.11 s †T</td><td align="right">79.41 s<br>(1.47×)</td><td align="right">67.14 s †T<br>(1.74×)</td><td align="right">48.87 s<br>(2.40×)</td><td align="right">35.02 s<br>(3.34×)</td><td align="right">29.05 s<br>(4.03×)</td><td align="right">20.78 s<br>(5.64×)</td></tr>
+    <tr><td align="right">345</td><td>Full</td><td align="right">1211.17 s †T</td><td align="right">649.72 s †T<br>(1.86×)</td><td align="right">625.72 s †T<br>(1.94×)</td><td align="right">328.63 s<br>(3.69×)</td><td align="right">299.26 s<br>(4.05×)</td><td align="right">178.81 s<br>(6.77×)</td><td align="right">159.88 s<br>(7.58×)</td></tr>
+    <tr><td align="right">345</td><td>VSA V2 · 80%</td><td align="right">617.55 s †L ‡R</td><td align="right">363.99 s †T<br>(1.70×)</td><td align="right">334.36 s †T<br>(1.85×)</td><td align="right">193.33 s<br>(3.19×)</td><td align="right">165.62 s<br>(3.73×)</td><td align="right">104.71 s<br>(5.90×)</td><td align="right">83.26 s<br>(7.42×)</td></tr>
+    <tr><td align="right">345</td><td>Veda · 90%</td><td align="right">337.95 s †T</td><td align="right">225.31 s †T<br>(1.50×)</td><td align="right">188.40 s †T<br>(1.79×)</td><td align="right">130.11 s<br>(2.60×)</td><td align="right">98.70 s<br>(3.42×)</td><td align="right">75.93 s<br>(4.45×)</td><td align="right">54.98 s<br>(6.15×)</td></tr>
+    <tr><td align="right">345</td><td>VDN · official</td><td align="right">620.67 s †L ‡R</td><td align="right">388.58 s †T<br>(1.60×)</td><td align="right">377.01 s †T<br>(1.65×)</td><td align="right">209.84 s<br>(2.96×)</td><td align="right">167.51 s †T<br>(3.71×)</td><td align="right">117.27 s<br>(5.29×)</td><td align="right">92.20 s<br>(6.73×)</td></tr>
+    <tr><td align="right">345</td><td>Spark-H3 · 90%</td><td align="right">419.44 s †L ‡R</td><td align="right">267.61 s †T<br>(1.57×)</td><td align="right">231.16 s †T<br>(1.81×)</td><td align="right">150.50 s<br>(2.79×)</td><td align="right">120.20 s †T<br>(3.49×)</td><td align="right">87.02 s<br>(4.82×)</td><td align="right">66.18 s<br>(6.34×)</td></tr>
   </tbody>
 </table>
 
-†T 表示该次多卡运行仅卸载文本编码器；无标记格子不使用运行时 Offload。单卡基线除 345 帧 VSA、VDN、Spark 外均仅文本 Offload；这三组使用 DiT／文本逐层 Offload，复用 2026-10-31 已完整验收的实测。因此加速比也包含 Offload 策略变化带来的收益，不等同于纯并行效率。30 组 SP 均保持 DiT 常驻。
+†T：仅文本编码器 Offload；†L：DiT／文本逐层 Offload；‡R：复用已验收的历史实测。无标记格子不使用运行时 Offload。单卡基线除 345 帧 VSA、VDN、Spark 外均仅文本 Offload；这三组使用 DiT／文本逐层 Offload，复用 2026-10-31 已完整验收的实测。因此加速比也包含 Offload 策略变化带来的收益，不等同于纯并行效率。30 组 SP 均保持 DiT 常驻。
 
 端到端计时包含文本编码、音视频解码与 MP4 写出，排除模型加载、提前合并 LoRA、启动阶段 AdaLN 准备和预热。30 组 SP 各执行一次带对齐核验的预热和一次正式请求，不追加 profile 请求；TP／单卡来源包括 37 组新测和 3 组明确标记的历史实测。选中卡有竞争时该次记录作废并重跑。VAE 并行数等于卡数，DiT heads 按 56/28/14/7 分配。
 
