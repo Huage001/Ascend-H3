@@ -2,7 +2,6 @@
   "language": "vi",
   "name": "Tiếng Việt",
   "messages": {
-    "cd141830022b62ef": "Chỉ Ascend 910B3: **1344×768, 345 khung hình gốc, 24 FPS (14,375 giây, khoảng 14,4 giây)**, có âm thanh.",
     "c0ebd296ffa66112": "Tất cả năm phương pháp đều sử dụng tám chuyển tiếp. Bên trái: BF16. Phải: W8A8 INT8 gốc. Tất cả các mẫu đều sử dụng một thẻ, cùng một lời nhắc, hạt giống chung **7** và Giảm tải phù hợp.",
     "f0dc8d4df4421774": "> Một người đi xe đạp đạp xe dọc theo con đường công viên xanh yên tĩnh, cảnh quay theo dõi mượt mà như điện ảnh, ánh sáng ban ngày tự nhiên.",
     "13bf8623731636b1": "**Đầy đủ + LightX2V8 · 8 bước**",
@@ -82,7 +81,8 @@
     "a89276e06a584e73": "Mốc một NPU và bản ghi thời gian TP",
     "b954cd7d3f0970b0": "Bản ghi thời gian SP và định danh mã nguồn",
     "7fad2bb9304c25b7": "SP2/SP4 khi bật sẽ dùng lại lượng tử hóa đầu vào W8A8 gốc rồi tính QKV cho heads cục bộ. SP8 giữ truyền QKV BF16. **VDN／SP2／345 khung hình** dùng `H3_ASCEND_INPUT_EXCHANGE=0` để giữ đường BF16, tránh bộ đệm trọng số head bổ sung; lớp tuyến tính vẫn INT8. Lõi attention không đổi. Xem [thiết lập SP](docs/serving.md#sequence-parallel-inference).",
-    "a942d236b7dd7e1a": "So sánh Offload từng lớp đồng nhất trước đây được giữ ở [tham chiếu một NPU cũ](docs/archive/matched-offload-single-card.md). JSON thời gian vẫn liên kết tới bản ghi gốc."
+    "a942d236b7dd7e1a": "So sánh Offload từng lớp đồng nhất trước đây được giữ ở [tham chiếu một NPU cũ](docs/archive/matched-offload-single-card.md). JSON thời gian vẫn liên kết tới bản ghi gốc.",
+    "eb994062e65bb7de": "Chỉ Ascend 910B3: **1344×768, 124 khung hình gốc, 24 FPS (5,1667 giây, khoảng 5,17 giây)**, có âm thanh."
   },
   "navigation": [
     "Cài đặt",

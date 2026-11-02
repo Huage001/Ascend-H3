@@ -2,7 +2,6 @@
   "language": "fr",
   "name": "Français",
   "messages": {
-    "cd141830022b62ef": "Ascend 910B3 uniquement : **1344 × 768, 345 images natives, 24 FPS (14,375 secondes, environ 14,4 secondes)**, avec audio.",
     "c0ebd296ffa66112": "Les cinq méthodes utilisent huit avant. À gauche : BF16. À droite : W8A8 natif INT8. Tous les échantillons utilisent une carte, la même invite, la graine commune **7** et le déchargement correspondant.",
     "f0dc8d4df4421774": "> Un cycliste roule le long d'un sentier verdoyant et calme, un travelling cinématique fluide, la lumière naturelle du jour.",
     "13bf8623731636b1": "**Full + LightX2V8 · 8 étapes**",
@@ -82,7 +81,8 @@
     "a89276e06a584e73": "Références sur un NPU et mesures TP",
     "b954cd7d3f0970b0": "Mesures SP et identité des sources",
     "7fad2bb9304c25b7": "SP2/SP4 réutilisent la quantification d’entrée W8A8 native lorsqu’elle est activée, puis projettent les QKV des têtes locales. SP8 garde les échanges QKV BF16. **VDN／SP2／345 images** utilise `H3_ASCEND_INPUT_EXCHANGE=0` pour garder ce chemin BF16 et éviter le cache supplémentaire des poids par tête ; les couches linéaires restent INT8. Les cœurs d’attention sont inchangés. Voir les [réglages SP](docs/serving.md#sequence-parallel-inference).",
-    "a942d236b7dd7e1a": "L’ancien comparatif avec déchargement identique par couche reste dans la [référence historique sur un NPU](docs/archive/matched-offload-single-card.md). Les JSON de temps conservent les liens vers les mesures originales."
+    "a942d236b7dd7e1a": "L’ancien comparatif avec déchargement identique par couche reste dans la [référence historique sur un NPU](docs/archive/matched-offload-single-card.md). Les JSON de temps conservent les liens vers les mesures originales.",
+    "eb994062e65bb7de": "Ascend 910B3 uniquement : **1344 × 768, 124 images natives, 24 FPS (5,1667 secondes, environ 5,17 secondes)**, avec audio."
   },
   "navigation": [
     "Mise en place",

@@ -2,7 +2,6 @@
   "language": "bn",
   "name": "বাংলা",
   "messages": {
-    "cd141830022b62ef": "Ascend 910B3 শুধুমাত্র: **1344×768, 345 নেটিভ ফ্রেম, 24 FPS (14.375 সেকেন্ড, প্রায় 14.4 সেকেন্ড)**, অডিও সহ।",
     "c0ebd296ffa66112": "সমস্ত পাঁচটি পদ্ধতি আটটি ফরোয়ার্ড ব্যবহার করে। বাম: BF16। ডানদিকে: নেটিভ W8A8 INT8। সমস্ত নমুনা একটি কার্ড, একই প্রম্পট, সাধারণ বীজ **7** এবং মিলিত অফলোড ব্যবহার করে।",
     "f0dc8d4df4421774": "> একটি সাইকেল আরোহী একটি শান্ত সবুজ পার্কের পথ, মসৃণ সিনেম্যাটিক ট্র্যাকিং শট, প্রাকৃতিক দিনের আলোতে রাইড করে।",
     "13bf8623731636b1": "**Full + LightX2V8 · ৮টি ধাপ**",
@@ -82,7 +81,8 @@
     "a89276e06a584e73": "Single-NPU baseline ও TP timing records",
     "b954cd7d3f0970b0": "SP timing records ও source পরিচয়",
     "7fad2bb9304c25b7": "সক্রিয় থাকলে SP2/SP4 native W8A8 input quantization পুনর্ব্যবহার করে শুধু স্থানীয় heads-এর QKV গণনা করে। SP8 BF16 QKV communication রাখে। **VDN／SP2／345 frames**-এ `H3_ASCEND_INPUT_EXCHANGE=0` BF16 path রাখে এবং অতিরিক্ত head-weight cache এড়ায়; linear layers INT8 থাকে। Attention cores অপরিবর্তিত। [SP settings](docs/serving.md#sequence-parallel-inference) দেখুন।",
-    "a942d236b7dd7e1a": "আগের একই layer-Offload তুলনা [ঐতিহাসিক single-NPU reference](docs/archive/matched-offload-single-card.md)-এ রাখা হয়েছে। Timing JSON মূল records-এর links সংরক্ষণ করে।"
+    "a942d236b7dd7e1a": "আগের একই layer-Offload তুলনা [ঐতিহাসিক single-NPU reference](docs/archive/matched-offload-single-card.md)-এ রাখা হয়েছে। Timing JSON মূল records-এর links সংরক্ষণ করে।",
+    "eb994062e65bb7de": "Ascend 910B3 শুধুমাত্র: **1344×768, 124 নেটিভ ফ্রেম, 24 FPS (5.1667 সেকেন্ড, প্রায় 5.17 সেকেন্ড)**, অডিও সহ।"
   },
   "navigation": [
     "ইনস্টলেশন",

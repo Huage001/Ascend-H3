@@ -35,7 +35,7 @@ INT8 transformer quantization and selectable tensor / sequence parallel inferenc
 
 ## Watch the Fair Comparison
 
-Ascend 910B3 only: **1344×768, 345 native frames, 24 FPS (14.375 seconds, approximately 14.4 seconds)**, with audio.
+Ascend 910B3 only: **1344×768, 124 native frames, 24 FPS (5.1667 seconds, approximately 5.17 seconds)**, with audio.
 
 All five methods use eight forwards. Left: BF16. Right: native W8A8 INT8. All samples use one card, the same prompt, common seed **7** and matched Offload.
 
@@ -49,14 +49,14 @@ All five methods use eight forwards. Left: BF16. Right: native W8A8 INT8. All sa
 
 **Full + LightX2V8 · 8 steps**
 
-https://github.com/user-attachments/assets/1751d9fe-3ff9-48d1-a0dd-9ed62d431d17
+https://github.com/user-attachments/assets/e59cf141-3d11-44fe-911c-0ebc9c70a3f2
 
 </td>
 <td>
 
 **Full + LightX2V8 · 8 steps**
 
-https://github.com/user-attachments/assets/0514e9a0-76dd-4946-b4b8-b39ca38d7c69
+https://github.com/user-attachments/assets/b848532f-adcf-407b-99d8-23befe85ae18
 
 </td>
 </tr>
@@ -65,14 +65,14 @@ https://github.com/user-attachments/assets/0514e9a0-76dd-4946-b4b8-b39ca38d7c69
 
 **VSA · FastH3 V2 · 80% · 8 steps**
 
-https://github.com/user-attachments/assets/4a03fd28-4c88-4b46-b3aa-7dcb4ec4b1c1
+https://github.com/user-attachments/assets/778a882a-5e8a-46ef-92c5-a24719fe1fd7
 
 </td>
 <td>
 
 **VSA · FastH3 V2 · 80% · 8 steps**
 
-https://github.com/user-attachments/assets/bae64455-0bbc-4708-b33e-1e1a4269e4cf
+https://github.com/user-attachments/assets/5567de11-f619-44f3-b369-7459fe45b105
 
 </td>
 </tr>
@@ -81,14 +81,14 @@ https://github.com/user-attachments/assets/bae64455-0bbc-4708-b33e-1e1a4269e4cf
 
 **Veda + LightX2V8 · 90% · 8 steps**
 
-https://github.com/user-attachments/assets/2c345f2b-4188-48d1-b0fc-6a44dd59800b
+https://github.com/user-attachments/assets/9948d9f9-ad79-4266-9cbf-2749dc02d344
 
 </td>
 <td>
 
 **Veda + LightX2V8 · 90% · 8 steps**
 
-https://github.com/user-attachments/assets/bc8e2eb5-b51b-4a53-bf9b-05c432dfe62a
+https://github.com/user-attachments/assets/03cfb9ec-66be-4ed9-8fd8-171a6672836a
 
 </td>
 </tr>
@@ -97,14 +97,14 @@ https://github.com/user-attachments/assets/bc8e2eb5-b51b-4a53-bf9b-05c432dfe62a
 
 **VDN · official · 8 steps**
 
-https://github.com/user-attachments/assets/5e4d2ced-da14-4e50-b7ac-6ff1d298d478
+https://github.com/user-attachments/assets/2830941f-3a21-400e-aa9c-d0bbf7b84c4c
 
 </td>
 <td>
 
 **VDN · official · 8 steps**
 
-https://github.com/user-attachments/assets/7069c2e4-844c-497b-a824-7a26a515dce2
+https://github.com/user-attachments/assets/fa7bff37-ba41-491f-b519-c071728cf34c
 
 </td>
 </tr>
@@ -113,14 +113,14 @@ https://github.com/user-attachments/assets/7069c2e4-844c-497b-a824-7a26a515dce2
 
 **Spark-H3 + LightX2V8 · 8 steps**
 
-https://github.com/user-attachments/assets/66032d79-cf29-499e-ad0e-3f1bcaa753a9
+https://github.com/user-attachments/assets/31f6b343-e897-4998-8969-9ff84385194c
 
 </td>
 <td>
 
 **Spark-H3 + LightX2V8 · 8 steps**
 
-https://github.com/user-attachments/assets/c4a787a9-c1e9-46df-97f1-2887c7e49135
+https://github.com/user-attachments/assets/18db86f3-4dd9-40de-89b2-64a981d709cd
 
 </td>
 </tr>
@@ -129,7 +129,7 @@ https://github.com/user-attachments/assets/c4a787a9-c1e9-46df-97f1-2887c7e49135
 
 VSA V2 uses 80% video sparsity; Veda uses 90%. Text and audio retain their native rules.
 
-[Parameters, SHA256 and provenance for all ten videos](examples/videos/qualitative-1344-345.json).
+[Parameters, SHA256 and provenance for all ten videos](examples/videos/qualitative-1344-124.json).
 
 The initial integration targets batch-one T2VA without reference videos.
 See [architecture](docs/architecture.md), [validation status](docs/validation.md)

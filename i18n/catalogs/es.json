@@ -2,7 +2,6 @@
   "language": "es",
   "name": "Español",
   "messages": {
-    "cd141830022b62ef": "Solo Ascend 910B3: **1344×768, 345 fotogramas nativos, 24 FPS (14,375 segundos, aproximadamente 14,4 segundos)**, con audio.",
     "c0ebd296ffa66112": "Los cinco métodos utilizan ocho delanteros. Izquierda: BF16. Derecha: W8A8 INT8 nativo. Todas las muestras utilizan una tarjeta, el mismo mensaje, semilla común **7** y descarga coincidente.",
     "f0dc8d4df4421774": "> Un ciclista recorre un tranquilo sendero verde del parque, un suave seguimiento cinematográfico y luz natural.",
     "13bf8623731636b1": "**Completo + LightX2V8 · 8 pasos**",
@@ -82,7 +81,8 @@
     "a89276e06a584e73": "Referencias de una NPU y tiempos TP",
     "b954cd7d3f0970b0": "Tiempos SP e identidad del código fuente",
     "7fad2bb9304c25b7": "SP2/SP4 reutilizan la cuantización de entrada W8A8 nativa cuando está habilitada y calculan QKV solo para sus cabezas. SP8 conserva comunicación QKV BF16. **VDN／SP2／345 fotogramas** usa `H3_ASCEND_INPUT_EXCHANGE=0` para mantener esa ruta BF16 y evitar la caché adicional de pesos por cabeza; las capas lineales siguen en INT8. Los núcleos no cambian. Consulte los [ajustes SP](docs/serving.md#sequence-parallel-inference).",
-    "a942d236b7dd7e1a": "La comparación anterior con Offload por capas idéntico se conserva en la [referencia histórica de una NPU](docs/archive/matched-offload-single-card.md). Los JSON mantienen los enlaces a los registros originales."
+    "a942d236b7dd7e1a": "La comparación anterior con Offload por capas idéntico se conserva en la [referencia histórica de una NPU](docs/archive/matched-offload-single-card.md). Los JSON mantienen los enlaces a los registros originales.",
+    "eb994062e65bb7de": "Solo Ascend 910B3: **1344×768, 124 fotogramas nativos, 24 FPS (5,1667 segundos, aproximadamente 5,17 segundos)**, con audio."
   },
   "navigation": [
     "Instalación",

@@ -2,7 +2,6 @@
   "language": "hi",
   "name": "हिन्दी",
   "messages": {
-    "cd141830022b62ef": "केवल Ascend 910B3: **1344×768, 345 देशी फ्रेम, 24 एफपीएस (14.375 सेकंड, लगभग 14.4 सेकंड)**, ऑडियो के साथ।",
     "c0ebd296ffa66112": "सभी पांच विधियां आठ फॉरवर्ड का उपयोग करती हैं। बाएँ: BF16। दाएं: मूल W8A8 INT8। सभी नमूने एक कार्ड, एक ही प्रॉम्प्ट, सामान्य बीज **7** और मिलान किए गए ऑफलोड का उपयोग करते हैं।",
     "f0dc8d4df4421774": "> एक साइकिल चालक शांत हरे पार्क पथ, सहज सिनेमाई ट्रैकिंग शॉट, प्राकृतिक दिन के उजाले पर सवारी करता है।",
     "13bf8623731636b1": "**पूर्ण + लाइटएक्स2वी8 · 8 चरण**",
@@ -82,7 +81,8 @@
     "a89276e06a584e73": "Single-NPU baselines और TP timing records",
     "b954cd7d3f0970b0": "SP timing records और source पहचान",
     "7fad2bb9304c25b7": "SP2/SP4 में सक्षम होने पर native W8A8 input quantization पुनः उपयोग करके स्थानीय heads का QKV निकालते हैं। SP8 में BF16 QKV communication रहता है। **VDN／SP2／345 frames** में `H3_ASCEND_INPUT_EXCHANGE=0` से BF16 path रहता है और अतिरिक्त head-weight cache नहीं चाहिए; linear layers INT8 रहती हैं। attention cores अपरिवर्तित हैं। [SP settings](docs/serving.md#sequence-parallel-inference) देखें।",
-    "a942d236b7dd7e1a": "पहली समान layer-Offload तुलना [ऐतिहासिक single-NPU reference](docs/archive/matched-offload-single-card.md) में है। timing JSON मूल records के links बनाए रखता है।"
+    "a942d236b7dd7e1a": "पहली समान layer-Offload तुलना [ऐतिहासिक single-NPU reference](docs/archive/matched-offload-single-card.md) में है। timing JSON मूल records के links बनाए रखता है।",
+    "eb994062e65bb7de": "केवल Ascend 910B3: **1344×768, 124 देशी फ्रेम, 24 एफपीएस (5.1667 सेकंड, लगभग 5.17 सेकंड)**, ऑडियो के साथ।"
   },
   "navigation": [
     "स्थापना",

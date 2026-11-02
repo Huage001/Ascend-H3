@@ -2,7 +2,6 @@
   "language": "ur",
   "name": "اردو",
   "messages": {
-    "cd141830022b62ef": "Ascend 910B3 صرف: **1344×768، 345 مقامی فریم، 24 FPS (14.375 سیکنڈ، تقریباً 14.4 سیکنڈ)**، آڈیو کے ساتھ۔",
     "c0ebd296ffa66112": "تمام پانچ طریقے آٹھ فارورڈز استعمال کرتے ہیں۔ بائیں: BF16۔ دائیں: مقامی W8A8 INT8۔ تمام نمونے ایک کارڈ، ایک ہی پرامپٹ، عام بیج **7** اور مماثل آف لوڈ کا استعمال کرتے ہیں۔",
     "f0dc8d4df4421774": "> ایک سائیکل سوار ایک پُرسکون سبز پارک کے راستے، ہموار سنیماٹک ٹریکنگ شاٹ، قدرتی دن کی روشنی میں سواری کرتا ہے۔",
     "13bf8623731636b1": "**مکمل + LightX2V8 · 8 مراحل**",
@@ -82,7 +81,8 @@
     "a89276e06a584e73": "Single-NPU baselines اور TP timing records",
     "b954cd7d3f0970b0": "SP timing records اور source شناخت",
     "7fad2bb9304c25b7": "SP2/SP4 فعال ہونے پر native W8A8 input quantization دوبارہ استعمال کر کے صرف مقامی heads کا QKV نکالتے ہیں۔ SP8 BF16 QKV communication برقرار رکھتا ہے۔ **VDN／SP2／345 frames** میں `H3_ASCEND_INPUT_EXCHANGE=0` سے BF16 راستہ برقرار رہتا اور اضافی head-weight cache بچتا ہے؛ linear layers INT8 رہتی ہیں۔ Attention cores تبدیل نہیں ہوئے۔ [SP settings](docs/serving.md#sequence-parallel-inference) دیکھیں۔",
-    "a942d236b7dd7e1a": "پہلا یکساں layer-Offload موازنہ [تاریخی single-NPU reference](docs/archive/matched-offload-single-card.md) میں محفوظ ہے۔ Timing JSON اصل records کے links رکھتا ہے۔"
+    "a942d236b7dd7e1a": "پہلا یکساں layer-Offload موازنہ [تاریخی single-NPU reference](docs/archive/matched-offload-single-card.md) میں محفوظ ہے۔ Timing JSON اصل records کے links رکھتا ہے۔",
+    "eb994062e65bb7de": "Ascend 910B3 صرف: **1344×768، 124 مقامی فریم، 24 FPS (5.1667 سیکنڈ، تقریباً 5.17 سیکنڈ)**، آڈیو کے ساتھ۔"
   },
   "navigation": [
     "تنصیب",
