@@ -14,5 +14,6 @@ models/
 *.pt
 *.pth
 *.mp4
+!website/public/videos/*.mp4
 *.wav
 .env

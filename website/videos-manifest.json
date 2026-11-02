@@ -1,0 +1,52 @@
+[
+  {
+    "file": "full-bf16.mp4",
+    "bytes": 40126485,
+    "sha256": "7018273f5b6e6705a0dc0e1e3b3684a2be0f6f87d1c25b767f07a30f8b7feca1"
+  },
+  {
+    "file": "full-int8.mp4",
+    "bytes": 43095932,
+    "sha256": "6b5f5bf950ff1bd5da6dea3ad71d003515dd08ee309ba94573b462b1df06296f"
+  },
+  {
+    "file": "vsa-bf16.mp4",
+    "bytes": 37321233,
+    "sha256": "ffa3f70ad466f454d60fb65ffd680baf5117938375b1941f180ce5ac8b635490"
+  },
+  {
+    "file": "vsa-int8.mp4",
+    "bytes": 39733464,
+    "sha256": "de3288e47f3c5a3fd6d52756735d170315a00fc45fdb7354abf612a4d5c6b58c"
+  },
+  {
+    "file": "veda-bf16.mp4",
+    "bytes": 44209648,
+    "sha256": "a013cbd95005245e795034d2c19a239f35b712b7e2b52341e04cc2259e74be42"
+  },
+  {
+    "file": "veda-int8.mp4",
+    "bytes": 44390134,
+    "sha256": "33e066b424cb5c69f64211679d2f3e95986bb6560a041a8cf17eeb7758e9cdf3"
+  },
+  {
+    "file": "vdn-bf16.mp4",
+    "bytes": 37941323,
+    "sha256": "12e323e02bf263a3613409356b19ca7e40c1c7fc06450cf1e82831dfc8eecabe"
+  },
+  {
+    "file": "vdn-int8.mp4",
+    "bytes": 39208194,
+    "sha256": "e165c968c10a74362571cdebbbe2f8f284228013dac538d0c14a3e6fcdc360e9"
+  },
+  {
+    "file": "spark-bf16.mp4",
+    "bytes": 42512710,
+    "sha256": "20f1c029dfe49ae92e6befcae8e23ac9d7f96ee0ec90df320321c6f34ceee1ac"
+  },
+  {
+    "file": "spark-int8.mp4",
+    "bytes": 43803938,
+    "sha256": "c74fd5680d232c709192cb3485a2949753232782f633f33e81f6a2e02ba12e18"
+  }
+]
