@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "فقط Ascend 910B3: **1344×768، 124 فریم بومی، 24 FPS (14375 ثانیه، تقریباً 5.17 ثانیه)**، همراه با صدا.",
     "1555f11b24255faf": "هر پنج روش از هشت فوروارد استفاده می کنند. سمت چپ: BF16. سمت راست: بومی W8A8 INT8. همه نمونه ها از یک کارت، همان اعلان، Offload همسان استفاده می کنند.",
     "1ef93036e7583a5c": "## سپاسگزاری",
-    "a026a2e95e9eafe8": "از تیم‌های [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) برای انتشار پژوهش‌ها، کد و منابع مدل‌هایشان سپاسگزاریم که این سازگارسازی با Ascend را ممکن ساختند."
+    "567295dc0fc17e1f": "از تیم‌های [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) برای انتشار پژوهش‌ها، کد و منابع مدل‌هایشان سپاسگزاریم که این سازگارسازی با Ascend را ممکن ساختند."
   },
   "navigation": [
     "نصب و راه اندازی",

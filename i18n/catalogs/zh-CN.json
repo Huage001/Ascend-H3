@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "仅展示昇腾 910B3：**1344×768、124 原生帧、24 FPS（5.1667 秒，约 5.17 秒）**，含音频。",
     "1555f11b24255faf": "五种方法均执行 8 次实际前向。左列为 BF16，右列为原生 W8A8 INT8。所有样例使用单卡、相同 prompt、一致的 Offload 策略。",
     "1ef93036e7583a5c": "## 致谢",
-    "a026a2e95e9eafe8": "感谢 [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/)、[Veda](https://veda-sparse.github.io/)、[VDN](https://openvdn.github.io/)、[Spark-H3](https://zechengtang.github.io/Spark-H3/) 团队分享研究成果、代码和模型资源，为本项目的昇腾适配提供了基础。"
+    "567295dc0fc17e1f": "感谢 [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/)、[Veda](https://veda-sparse.github.io/)、[VDN](https://openvdn.github.io/)、[Spark-H3](https://zechengtang.github.io/Spark-H3/)、[vLLM](https://vllm.ai/)、[vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) 团队分享研究成果、代码和模型资源，为本项目的昇腾适配提供了基础。"
   },
   "navigation": [
     "安装与编译",

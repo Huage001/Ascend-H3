@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "Ascend 910B3 మాత్రమే: **1344×768, 124 స్థానిక ఫ్రేమ్‌లు, 24 FPS (5.1667 సెకన్లు, సుమారు 5.17 సెకన్లు)**, ఆడియోతో.",
     "1555f11b24255faf": "మొత్తం ఐదు పద్ధతులు ఎనిమిది ఫార్వర్డ్‌లను ఉపయోగిస్తాయి. ఎడమ: BF16. కుడి: స్థానిక W8A8 INT8. అన్ని నమూనాలు ఒక కార్డ్, అదే ప్రాంప్ట్, సరిపోలిన ఆఫ్‌లోడ్‌ని ఉపయోగిస్తాయి.",
     "1ef93036e7583a5c": "## కృతజ్ఞతలు",
-    "a026a2e95e9eafe8": "తమ పరిశోధన, కోడ్ మరియు మోడల్ వనరులను పంచుకుని ఈ Ascend అనుసరణను సాధ్యం చేసిన [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) బృందాలకు ధన్యవాదాలు."
+    "567295dc0fc17e1f": "తమ పరిశోధన, కోడ్ మరియు మోడల్ వనరులను పంచుకుని ఈ Ascend అనుసరణను సాధ్యం చేసిన [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) బృందాలకు ధన్యవాదాలు."
   },
   "navigation": [
     "సంస్థాపన",

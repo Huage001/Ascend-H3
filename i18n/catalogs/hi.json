@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "केवल Ascend 910B3: **1344×768, 124 देशी फ्रेम, 24 एफपीएस (5.1667 सेकंड, लगभग 5.17 सेकंड)**, ऑडियो के साथ।",
     "1555f11b24255faf": "सभी पांच विधियां आठ फॉरवर्ड का उपयोग करती हैं। बाएँ: BF16। दाएं: मूल W8A8 INT8। सभी नमूने एक कार्ड, एक ही प्रॉम्प्ट, मिलान किए गए ऑफलोड का उपयोग करते हैं।",
     "1ef93036e7583a5c": "## आभार",
-    "a026a2e95e9eafe8": "हम [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) की टीमों को उनके शोध, कोड और मॉडल संसाधन साझा करने के लिए धन्यवाद देते हैं, जिनसे यह Ascend अनुकूलन संभव हुआ।"
+    "567295dc0fc17e1f": "हम [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) की टीमों को उनके शोध, कोड और मॉडल संसाधन साझा करने के लिए धन्यवाद देते हैं, जिनसे यह Ascend अनुकूलन संभव हुआ।"
   },
   "navigation": [
     "स्थापना",

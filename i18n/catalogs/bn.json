@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "Ascend 910B3 শুধুমাত্র: **1344×768, 124 নেটিভ ফ্রেম, 24 FPS (5.1667 সেকেন্ড, প্রায় 5.17 সেকেন্ড)**, অডিও সহ।",
     "1555f11b24255faf": "সমস্ত পাঁচটি পদ্ধতি আটটি ফরোয়ার্ড ব্যবহার করে। বাম: BF16। ডানদিকে: নেটিভ W8A8 INT8। সমস্ত নমুনা একটি কার্ড, একই প্রম্পট, মিলিত অফলোড ব্যবহার করে।",
     "1ef93036e7583a5c": "## কৃতজ্ঞতা",
-    "a026a2e95e9eafe8": "আমরা [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) দলের প্রতি কৃতজ্ঞ, যাদের গবেষণা, কোড ও মডেল সম্পদ ভাগ করে নেওয়ার ফলে Ascend-এর জন্য এই অভিযোজন সম্ভব হয়েছে।"
+    "567295dc0fc17e1f": "আমরা [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) দলের প্রতি কৃতজ্ঞ, যাদের গবেষণা, কোড ও মডেল সম্পদ ভাগ করে নেওয়ার ফলে Ascend-এর জন্য এই অভিযোজন সম্ভব হয়েছে।"
   },
   "navigation": [
     "ইনস্টলেশন",

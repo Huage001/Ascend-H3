@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "Chỉ Ascend 910B3: **1344×768, 124 khung hình gốc, 24 FPS (5,1667 giây, khoảng 5,17 giây)**, có âm thanh.",
     "1555f11b24255faf": "Tất cả năm phương pháp đều sử dụng tám chuyển tiếp. Bên trái: BF16. Phải: W8A8 INT8 gốc. Tất cả các mẫu đều sử dụng một thẻ, cùng một lời nhắc, Giảm tải phù hợp.",
     "1ef93036e7583a5c": "## Lời cảm ơn",
-    "a026a2e95e9eafe8": "Chúng tôi cảm ơn các nhóm [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) đã chia sẻ nghiên cứu, mã nguồn và tài nguyên mô hình, giúp việc thích nghi với Ascend này trở thành hiện thực."
+    "567295dc0fc17e1f": "Chúng tôi cảm ơn các nhóm [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) đã chia sẻ nghiên cứu, mã nguồn và tài nguyên mô hình, giúp việc thích nghi với Ascend này trở thành hiện thực."
   },
   "navigation": [
     "Cài đặt",

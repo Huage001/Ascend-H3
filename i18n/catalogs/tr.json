@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "Yalnızca Ascend 910B3: **1344×768, 124 yerel kare, 24 FPS (5,1667 saniye, yaklaşık 5,17 saniye)**, sesli.",
     "1555f11b24255faf": "Beş yöntemin tümü sekiz ileriyi kullanır. Sol: BF16. Sağ: yerel W8A8 INT8. Tüm örnekler tek bir kart, aynı komut istemi, eşleşen Boşaltma kullanır.",
     "1ef93036e7583a5c": "## Teşekkürler",
-    "a026a2e95e9eafe8": "Araştırmalarını, kodlarını ve model kaynaklarını paylaşarak bu Ascend uyarlamasını mümkün kılan [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) ekiplerine teşekkür ederiz."
+    "567295dc0fc17e1f": "Araştırmalarını, kodlarını ve model kaynaklarını paylaşarak bu Ascend uyarlamasını mümkün kılan [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) ekiplerine teşekkür ederiz."
   },
   "navigation": [
     "Kurulum",

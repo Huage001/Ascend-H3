@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "Numai Ascend 910B3: **1344×768, 124 cadre native, 24 FPS (5,1667 secunde, aproximativ 5,17 secunde)**, cu sunet.",
     "1555f11b24255faf": "Toate cele cinci metode folosesc opt atacanți. Stânga: BF16. Dreapta: nativ W8A8 INT8. Toate mostrele folosesc un singur card, același prompt, descărcare potrivită.",
     "1ef93036e7583a5c": "## Mulțumiri",
-    "a026a2e95e9eafe8": "Mulțumim echipelor [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) pentru cercetările, codul și resursele modelelor puse la dispoziție, care au făcut posibilă această adaptare pentru Ascend."
+    "567295dc0fc17e1f": "Mulțumim echipelor [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) pentru cercetările, codul și resursele modelelor puse la dispoziție, care au făcut posibilă această adaptare pentru Ascend."
   },
   "navigation": [
     "Instalare",

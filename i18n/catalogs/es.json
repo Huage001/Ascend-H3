@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "Solo Ascend 910B3: **1344×768, 124 fotogramas nativos, 24 FPS (5,1667 segundos, aproximadamente 5,17 segundos)**, con audio.",
     "1555f11b24255faf": "Los cinco métodos utilizan ocho delanteros. Izquierda: BF16. Derecha: W8A8 INT8 nativo. Todas las muestras utilizan una tarjeta, el mismo mensaje, descarga coincidente.",
     "1ef93036e7583a5c": "## Agradecimientos",
-    "a026a2e95e9eafe8": "Agradecemos a los equipos de [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) por compartir su investigación, código y recursos de modelos, que hicieron posible esta adaptación a Ascend."
+    "567295dc0fc17e1f": "Agradecemos a los equipos de [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) por compartir su investigación, código y recursos de modelos, que hicieron posible esta adaptación a Ascend."
   },
   "navigation": [
     "Instalación",

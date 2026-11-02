@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "Ascend 910B3 のみ: **1344×768、124 ネイティブ フレーム、24 FPS (5.1667 秒、約 5.17 秒)**、オーディオ付き。",
     "1555f11b24255faf": "5 つのメソッドはすべて 8 つのフォワードを使用します。左: BF16。右: ネイティブ W8A8 INT8。すべてのサンプルは 1 つのカード、同じプロンプト、一致するオフロードを使用します。",
     "1ef93036e7583a5c": "## 謝辞",
-    "a026a2e95e9eafe8": "研究成果、コード、モデル資産を公開し、本プロジェクトの Ascend 対応を可能にしてくださった [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/)、[Veda](https://veda-sparse.github.io/)、[VDN](https://openvdn.github.io/)、[Spark-H3](https://zechengtang.github.io/Spark-H3/) の各チームに感謝します。"
+    "567295dc0fc17e1f": "研究成果、コード、モデル資産を公開し、本プロジェクトの Ascend 対応を可能にしてくださった [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/)、[Veda](https://veda-sparse.github.io/)、[VDN](https://openvdn.github.io/)、[Spark-H3](https://zechengtang.github.io/Spark-H3/)、[vLLM](https://vllm.ai/)、[vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) の各チームに感謝します。"
   },
   "navigation": [
     "インストール",

@@ -84,7 +84,7 @@
     "eb994062e65bb7de": "Ascend 910B3 فقط: **1344×768، 124 إطارًا أصليًا، 24 إطارًا في الثانية (5.1667 ثانية، 5.17 ثانية تقريبًا)**، مع الصوت.",
     "1555f11b24255faf": "جميع الطرق الخمس تستخدم ثمانية مهاجمين. اليسار: BF16. على اليمين: W8A8 INT8 الأصلي. تستخدم جميع العينات بطاقة واحدة، ونفس الموجه، والتفريغ المطابق.",
     "1ef93036e7583a5c": "## شكر وتقدير",
-    "a026a2e95e9eafe8": "نشكر فرق [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/) على مشاركة أبحاثها وشيفرتها وموارد نماذجها، مما أتاح هذا التكييف مع Ascend."
+    "567295dc0fc17e1f": "نشكر فرق [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) على مشاركة أبحاثها وشيفرتها وموارد نماذجها، مما أتاح هذا التكييف مع Ascend."
   },
   "navigation": [
     "التثبيت",

@@ -417,4 +417,4 @@ The earlier matched layer-Offload comparison is retained in the [historical sing
 
 ## Acknowledgements
 
-We thank the teams behind [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), and [Spark-H3](https://zechengtang.github.io/Spark-H3/) for sharing their research, code and model assets, which made this Ascend adaptation possible.
+We thank the teams behind [FastH3-v2](https://haoailab.com/blogs/fasth3-rtx/), [Veda](https://veda-sparse.github.io/), [VDN](https://openvdn.github.io/), [Spark-H3](https://zechengtang.github.io/Spark-H3/), [vLLM](https://vllm.ai/), and [vLLM-Omni](https://docs.vllm.ai/projects/vllm-omni/en/latest/) for sharing their research, code and model assets, which made this Ascend adaptation possible.
