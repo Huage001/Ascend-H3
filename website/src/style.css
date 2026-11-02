@@ -93,3 +93,21 @@
 .flow-branch::before{top:-16px}.flow-branch::after{bottom:-16px}.flow-branch .flow-block{height:100%}
 .method-item .method-diagram figcaption{font-size:10px}
 @media(min-width:1101px){.methods .wrap{width:min(1500px,calc(100% - 80px))}}
+
+/* Four comparable end-to-end latency plots. */
+.latency-explainer{max-width:820px;margin:20px 0 36px;color:#afbeb3;font-size:13px;line-height:1.9}
+.latency-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 44px}
+.latency-chart{min-width:0;margin:0;padding:20px 0 0;border-top:1px solid #ffffff38}
+.latency-heading{display:flex;justify-content:space-between;align-items:end;gap:14px;margin-bottom:20px}
+.latency-heading div>span{color:#a8bdac;font:700 11px/1.4 Manrope,'Noto Sans SC',sans-serif}
+.latency-heading h4{margin:6px 0 0;color:#f2f6ef;font-size:19px;font-weight:600;line-height:1.4}
+.latency-unit{flex:none;color:#9eafa3;font-size:11px}
+.latency-rows{list-style:none;padding:0;margin:0}
+.latency-row{display:grid;grid-template-columns:84px minmax(0,1fr) 80px;align-items:center;gap:12px;min-height:42px;border-bottom:1px solid #ffffff12}
+.latency-name{color:#edf3ed;font:700 12px/1.4 Manrope,sans-serif;white-space:nowrap}
+.latency-track{height:12px;min-width:0;background:#ffffff10}
+.latency-bar{display:block;height:100%;min-width:2px}
+.latency-value{color:#ecf3ea;text-align:right;font:600 12px/1.4 Manrope,sans-serif;white-space:nowrap;font-variant-numeric:tabular-nums}
+.latency-value small{color:#a9bbae;font-size:10px}
+.latency-axis{display:flex;justify-content:space-between;margin:10px 92px 0 96px;color:#98aa9e;font:500 10px/1.4 Manrope,'Noto Sans SC',sans-serif}
+@media(max-width:760px){.latency-grid{grid-template-columns:1fr;gap:36px}.latency-row{grid-template-columns:76px minmax(0,1fr) 76px;gap:8px}.latency-axis{margin-left:84px;margin-right:84px}.latency-heading h4{font-size:17px}}

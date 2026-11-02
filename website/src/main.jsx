@@ -94,9 +94,26 @@ const benchmark = {
   ],
 };
 
+function LatencyChart({ frameCount, devices, rows, t }) {
+  const isSingle = devices === 'single';
+  const maximum = frameCount === 124 ? 230 : 1250;
+  return <figure className="latency-chart" aria-labelledby={`latency-${frameCount}-${devices}-frames latency-${frameCount}-${devices}`}>
+    <figcaption className="latency-heading"><div><span id={`latency-${frameCount}-${devices}-frames`}>{t('performance.frame', { frames: frameCount })}</span><h4 id={`latency-${frameCount}-${devices}`}>{t(isSingle ? 'chart.single' : 'chart.multi')}</h4></div><span className="latency-unit">{t('chart.unit')}</span></figcaption>
+    <ul className="latency-rows">{rows.map(row => {
+      const value = isSingle ? row.single : row.multi;
+      const color = methods.find(item => item.name === row.name)?.color ?? '#cbd7c8';
+      return <li className="latency-row" key={row.name}>
+        <span className="latency-name">{row.name}</span>
+        <span className="latency-track" aria-hidden="true"><span className="latency-bar" style={{ width: `${value / maximum * 100}%`, backgroundColor: color }} /></span>
+        <span className="latency-value">{value.toFixed(2)}{isSingle && <small> {row.note}</small>}</span>
+      </li>;
+    })}</ul>
+    <div className="latency-axis" aria-hidden="true"><span>0</span><span>{t('chart.axisMaximum', { value: maximum })}</span></div>
+  </figure>;
+}
+
 function App() {
   const { t, i18n } = useTranslation();
-  const [frames, setFrames] = useState(124);
   const [coreFrames, setCoreFrames] = useState(124);
   const [copied, setCopied] = useState(false);
   const reduced = useReducedMotion();
@@ -174,10 +191,10 @@ function App() {
       <section id="performance" className="performance section-pad">
         <div className="wrap"><div className="section-top reveal"><div><div className="section-kicker"><span>{t('labels.performance')}</span><span className="kicker-line" /></div><h2>{t('performance.heading1')}<br /><span>{t('performance.heading2')}</span></h2></div><p>{t('performance.intro')}</p></div>
           <div className="core-comparison reveal"><div className="benchmark-head"><div><span className="micro">{t('labels.core')}</span><h3>{t('performance.coreTitle')}</h3></div><div className="segmented" aria-label={t('performance.coreFrames')}>{[124, 345].map(n => <SpecularButton key={n} radius={6} size="sm" className={coreFrames === n ? 'selected' : ''} aria-pressed={coreFrames === n} onClick={() => setCoreFrames(n)}>{t('performance.frame', { frames: n })}</SpecularButton>)}</div></div><p className="core-intro">{t('performance.coreIntro')}<strong>{t('performance.coreWarning')}</strong></p><div className="core-table-wrap"><table className="core-table"><thead><tr><th scope="col">{t('performance.method')}</th><th scope="col">{t('performance.ascend')} <span>{t('performance.latencySpeed')}</span></th><th scope="col">RTX PRO 6000 <span>{t('performance.latencySpeed')}</span></th></tr></thead><tbody>{coreBenchmark[coreFrames].map(row => <tr key={row.name}><th scope="row">{row.name}</th><td><span>{row.ascend[0].toFixed(2)} ms</span><strong>{row.ascend[1].toFixed(2)}×</strong></td><td><span>{row.gpu[0].toFixed(2)} ms</span><strong>{row.gpu[1].toFixed(2)}×</strong></td></tr>)}</tbody></table></div><p className="benchmark-note">{t('performance.coreNote')}</p><a className="inline-link" href={`${github}/blob/main/benchmarks/bf16-three-layer.json`} target="_blank" rel="noreferrer">{t('performance.coreSource')} <ArrowUpRight size={16} /></a></div>
-          <div className="benchmark reveal"><div className="benchmark-head"><div><span className="micro">{t('labels.e2e')}</span><h3>{t('performance.e2eTitle')}</h3></div><div className="segmented" aria-label={t('performance.frames')}>{[124, 345].map(n => <SpecularButton key={n} radius={6} size="sm" className={frames === n ? 'selected' : ''} aria-pressed={frames === n} onClick={() => setFrames(n)}>{t('performance.frame', { frames: n })}</SpecularButton>)}</div></div>
-            <div className="bench-legend"><span><i className="legend-single" /> {t('performance.single')}</span><span><i className="legend-multi" /> {t('performance.multi')}</span><span>{t('performance.units')}</span></div>
-            <div className="bench-rows">{benchmark[frames].map(row => <div className="bench-row" key={row.name}><div className="bench-name">{row.name}</div><div className="bar-group"><div className="bar-line"><div className="bar single" style={{ width: `${row.single / (frames === 124 ? 230 : 1250) * 72}%` }} /><span>{row.single.toFixed(2)} {row.note}</span></div><div className="bar-line"><div className="bar multi" style={{ width: `${row.multi / (frames === 124 ? 230 : 1250) * 72}%` }} /><span>{row.multi.toFixed(2)}</span></div></div><div className="speed">{row.speed}<small>×</small><span>{t('performance.relative')}</span></div></div>)}</div>
-            <p className="benchmark-note">{t('performance.e2eNote')}</p><a className="inline-link" href={`${github}#performance`} target="_blank" rel="noreferrer">{t('performance.e2eSource')} <ArrowUpRight size={16} /></a>
+          <div className="benchmark reveal"><div className="benchmark-head"><div><span className="micro">{t('labels.e2e')}</span><h3>{t('performance.e2eTitle')}</h3></div></div>
+            <p className="latency-explainer">{t('chart.explainer')}</p>
+            <div className="latency-grid">{[124, 345].flatMap(frameCount => ['single', 'multi'].map(devices => <LatencyChart key={`${frameCount}-${devices}`} frameCount={frameCount} devices={devices} rows={benchmark[frameCount]} t={t} />))}</div>
+            <p className="benchmark-note">{t('performance.e2eNote')} {t('chart.offloadComparison')}</p><a className="inline-link" href={`${github}#performance`} target="_blank" rel="noreferrer">{t('performance.e2eSource')} <ArrowUpRight size={16} /></a>
           </div>
         </div>
       </section>
