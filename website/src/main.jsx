@@ -24,8 +24,8 @@ const showcaseSource = `${github}#watch-the-fair-comparison`;
 const videoVersions = new Map(videoManifest.map(video => [video.file, video.sha256.slice(0, 12)]));
 const media = [
   { key: 'full', name: 'Full + LightX2V8', bf16: 'e59cf141-3d11-44fe-911c-0ebc9c70a3f2', int8: 'b848532f-adcf-407b-99d8-23befe85ae18' },
-  { key: 'vsa', name: 'VSA · FastH3 V2 · 80%', bf16: '778a882a-5e8a-46ef-92c5-a24719fe1fd7', int8: '5567de11-f619-44f3-b369-7459fe45b105' },
-  { key: 'veda', name: 'Veda · 90%', bf16: '9948d9f9-ad79-4266-9cbf-2749dc02d344', int8: '03cfb9ec-66be-4ed9-8fd8-171a6672836a' },
+  { key: 'vsa', name: 'VSA · FastH3 V2 · 80%', bf16: '47802ca4-31f4-46d9-a479-aef7075e3c41', int8: 'db092234-12a4-48d6-ac34-4271f97d6631' },
+  { key: 'veda', name: 'Veda · 90%', bf16: 'f7120a47-795a-47b0-9ce6-7e2ef732106e', int8: 'fd7a11f1-7a7d-45ab-a9c2-2d1fb15d620a' },
   { key: 'vdn', name: 'VDN · 官方配置', bf16: '2830941f-3a21-400e-aa9c-d0bbf7b84c4c', int8: 'fa7bff37-ba41-491f-b519-c071728cf34c' },
   { key: 'spark', name: 'Spark-H3 + LightX2V8', bf16: '31f6b343-e897-4998-8969-9ff84385194c', int8: '18db86f3-4dd9-40de-89b2-64a981d709cd' },
 ];
