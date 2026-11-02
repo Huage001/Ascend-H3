@@ -58,3 +58,38 @@
 .method-diagram figcaption{margin-top:17px;color:#99aa9d;font-size:11px;line-height:1.7}
 @media(max-width:1100px){.method-layout{gap:28px}.method-detail-body{grid-template-columns:1fr;gap:32px}.method-foot{margin-top:22px}.method-diagram{max-width:650px}}
 @media(max-width:650px){.method-layout{grid-template-columns:1fr;gap:30px}.method-detail{padding:0}.method-copy h3{font-size:30px}.diagram-branches{grid-template-columns:1fr}.diagram-heading{flex-wrap:wrap}.diagram-steps li{padding-bottom:12px}}
+
+/* All five methods are visible together rather than hidden behind tabs. */
+.methods-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:48px 22px;align-items:stretch}
+.method-item{display:flex;flex-direction:column;min-width:0;border-top:2px solid var(--method-color);padding-top:20px}
+.method-item-heading{min-width:0}.method-number{display:block;color:var(--method-color);font:700 11px Manrope,sans-serif;margin-bottom:16px}
+.method-item .detail-label{display:block;min-height:2.7em;font-size:9px;line-height:1.4;overflow-wrap:anywhere}
+.method-item h3{margin:10px 0 16px;font:700 25px/1.2 Manrope,sans-serif;overflow-wrap:anywhere}
+.method-item .method-description{font-size:13px;line-height:1.8;margin:0 0 24px;overflow-wrap:anywhere}
+.method-item .method-diagram{max-width:none;margin-top:0}
+.method-item .diagram-heading{align-items:start;flex-wrap:wrap}.method-item .diagram-heading strong{white-space:normal;overflow-wrap:anywhere}
+.method-item .diagram-branches{grid-template-columns:1fr}
+.method-item .method-foot{margin-top:24px}.method-item .method-foot p{overflow-wrap:anywhere}
+@supports (grid-template-rows:subgrid){.method-item{display:grid;grid-template-rows:subgrid;grid-row:span 4;row-gap:0}}
+@media(max-width:1100px){.methods-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){.methods-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}}
+@media(max-width:560px){.methods-grid{grid-template-columns:1fr;row-gap:42px}.method-item h3{font-size:28px}.method-item .detail-label{min-height:0}.method-item .method-description{font-size:14px}}
+
+/* Operator schematics use blocks and connectors rather than numbered steps. */
+.flowchart{display:flex;flex-direction:column;align-items:center;padding:20px 0 0}
+.flow-terminal{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;min-width:0;padding:9px 8px;border:1px solid #82988980;border-radius:3px;text-align:center;background:#ffffff06}
+.flow-terminal span{color:#a0b6a5;font:700 9px/1.3 Manrope,sans-serif}.flow-terminal strong{color:#e7f0e8;font:600 12px/1.5 Manrope,'Noto Sans SC',sans-serif;overflow-wrap:anywhere}
+.flow-terminal--output{border-color:var(--method-color);background:#ffffff0b}.flow-terminal--output span{color:var(--method-color)}
+.flow-arrow{position:relative;width:14px;height:22px;flex:none}
+.flow-arrow::before{content:'';position:absolute;left:6px;top:0;bottom:5px;width:1px;background:#a9bbad}
+.flow-arrow::after{content:'';position:absolute;left:3px;bottom:1px;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid #a9bbad}
+.flow-block{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:100%;min-width:0;min-height:58px;padding:10px 7px;border:1px solid #82988980;border-radius:3px;background:#1b2b23;text-align:center;overflow-wrap:anywhere}
+.flow-block strong{color:#eef5ee;font-size:12px;line-height:1.45;font-weight:700}.flow-block span{color:#b9cbbb;font-size:11px;line-height:1.5}
+.flow-block--npu{border-color:var(--method-color);background:#263a2d}.flow-block--merge{border-style:dashed;background:#202e2a}
+.flow-branches{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;padding:16px 0}
+.flow-branches::before,.flow-branches::after{content:'';position:absolute;left:25%;right:25%;height:1px;background:#a9bbad}
+.flow-branches::before{top:0}.flow-branches::after{bottom:0}
+.flow-branch{position:relative;display:flex;min-width:0}.flow-branch::before,.flow-branch::after{content:'';position:absolute;left:50%;width:1px;height:16px;background:#a9bbad}
+.flow-branch::before{top:-16px}.flow-branch::after{bottom:-16px}.flow-branch .flow-block{height:100%}
+.method-item .method-diagram figcaption{font-size:10px}
+@media(min-width:1101px){.methods .wrap{width:min(1500px,calc(100% - 80px))}}

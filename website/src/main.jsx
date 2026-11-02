@@ -42,13 +42,13 @@ function ComparisonVideo({ name, precision, id, local }) {
 }
 
 function MethodDiagram({ name, diagram, t }) {
+  const block = (node) => <div className={`flow-block${node.kind ? ` flow-block--${node.kind}` : ''}`}><strong>{node.title}</strong>{node.detail && <span>{node.detail}</span>}</div>;
   return <figure className="method-diagram" aria-label={t('methods.path', { name })}>
     <div className="diagram-heading"><span>{t('diagram.eyebrow')}</span><strong>{name} / ASCEND</strong></div>
-    <div className="diagram-input"><span>INPUT</span><strong>{diagram.input}</strong></div>
-    <ol className="diagram-steps">{diagram.steps.map((step, index) => <li key={step.title}>
-      <span className="diagram-node" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-      <div className="diagram-stage"><div className="diagram-stage-title"><strong>{step.title}</strong><span className="diagram-tiles" aria-hidden="true">{Array.from({ length: 8 }, (_, i) => <i key={i} className={(i + index * 3) % 5 < 2 ? 'on' : ''} />)}</span></div><span className="diagram-detail">{step.detail}</span>{step.branches && <div className="diagram-branches" aria-label={t('diagram.branches')}>{step.branches.map(branch => <span key={branch}>{branch}</span>)}</div>}</div>
-    </li>)}</ol>
+    <div className="flowchart"><div className="flow-terminal"><span>{t('diagram.inputLabel')}</span><strong>{diagram.input}</strong></div>
+      {diagram.steps.map(step => <React.Fragment key={step.title}><div className="flow-arrow" aria-hidden="true" />{step.branches ? <div className="flow-branches" aria-label={t('diagram.branches')}>{step.branches.map(branch => <div className="flow-branch" key={branch.title}>{block(branch)}</div>)}</div> : block(step)}</React.Fragment>)}
+      <div className="flow-arrow" aria-hidden="true" /><div className="flow-terminal flow-terminal--output"><span>{t('diagram.outputLabel')}</span><strong>{diagram.output}</strong></div>
+    </div>
     <figcaption>{t('diagram.caption')}</figcaption>
   </figure>;
 }
@@ -98,12 +98,8 @@ function App() {
   const { t, i18n } = useTranslation();
   const [frames, setFrames] = useState(124);
   const [coreFrames, setCoreFrames] = useState(124);
-  const [method, setMethod] = useState(1);
   const [copied, setCopied] = useState(false);
   const reduced = useReducedMotion();
-  const activeMethod = methods[method];
-  const activeCopy = t(`methods.items.${activeMethod.key}`, { returnObjects: true });
-  const activeDiagram = t(`diagram.${activeMethod.key}`, { returnObjects: true });
   const navItems = [
     { label: t('nav.project'), description: t('nav.projectDescription'), links: [{ label: t('nav.overview'), href: '#overview' }, { label: t('nav.methods'), href: '#methods' }] },
     { label: t('nav.results'), description: t('nav.resultsDescription'), links: [{ label: t('nav.performance'), href: '#performance' }, { label: t('nav.videos'), href: '#videos' }] },
@@ -162,8 +158,16 @@ function App() {
 
       <section id="methods" className="methods section-pad">
         <div className="wrap"><div className="section-top reveal"><div><div className="section-kicker"><span>{t('labels.methods')}</span><span className="kicker-line" /></div><h2>{t('methods.heading1')}<br />{t('methods.heading2')}</h2></div><p>{t('methods.intro')}</p></div>
-          <div className="method-layout reveal"><div className="method-list" role="tablist" aria-label={t('methods.tabs')}>{methods.map((item, i) => <SpecularButton key={item.name} radius={6} size="sm" role="tab" aria-selected={method === i} className={method === i ? 'method-tab active' : 'method-tab'} onClick={() => setMethod(i)}><span className="method-num">{item.number}</span><span>{item.name}</span><ArrowUpRight size={18} /></SpecularButton>)}</div>
-            <motion.div key={method} initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="method-detail" style={{ '--method-color': activeMethod.color }} role="tabpanel"><div className="method-detail-body"><div className="method-copy"><span className="detail-label">{activeCopy.label}</span><h3>{activeMethod.name}</h3><p className="method-description">{activeCopy.description}</p><div className="method-foot"><p>{activeCopy.note}</p><a className="inline-link" href={`${github}/blob/main/${activeMethod.source}`} target="_blank" rel="noreferrer">{t('methods.source')} <ArrowUpRight size={15} /></a></div></div><MethodDiagram name={activeMethod.name} diagram={activeDiagram} t={t} /></div></motion.div></div>
+          <div className="methods-grid reveal">{methods.map(item => {
+            const copy = t(`methods.items.${item.key}`, { returnObjects: true });
+            const diagram = t(`diagram.${item.key}`, { returnObjects: true });
+            return <article className="method-item" key={item.key} style={{ '--method-color': item.color }} aria-labelledby={`method-${item.key}`}>
+              <header className="method-item-heading"><span className="detail-label">{copy.label}</span><h3 id={`method-${item.key}`}>{item.name}</h3></header>
+              <p className="method-description">{copy.description}</p>
+              <MethodDiagram name={item.name} diagram={diagram} t={t} />
+              <div className="method-foot"><p>{copy.note}</p><a className="inline-link" href={`${github}/blob/main/${item.source}`} target="_blank" rel="noreferrer">{t('methods.source')} <ArrowUpRight size={15} /></a></div>
+            </article>;
+          })}</div>
         </div>
       </section>
 
