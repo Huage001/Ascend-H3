@@ -142,7 +142,7 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 
 Residente NPU-Starts bereiten AdaLN-Ergebnisse vor, bevor der Server bereit ist. Durch die Vorbereitung wird das geladene Modell aufgelöst und die tatsächlichen Sigma-Positionen von LoRA, die Aktualisierungsanzahl von DiT und die Video-/Audioverschiebungen zusammengeführt. Es ist nicht auf acht Schritte fest codiert. Verwenden Sie `serve --steps N`, um einen Lehrer-/benutzerdefinierten Schülerstart anzugeben, und verwenden Sie dieselbe Anzahl in `generate --steps N`. Ein widersprüchlicher destillierter Prüfpunktplan wird abgelehnt. Die Cache-Kapazität wächst mit den erforderlichen Plänen. Die ursprüngliche Projektionsberechnung bleibt erhalten; AdaLN Mastergewichtungen bleiben auf der CPU, während vorbereitete Ergebnisse auf der NPU bleiben. TP4/TP8 speichert auch native Zeiteinbettungen aus exakten Zeitschritteingaben, um zu vermeiden, dass Low-Bit-FP32-Reduktionsschwankungen Downstream-Caches ungültig machen. Gewichtungen, numerische Einstellungen und die Trefferübereinstimmung aller Ränge schützen weiterhin die Wiederverwendung. Starten Sie mit der neuen Konfiguration neu, um einen anderen Zeitplan vorab zu berechnen. Eine unvorbereitete Eingabe verwendet die ursprüngliche Berechnung und kann Gewichtungen übertragen. `--no-precompute-adaln` deaktiviert die Vorbereitung; Beim DiT-Modul-/Layer-Streaming bleibt es standardmäßig deaktiviert.
 
-Für Spark/VSA/VDN mit einer Karte und 345 Frames verwenden Sie `--offload layer --no-precompute-adaln` mit den ursprünglich validierten Operatoren. Die E2E-Tabelle markiert diese Offload-Zellen der nativen Schicht mit †L; ‡R identifiziert übereinstimmende Messungen, die aus dem vorherigen Lauf wiederverwendet wurden. Alle anderen Zellen behalten ihre individuell erfasste Aufenthaltsrichtlinie.
+Für Spark/VSA/VDN mit einer Karte und 345 Frames verwenden Sie `--offload layer --no-precompute-adaln` mit den ursprünglich validierten Operatoren. Die E2E-Tabelle markiert diese Offload-Zellen der nativen Schicht mit †L. Alle anderen Zellen behalten ihre individuell erfasste Aufenthaltsrichtlinie.
 
 Der Launcher legt die Deadline für native Worker-Anfragen auf 7200 Sekunden fest, sodass ein langes Video nicht durch die Upstream-Standardeinstellung von 600 Sekunden abgebrochen wird. Legen Sie `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` vor dem Start fest, um dieses Limit zu überschreiben. Es ändert das Warteverhalten, nicht die Modellberechnung oder die gemessene Anforderungsdauer.
 
@@ -220,12 +220,12 @@ Läuft von der Blockeingabe zur Blockausgabe, einschließlich Projektionen, Norm
 | 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
 | 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
 | 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
+| 345 | VSA V2 · 80% | 617.55 s †L | 363.99 s †T | 193.33 s | 104.71 s |
 | 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
+| 345 | VDN · official | 620.67 s †L | 388.58 s †T | 209.84 s | 117.27 s |
+| 345 | Spark-H3 · 90% | 419.44 s †L | 267.61 s †T | 150.50 s | 87.02 s |
 
-Abgedeckt **40/40**: 37 frische und 3 wiederverwendete vorherige Messungen. †T: Nur Text-Encoder-Layer-Offload; †L: natives DiT/Text-Encoder-Layer-Offload mit einschichtigem Prefetch und residentem VAE; ‡R: Entspricht den Originalmaßen von 2026-10-31. Für nicht markierte Zellen gibt es kein Laufzeit-Offload. Nur residente Zeilen berechnen AdaLN vorab; Layer-Offload-Zeilen erheben keinen Anspruch auf DiT-Residency oder Null-AdaLN-Transfer. VAE-Ränge entsprechen der Kartenanzahl; DiT Köpfe geteilt 56/28/14/7. Die native INT8-Abdeckung bleibt erhalten.[INT8 E2E-Datensätze](../benchmarks/ascend-int8-e2e.json)
+Abgedeckt **40/40**: 37 frische und 3 wiederverwendete vorherige Messungen. †T: Nur Text-Encoder-Layer-Offload; †L: natives DiT/Text-Encoder-Layer-Offload mit einschichtigem Prefetch und residentem VAE. Für nicht markierte Zellen gibt es kein Laufzeit-Offload. Nur residente Zeilen berechnen AdaLN vorab; Layer-Offload-Zeilen erheben keinen Anspruch auf DiT-Residency oder Null-AdaLN-Transfer. VAE-Ränge entsprechen der Kartenanzahl; DiT Köpfe geteilt 56/28/14/7. Die native INT8-Abdeckung bleibt erhalten.[INT8 E2E-Datensätze](../benchmarks/ascend-int8-e2e.json)
 
 <!-- END INT8 E2E MATRIX -->
 

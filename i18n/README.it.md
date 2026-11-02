@@ -142,7 +142,7 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 
 I lanci della NPU residente preparano i risultati AdaLN prima che il server sia pronto. La preparazione risolve il modello caricato e unisce le posizioni sigma effettive di LoRA, il conteggio degli aggiornamenti di DiT e gli spostamenti video/audio; non è codificato in otto passaggi. Utilizzare `serve --steps N` per specificare un avvio insegnante/studente personalizzato e utilizzare lo stesso conteggio in `generate --steps N`. Una pianificazione distillata del checkpoint in conflitto viene rifiutata. La capacità della cache aumenta con i piani richiesti. La matematica della proiezione originale viene mantenuta; I pesi principali AdaLN rimangono sulla CPU, mentre i risultati preparati rimangono sulla NPU. TP4/TP8 memorizzano inoltre gli incorporamenti temporali nativi dagli input esatti del passo temporale per evitare che la variazione di riduzione FP32 a bit basso invalidi le cache downstream. Pesi, impostazioni numeriche e accordo sui risultati di tutti i ranghi continuano a tutelare il riutilizzo. Riavviare con la nuova configurazione per precalcolare una pianificazione diversa; un input non preparato utilizza il calcolo originale e può trasferire pesi. `--no-precompute-adaln` disabilita la preparazione; Lo streaming del modulo/livello DiT lo mantiene disabilitato per impostazione predefinita.
 
-Per Spark/VSA/VDN a scheda singola da 345 frame, utilizzare `--offload layer --no-precompute-adaln` con gli operatori convalidati originali. La tabella E2E contrassegna queste celle di offload del livello nativo con †L; ‡R identifica le misurazioni corrispondenti riutilizzate dalla corsa precedente. Tutte le altre celle mantengono la loro politica di residenza registrata individualmente.
+Per Spark/VSA/VDN a scheda singola da 345 frame, utilizzare `--offload layer --no-precompute-adaln` con gli operatori convalidati originali. La tabella E2E contrassegna queste celle di offload del livello nativo con †L. Tutte le altre celle mantengono la loro politica di residenza registrata individualmente.
 
 Il programma di avvio imposta la scadenza per la richiesta del lavoratore nativo su 7200 secondi in modo che un video lungo non venga interrotto dall'impostazione predefinita di 600 secondi upstream. Imposta `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` prima del lancio per ignorare questo limite; cambia il comportamento di attesa, non il calcolo del modello o la durata misurata della richiesta.
 
@@ -220,12 +220,12 @@ Va dall'input del blocco all'output del blocco, incluse proiezioni, normalizzazi
 | 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
 | 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
 | 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
+| 345 | VSA V2 · 80% | 617.55 s †L | 363.99 s †T | 193.33 s | 104.71 s |
 | 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
+| 345 | VDN · official | 620.67 s †L | 388.58 s †T | 209.84 s | 117.27 s |
+| 345 | Spark-H3 · 90% | 419.44 s †L | 267.61 s †T | 150.50 s | 87.02 s |
 
-Coperto **40/40**: 37 misurazioni precedenti fresche e 3 riutilizzate. †T: solo download del livello codificatore di testo; †L: Offload livello nativo DiT/codificatore di testo con prelettura a un livello e VAE residente; ‡R: corrispondenti alle misure originali di 2026-10-31. Le celle non contrassegnate non hanno alcun download di runtime. Solo le righe residenti precalcolano AdaLN; le righe layer-Offload non presentano alcuna richiesta di residenza DiT o di trasferimento zero-AdaLN. VAE classifica il conteggio delle carte della partita; DiT teste divise il 56/28/14/7. La copertura nativa INT8 viene mantenuta.[Registra INT8 E2E](../benchmarks/ascend-int8-e2e.json)
+Coperto **40/40**: 37 misurazioni precedenti fresche e 3 riutilizzate. †T: solo download del livello codificatore di testo; †L: Offload livello nativo DiT/codificatore di testo con prelettura a un livello e VAE residente. Le celle non contrassegnate non hanno alcun download di runtime. Solo le righe residenti precalcolano AdaLN; le righe layer-Offload non presentano alcuna richiesta di residenza DiT o di trasferimento zero-AdaLN. VAE classifica il conteggio delle carte della partita; DiT teste divise il 56/28/14/7. La copertura nativa INT8 viene mantenuta.[Registra INT8 E2E](../benchmarks/ascend-int8-e2e.json)
 
 <!-- END INT8 E2E MATRIX -->
 

@@ -142,7 +142,7 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 
 NPU thường trú ra mắt chuẩn bị kết quả AdaLN trước khi máy chủ sẵn sàng. Quá trình chuẩn bị giải quyết mô hình đã tải và các vị trí sigma thực tế của LoRA, số lần cập nhật DiT và các thay đổi video/âm thanh; nó không được mã hóa cứng thành tám bước. Sử dụng `serve --steps N` để chỉ định lần khởi chạy của giáo viên/học sinh tùy chỉnh và sử dụng cùng số lượng trong `generate --steps N`. Lịch trình điểm kiểm tra chưng cất xung đột bị từ chối. Dung lượng bộ nhớ đệm tăng lên theo các kế hoạch được yêu cầu. Phép chiếu ban đầu được giữ lại; Trọng số chính của AdaLN nằm trên CPU, trong khi kết quả đã chuẩn bị vẫn nằm trên NPU. TP4/TP8 cũng ghi nhớ các phần nhúng thời gian gốc từ đầu vào dấu thời gian chính xác để tránh biến thể giảm FP32 bit thấp làm mất hiệu lực các bộ nhớ đệm xuôi dòng. Trọng lượng, cài đặt số và thỏa thuận truy cập tất cả các cấp vẫn đảm bảo việc sử dụng lại. Khởi động lại với cấu hình mới để tính toán trước một lịch trình khác; đầu vào không được chuẩn bị trước sẽ sử dụng tính toán ban đầu và có thể chuyển trọng số. `--no-precompute-adaln` vô hiệu hóa việc chuẩn bị; Truyền phát mô-đun/lớp DiT giữ cho nó bị tắt theo mặc định.
 
-Đối với Spark/VSA/VDN 345 khung thẻ đơn, hãy sử dụng `--offload layer --no-precompute-adaln` với các toán tử được xác thực ban đầu. Bảng E2E đánh dấu các ô Giảm tải lớp gốc này bằng †L; ‡R xác định các phép đo phù hợp được sử dụng lại từ lần chạy trước. Tất cả các tế bào khác vẫn giữ nguyên chính sách cư trú được ghi lại riêng của chúng.
+Đối với Spark/VSA/VDN 345 khung thẻ đơn, hãy sử dụng `--offload layer --no-precompute-adaln` với các toán tử được xác thực ban đầu. Bảng E2E đánh dấu các ô Giảm tải lớp gốc này bằng †L. Tất cả các tế bào khác vẫn giữ nguyên chính sách cư trú được ghi lại riêng của chúng.
 
 Trình khởi chạy đặt thời hạn yêu cầu của nhân viên gốc là 7200 giây để video dài không bị hủy theo mặc định 600 giây ngược dòng. Đặt `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` trước khi khởi chạy để ghi đè giới hạn này; nó thay đổi hành vi chờ đợi, không phải tính toán mô hình hoặc thời lượng yêu cầu được đo.
 
@@ -220,12 +220,12 @@ Chạy từ đầu vào khối đến đầu ra khối, bao gồm các phép chi
 | 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
 | 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
 | 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
+| 345 | VSA V2 · 80% | 617.55 s †L | 363.99 s †T | 193.33 s | 104.71 s |
 | 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
+| 345 | VDN · official | 620.67 s †L | 388.58 s †T | 209.84 s | 117.27 s |
+| 345 | Spark-H3 · 90% | 419.44 s †L | 267.61 s †T | 150.50 s | 87.02 s |
 
-Bao gồm **40/40**: 37 phép đo mới và 3 phép đo trước đó được sử dụng lại. †T: Chỉ giảm tải lớp mã hóa văn bản; †L: DiT/lớp mã hóa văn bản gốc Giảm tải với tìm nạp trước một lớp và VAE cố định; ‡R: khớp với số đo ban đầu từ 2026-10-31. Các ô không được đánh dấu không có thời gian giảm tải. Chỉ các hàng thường trú mới tính toán trước AdaLN; các hàng giảm tải lớp không tạo ra yêu cầu chuyển giao DiT hoặc zero-AdaLN. VAE xếp hạng số lượng thẻ trận đấu; Đầu DiT chia 56/28/14/7. Vùng phủ sóng INT8 gốc được giữ lại.[Bản ghi INT8 E2E](../benchmarks/ascend-int8-e2e.json)
+Bao gồm **40/40**: 37 phép đo mới và 3 phép đo trước đó được sử dụng lại. †T: Chỉ giảm tải lớp mã hóa văn bản; †L: DiT/lớp mã hóa văn bản gốc Giảm tải với tìm nạp trước một lớp và VAE cố định. Các ô không được đánh dấu không có thời gian giảm tải. Chỉ các hàng thường trú mới tính toán trước AdaLN; các hàng giảm tải lớp không tạo ra yêu cầu chuyển giao DiT hoặc zero-AdaLN. VAE xếp hạng số lượng thẻ trận đấu; Đầu DiT chia 56/28/14/7. Vùng phủ sóng INT8 gốc được giữ lại.[Bản ghi INT8 E2E](../benchmarks/ascend-int8-e2e.json)
 
 <!-- END INT8 E2E MATRIX -->
 

@@ -142,7 +142,7 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 
 Lansările NPU rezidente pregătesc rezultatele AdaLN înainte de pregătirea serverului. Pregătirea rezolvă modelul încărcat și pozițiile sigma reale ale LoRA îmbinate, numărul de actualizări DiT și schimbările video/audio; nu este codificat în opt pași. Utilizați `serve --steps N` pentru a specifica o lansare profesor/elev personalizat și utilizați același număr în `generate --steps N`. Un program de control distilat conflictual este respins. Capacitatea memoriei cache crește odată cu planurile necesare. Matematica originală de proiecție este reținută; Greutățile principale AdaLN rămân pe CPU, în timp ce rezultatele pregătite rămân pe NPU. TP4/TP8 memorează, de asemenea, încorporarea timpului nativ din intrările exacte cu pas de timp pentru a evita variația de reducere a FP32 cu biți mici care invalidează memoria cache în aval. Greutățile, setările numerice și acordul de lovituri pentru toate rangurile asigură încă reutilizarea. Reporniți cu noua configurație pentru a precalcula un program diferit; o intrare nepregătită utilizează calculul original și poate transfera ponderi. `--no-precompute-adaln` dezactivează pregătirea; Modulul/stratul DiT îl menține dezactivat în mod implicit.
 
-Pentru Spark cu un singur card cu 345 de cadre/VSA/VDN, utilizați `--offload layer --no-precompute-adaln` cu operatorii originali validați. Tabelul E2E marchează aceste celule de descărcare a stratului nativ cu †L; ‡R identifică măsurătorile care se potrivesc reutilizate din runda anterioară. Toate celelalte celule își păstrează politica de rezidență înregistrată individual.
+Pentru Spark cu un singur card cu 345 de cadre/VSA/VDN, utilizați `--offload layer --no-precompute-adaln` cu operatorii originali validați. Tabelul E2E marchează aceste celule de descărcare a stratului nativ cu †L. Toate celelalte celule își păstrează politica de rezidență înregistrată individual.
 
 Lansatorul setează termenul limită de solicitare a lucrătorului nativ la 7200 de secunde, astfel încât un videoclip lung să nu fie întrerupt de 600 de secunde implicite din amonte. Setați `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` înainte de lansare pentru a depăși această limită; modifică comportamentul de așteptare, nu calculul modelului sau durata măsurată a cererii.
 
@@ -220,12 +220,12 @@ Se execută de la intrarea blocului la ieșirea blocului, incluzând proiecții,
 | 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
 | 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
 | 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
+| 345 | VSA V2 · 80% | 617.55 s †L | 363.99 s †T | 193.33 s | 104.71 s |
 | 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
+| 345 | VDN · official | 620.67 s †L | 388.58 s †T | 209.84 s | 117.27 s |
+| 345 | Spark-H3 · 90% | 419.44 s †L | 267.61 s †T | 150.50 s | 87.02 s |
 
-Acoperit **40/40**: 37 măsurători anterioare proaspete și 3 refolosite. †T: strat codificator de text Numai descărcare; †L: DiT nativ/strat codificator de text Descărcare cu preîncărcare cu un singur strat și VAE rezident; ‡R: potrivirea măsurătorilor originale de la 2026-10-31. Celulele nemarcate nu au timp de rulare Descărcare. Numai rândurile rezidente precalculează AdaLN; layer-Rândurile de descărcare nu fac nicio revendicare DiT-reședință sau zero-AdaLN-transfer. VAE clasifică numărul de carduri de meci; DiT capete împărțite 56/28/14/7. Acoperirea nativă INT8 este păstrată.[INT8 Înregistrări E2E](../benchmarks/ascend-int8-e2e.json)
+Acoperit **40/40**: 37 măsurători anterioare proaspete și 3 refolosite. †T: strat codificator de text Numai descărcare; †L: DiT nativ/strat codificator de text Descărcare cu preîncărcare cu un singur strat și VAE rezident. Celulele nemarcate nu au timp de rulare Descărcare. Numai rândurile rezidente precalculează AdaLN; layer-Rândurile de descărcare nu fac nicio revendicare DiT-reședință sau zero-AdaLN-transfer. VAE clasifică numărul de carduri de meci; DiT capete împărțite 56/28/14/7. Acoperirea nativă INT8 este păstrată.[INT8 Înregistrări E2E](../benchmarks/ascend-int8-e2e.json)
 
 <!-- END INT8 E2E MATRIX -->
 

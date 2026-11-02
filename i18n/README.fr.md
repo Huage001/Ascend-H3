@@ -142,7 +142,7 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 
 Les lancements de NPU résidents préparent les résultats AdaLN avant que le serveur ne soit prêt. La préparation résout le modèle chargé et fusionne les positions sigma réelles de LoRA, le nombre de mises à jour de DiT et les décalages vidéo/audio ; il n'est pas codé en dur en huit étapes. Utilisez `serve --steps N` pour spécifier un lancement enseignant/étudiant personnalisé et utilisez le même nombre dans `generate --steps N`. Un programme de points de contrôle distillé contradictoire est rejeté. La capacité du cache augmente avec les plans requis. Les calculs de projection d'origine sont conservés ; Les poids principaux AdaLN restent sur le CPU, tandis que les résultats préparés restent sur le NPU. TP4/TP8 mémorisent également les intégrations temporelles natives à partir d'entrées de pas de temps exacts pour éviter que la variation de réduction FP32 à bits faibles n'invalide les caches en aval. Les poids, les paramètres numériques et l’accord de tous les rangs protègent toujours la réutilisation. Redémarrez avec la nouvelle configuration pour précalculer un planning différent ; une entrée non préparée utilise le calcul d'origine et peut transférer des poids. `--no-precompute-adaln` désactive la préparation ; Le streaming de module/couche DiT le maintient désactivé par défaut.
 
-Pour Spark/VSA/VDN à 345 images à carte unique, utilisez `--offload layer --no-precompute-adaln` avec les opérateurs validés d'origine. Le tableau E2E marque ces cellules de déchargement de couche native avec †L ; ‡R identifie les mesures correspondantes réutilisées lors de l'exécution précédente. Toutes les autres cellules conservent leur politique de résidence enregistrée individuellement.
+Pour Spark/VSA/VDN à 345 images à carte unique, utilisez `--offload layer --no-precompute-adaln` avec les opérateurs validés d'origine. Le tableau E2E marque ces cellules de déchargement de couche native avec †L . Toutes les autres cellules conservent leur politique de résidence enregistrée individuellement.
 
 Le lanceur définit le délai de demande du travailleur natif à 7200 secondes afin qu'une longue vidéo ne soit pas abandonnée par la valeur par défaut de 600 secondes en amont. Définissez `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` avant le lancement pour outrepasser cette limite ; cela modifie le comportement d'attente, pas le calcul du modèle ou la durée mesurée de la requête.
 
@@ -220,12 +220,12 @@ S'exécute de l'entrée du bloc à la sortie du bloc, y compris les projections,
 | 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
 | 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
 | 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
+| 345 | VSA V2 · 80% | 617.55 s †L | 363.99 s †T | 193.33 s | 104.71 s |
 | 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
+| 345 | VDN · official | 620.67 s †L | 388.58 s †T | 209.84 s | 117.27 s |
+| 345 | Spark-H3 · 90% | 419.44 s †L | 267.61 s †T | 150.50 s | 87.02 s |
 
-Couvert **40/40** : 37 mesures antérieures fraîches et 3 réutilisées. †T : déchargement de la couche d'encodeur de texte uniquement ; †L : déchargement de couche DiT/encodeur de texte natif avec prélecture à une couche et VAE résident ; ‡R : correspondant aux mesures originales de 2026-10-31. Les cellules non marquées n’ont pas de déchargement d’exécution. Seules les lignes résidentes précalculent AdaLN ; Les lignes de déchargement de couches ne font aucune réclamation de résidence DiT ou de transfert nul-AdaLN. VAE classe le nombre de cartes de correspondance ; Têtes DiT divisées 56/28/14/7. La couverture native INT8 est conservée.[Enregistrements E2E INT8](../benchmarks/ascend-int8-e2e.json)
+Couvert **40/40** : 37 mesures antérieures fraîches et 3 réutilisées. †T : déchargement de la couche d'encodeur de texte uniquement ; †L : déchargement de couche DiT/encodeur de texte natif avec prélecture à une couche et VAE résident . Les cellules non marquées n’ont pas de déchargement d’exécution. Seules les lignes résidentes précalculent AdaLN ; Les lignes de déchargement de couches ne font aucune réclamation de résidence DiT ou de transfert nul-AdaLN. VAE classe le nombre de cartes de correspondance ; Têtes DiT divisées 56/28/14/7. La couverture native INT8 est conservée.[Enregistrements E2E INT8](../benchmarks/ascend-int8-e2e.json)
 
 <!-- END INT8 E2E MATRIX -->
 

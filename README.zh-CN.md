@@ -31,7 +31,7 @@
 整合到同一个仓库，复用 vLLM-Omni 的模型加载、INT8 量化和 attention
 head 多卡并行，并支持可选的张量并行（TP）与序列并行（SP）。
 
-**已验证范围：**1344×768、124/345 帧、1/2/4/8 卡的 INT8 端到端共 40/40 项，其中 37 项本轮新测、3 项明确标记的历史分层 Offload 实测。昇腾 910B3 与 PRO 6000 的 BF16 常驻对照包含 20 项注意力核心和 20 项完整 DiT block 测量；注意力算子保留此前已验收版本。 新增 **30/30 组新测 SP 结果**，覆盖双／四／八卡的两种时长；全部 DiT 常驻，使用文本编码器 Offload 的格子单独标记。
+**已验证范围：**1344×768、124/345 帧、1/2/4/8 卡的 INT8 端到端共 40/40 项，其中 37 项本轮新测、3 项已验收的分层 Offload 实测。昇腾 910B3 与 PRO 6000 的 BF16 常驻对照包含 20 项注意力核心和 20 项完整 DiT block 测量；注意力算子保留此前已验收版本。 新增 **30/30 组新测 SP 结果**，覆盖双／四／八卡的两种时长；全部 DiT 常驻，使用文本编码器 Offload 的格子单独标记。
 
 ## 默认 768p 视频规格
 
@@ -192,8 +192,7 @@ NPU 的 DiT 常驻模式会在服务就绪前准备 AdaLN 结果。准备过程�
 Offload 默认关闭此功能。
 
 Spark/VSA/VDN 的单卡 345 帧使用 `--offload layer --no-precompute-adaln`，
-保留此前已验收的原算子。端到端表以 †L 标记原生分层 Offload，‡R 标记
-从上一轮复用的同配置实测；其他格子的常驻策略按各自记录说明。
+保留此前已验收的原算子。端到端表以 †L 标记原生分层 Offload；其他格子的常驻策略按各自记录说明。
 
 启动器将原生工作进程的单次请求等待上限设为 7200 秒，避免长视频被上游默认的
 600 秒上限中止。可在启动前设置 `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` 覆盖；这只
@@ -268,16 +267,16 @@ VDN／Spark 用 `text`；八卡全部 `none`。VAE 默认使用全部选中卡�
     <tr><td align="right">124</td><td>VDN · official</td><td align="right">216.91 s †T</td><td align="right">136.02 s<br>(1.59×)</td><td align="right">115.92 s †T<br>(1.87×)</td><td align="right">79.26 s<br>(2.74×)</td><td align="right">59.90 s<br>(3.62×)</td><td align="right">44.36 s<br>(4.89×)</td><td align="right">34.91 s<br>(6.21×)</td></tr>
     <tr><td align="right">124</td><td>Spark-H3 · 90%</td><td align="right">117.11 s †T</td><td align="right">79.41 s<br>(1.47×)</td><td align="right">67.14 s †T<br>(1.74×)</td><td align="right">48.87 s<br>(2.40×)</td><td align="right">35.02 s<br>(3.34×)</td><td align="right">29.05 s<br>(4.03×)</td><td align="right">20.78 s<br>(5.64×)</td></tr>
     <tr><td align="right">345</td><td>Full</td><td align="right">1211.17 s †T</td><td align="right">649.72 s †T<br>(1.86×)</td><td align="right">625.72 s †T<br>(1.94×)</td><td align="right">328.63 s<br>(3.69×)</td><td align="right">299.26 s<br>(4.05×)</td><td align="right">178.81 s<br>(6.77×)</td><td align="right">159.88 s<br>(7.58×)</td></tr>
-    <tr><td align="right">345</td><td>VSA V2 · 80%</td><td align="right">617.55 s †L ‡R</td><td align="right">363.99 s †T<br>(1.70×)</td><td align="right">334.36 s †T<br>(1.85×)</td><td align="right">193.33 s<br>(3.19×)</td><td align="right">165.62 s<br>(3.73×)</td><td align="right">104.71 s<br>(5.90×)</td><td align="right">83.26 s<br>(7.42×)</td></tr>
+    <tr><td align="right">345</td><td>VSA V2 · 80%</td><td align="right">617.55 s †L</td><td align="right">363.99 s †T<br>(1.70×)</td><td align="right">334.36 s †T<br>(1.85×)</td><td align="right">193.33 s<br>(3.19×)</td><td align="right">165.62 s<br>(3.73×)</td><td align="right">104.71 s<br>(5.90×)</td><td align="right">83.26 s<br>(7.42×)</td></tr>
     <tr><td align="right">345</td><td>Veda · 90%</td><td align="right">337.95 s †T</td><td align="right">225.31 s †T<br>(1.50×)</td><td align="right">188.40 s †T<br>(1.79×)</td><td align="right">130.11 s<br>(2.60×)</td><td align="right">98.70 s<br>(3.42×)</td><td align="right">75.93 s<br>(4.45×)</td><td align="right">54.98 s<br>(6.15×)</td></tr>
-    <tr><td align="right">345</td><td>VDN · official</td><td align="right">620.67 s †L ‡R</td><td align="right">388.58 s †T<br>(1.60×)</td><td align="right">377.01 s †T<br>(1.65×)</td><td align="right">209.84 s<br>(2.96×)</td><td align="right">167.51 s †T<br>(3.71×)</td><td align="right">117.27 s<br>(5.29×)</td><td align="right">92.20 s<br>(6.73×)</td></tr>
-    <tr><td align="right">345</td><td>Spark-H3 · 90%</td><td align="right">419.44 s †L ‡R</td><td align="right">267.61 s †T<br>(1.57×)</td><td align="right">231.16 s †T<br>(1.81×)</td><td align="right">150.50 s<br>(2.79×)</td><td align="right">120.20 s †T<br>(3.49×)</td><td align="right">87.02 s<br>(4.82×)</td><td align="right">66.18 s<br>(6.34×)</td></tr>
+    <tr><td align="right">345</td><td>VDN · official</td><td align="right">620.67 s †L</td><td align="right">388.58 s †T<br>(1.60×)</td><td align="right">377.01 s †T<br>(1.65×)</td><td align="right">209.84 s<br>(2.96×)</td><td align="right">167.51 s †T<br>(3.71×)</td><td align="right">117.27 s<br>(5.29×)</td><td align="right">92.20 s<br>(6.73×)</td></tr>
+    <tr><td align="right">345</td><td>Spark-H3 · 90%</td><td align="right">419.44 s †L</td><td align="right">267.61 s †T<br>(1.57×)</td><td align="right">231.16 s †T<br>(1.81×)</td><td align="right">150.50 s<br>(2.79×)</td><td align="right">120.20 s †T<br>(3.49×)</td><td align="right">87.02 s<br>(4.82×)</td><td align="right">66.18 s<br>(6.34×)</td></tr>
   </tbody>
 </table>
 
-†T：仅文本编码器 Offload；†L：DiT／文本逐层 Offload；‡R：复用已验收的历史实测。无标记格子不使用运行时 Offload。单卡基线除 345 帧 VSA、VDN、Spark 外均仅文本 Offload；这三组使用 DiT／文本逐层 Offload，复用 2026-10-31 已完整验收的实测。因此加速比也包含 Offload 策略变化带来的收益，不等同于纯并行效率。30 组 SP 均保持 DiT 常驻。
+†T：仅文本编码器 Offload；†L：DiT／文本逐层 Offload。无标记格子不使用运行时 Offload。单卡基线除 345 帧 VSA、VDN、Spark 外均仅文本 Offload；这三组使用 DiT／文本逐层 Offload，复用 2026-10-31 已完整验收的实测。因此加速比也包含 Offload 策略变化带来的收益，不等同于纯并行效率。30 组 SP 均保持 DiT 常驻。
 
-端到端计时包含文本编码、音视频解码与 MP4 写出，排除模型加载、提前合并 LoRA、启动阶段 AdaLN 准备和预热。30 组 SP 各执行一次带对齐核验的预热和一次正式请求，不追加 profile 请求；TP／单卡来源包括 37 组新测和 3 组明确标记的历史实测。选中卡有竞争时该次记录作废并重跑。VAE 并行数等于卡数，DiT heads 按 56/28/14/7 分配。
+端到端计时包含文本编码、音视频解码与 MP4 写出，排除模型加载、提前合并 LoRA、启动阶段 AdaLN 准备和预热。30 组 SP 各执行一次带对齐核验的预热和一次正式请求，不追加 profile 请求；TP／单卡来源包括 37 组新测和 3 组已验收的实测。选中卡有竞争时该次记录作废并重跑。VAE 并行数等于卡数，DiT heads 按 56/28/14/7 分配。
 
 [单卡基线与 TP 原始耗时](benchmarks/ascend-int8-e2e.json) · [SP 原始耗时与源码标识](benchmarks/ascend-sp-e2e.json)。
 

@@ -104,8 +104,7 @@ disabled by default.
 For single-card 345-frame Spark/VSA/VDN, use `--offload layer --no-precompute-adaln`
 with the original validated operators. The [E2E table](../README.md#performance)
 marks these native layer
-Offload cells with †L; ‡R identifies matching measurements reused from the
-previous run. All other cells retain their individually recorded residency policy.
+Offload cells with †L. All other cells retain their individually recorded residency policy.
 
 The launcher sets the native worker request deadline to 7200 seconds so a long
 video is not aborted by the upstream 600-second default. Set

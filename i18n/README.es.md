@@ -142,7 +142,7 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 
 Los lanzamientos de NPU residentes preparan los resultados de AdaLN antes de que el servidor esté listo. La preparación resuelve el modelo cargado y fusiona las posiciones sigma reales de LoRA, el recuento de actualizaciones de DiT y los cambios de video/audio; no está codificado en ocho pasos. Utilice `serve --steps N` para especificar un inicio de profesor/estudiante personalizado y utilice el mismo recuento en `generate --steps N`. Se rechaza un cronograma de puntos de control destilado contradictorio. La capacidad de caché crece con los planes necesarios. Se conservan las matemáticas de proyección originales; Los pesos maestros AdaLN permanecen en la CPU, mientras que los resultados preparados permanecen en la NPU. TP4/TP8 también memoriza incrustaciones de tiempo nativo a partir de entradas de pasos de tiempo exactos para evitar que la variación de reducción de FP32 de bits bajos invalide los cachés posteriores. Los pesos, las configuraciones numéricas y el acuerdo de impacto de todos los rangos aún protegen la reutilización. Reinicie con la nueva configuración para precalcular un cronograma diferente; una entrada no preparada utiliza el cálculo original y puede transferir pesos. `--no-precompute-adaln` desactiva la preparación; La transmisión de módulo/capa DiT lo mantiene desactivado de forma predeterminada.
 
-Para Spark/VSA/VDN de 345 cuadros de tarjeta única, utilice `--offload layer --no-precompute-adaln` con los operadores validados originales. La tabla E2E marca estas celdas de descarga de capa nativa con †L; ‡R identifica mediciones coincidentes reutilizadas de la ejecución anterior. Todas las demás células conservan su política de residencia registrada individualmente.
+Para Spark/VSA/VDN de 345 cuadros de tarjeta única, utilice `--offload layer --no-precompute-adaln` con los operadores validados originales. La tabla E2E marca estas celdas de descarga de capa nativa con †L. Todas las demás células conservan su política de residencia registrada individualmente.
 
 El iniciador establece la fecha límite de solicitud de trabajador nativo en 7200 segundos para que un video largo no sea cancelado por el valor predeterminado de 600 segundos ascendente. Configure `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` antes del lanzamiento para anular este límite; cambia el comportamiento de espera, no el cálculo del modelo o la duración medida de la solicitud.
 
@@ -220,12 +220,12 @@ Se ejecuta desde la entrada del bloque hasta la salida del bloque, incluidas pro
 | 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
 | 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
 | 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
+| 345 | VSA V2 · 80% | 617.55 s †L | 363.99 s †T | 193.33 s | 104.71 s |
 | 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
+| 345 | VDN · official | 620.67 s †L | 388.58 s †T | 209.84 s | 117.27 s |
+| 345 | Spark-H3 · 90% | 419.44 s †L | 267.61 s †T | 150.50 s | 87.02 s |
 
-Cubierto **40/40**: 37 mediciones anteriores frescas y 3 reutilizadas. †T: capa de codificador de texto Solo descarga; †L: descarga nativa de capa DiT/codificador de texto con captación previa de una capa y VAE residente; ‡R: coincide con las medidas originales de 2026-10-31. Las celdas sin marcar no tienen descarga en tiempo de ejecución. Sólo las filas residentes precalculan AdaLN; Las filas de descarga de capa no hacen ningún reclamo de residencia DiT o transferencia cero-AdaLN. VAE clasifica el recuento de cartas del partido; Cabezales DiT divididos 56/28/14/7. Se conserva la cobertura nativa INT8.[INT8 registros E2E](../benchmarks/ascend-int8-e2e.json)
+Cubierto **40/40**: 37 mediciones anteriores frescas y 3 reutilizadas. †T: capa de codificador de texto Solo descarga; †L: descarga nativa de capa DiT/codificador de texto con captación previa de una capa y VAE residente. Las celdas sin marcar no tienen descarga en tiempo de ejecución. Sólo las filas residentes precalculan AdaLN; Las filas de descarga de capa no hacen ningún reclamo de residencia DiT o transferencia cero-AdaLN. VAE clasifica el recuento de cartas del partido; Cabezales DiT divididos 56/28/14/7. Se conserva la cobertura nativa INT8.[INT8 registros E2E](../benchmarks/ascend-int8-e2e.json)
 
 <!-- END INT8 E2E MATRIX -->
 

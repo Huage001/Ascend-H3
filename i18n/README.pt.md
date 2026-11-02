@@ -142,7 +142,7 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 
 Os lançamentos de NPU residentes preparam os resultados AdaLN antes da preparação do servidor. A preparação resolve o modelo carregado e mescla as posições sigma reais de LoRA, contagem de atualização de DiT e mudanças de vídeo/áudio; não é codificado em oito etapas. Use `serve --steps N` para especificar um lançamento de professor/aluno personalizado e use a mesma contagem em `generate --steps N`. Uma programação de ponto de verificação destilada conflitante é rejeitada. A capacidade do cache aumenta com os planos necessários. A matemática da projeção original é mantida; Os pesos mestres AdaLN permanecem na CPU, enquanto os resultados preparados permanecem na NPU. TP4/TP8 também memoriza incorporações de tempo nativo a partir de entradas exatas de timestep para evitar variação de redução de FP32 de baixo bit, invalidando caches downstream. Pesos, configurações numéricas e acordo de acerto em todas as classificações ainda protegem a reutilização. Reinicie com a nova configuração para pré-calcular um agendamento diferente; uma entrada não preparada usa o cálculo original e pode transferir pesos. `--no-precompute-adaln` desativa a preparação; O streaming de módulo/camada DiT o mantém desabilitado por padrão.
 
-Para Spark/VSA/VDN de placa única de 345 quadros, use `--offload layer --no-precompute-adaln` com os operadores validados originais. A tabela E2E marca essas células de descarregamento da camada nativa com †L; ‡R identifica medições correspondentes reutilizadas da execução anterior. Todas as outras células mantêm a sua política de residência registada individualmente.
+Para Spark/VSA/VDN de placa única de 345 quadros, use `--offload layer --no-precompute-adaln` com os operadores validados originais. A tabela E2E marca essas células de descarregamento da camada nativa com †L. Todas as outras células mantêm a sua política de residência registada individualmente.
 
 O iniciador define o prazo de solicitação do trabalhador nativo para 7200 segundos, para que um vídeo longo não seja abortado pelo padrão upstream de 600 segundos. Defina `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT` antes do lançamento para substituir esse limite; ele altera o comportamento de espera, não o cálculo do modelo ou a duração medida da solicitação.
 
@@ -220,12 +220,12 @@ Funciona da entrada ao bloco de saída, incluindo projeções, normalização, R
 | 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
 | 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
 | 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
+| 345 | VSA V2 · 80% | 617.55 s †L | 363.99 s †T | 193.33 s | 104.71 s |
 | 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
+| 345 | VDN · official | 620.67 s †L | 388.58 s †T | 209.84 s | 117.27 s |
+| 345 | Spark-H3 · 90% | 419.44 s †L | 267.61 s †T | 150.50 s | 87.02 s |
 
-Coberto **40/40**: 37 medições anteriores frescas e 3 reutilizadas. †T: apenas descarregamento da camada do codificador de texto; †L: DiT nativo/descarregamento da camada do codificador de texto com pré-busca de uma camada e VAE residente; ‡R: correspondendo às medidas originais de 2026-10-31. Células não marcadas não têm descarregamento de tempo de execução. Somente linhas residentes pré-calculam AdaLN; As linhas de descarregamento de camada não fazem nenhuma reivindicação de residência DiT ou de transferência zero de AdaLN. VAE classifica a contagem de cartas correspondentes; Cabeças DiT divididas em 56/28/14/7. A cobertura nativa INT8 é mantida.[Registros INT8 E2E](../benchmarks/ascend-int8-e2e.json)
+Coberto **40/40**: 37 medições anteriores frescas e 3 reutilizadas. †T: apenas descarregamento da camada do codificador de texto; †L: DiT nativo/descarregamento da camada do codificador de texto com pré-busca de uma camada e VAE residente. Células não marcadas não têm descarregamento de tempo de execução. Somente linhas residentes pré-calculam AdaLN; As linhas de descarregamento de camada não fazem nenhuma reivindicação de residência DiT ou de transferência zero de AdaLN. VAE classifica a contagem de cartas correspondentes; Cabeças DiT divididas em 56/28/14/7. A cobertura nativa INT8 é mantida.[Registros INT8 E2E](../benchmarks/ascend-int8-e2e.json)
 
 <!-- END INT8 E2E MATRIX -->
 

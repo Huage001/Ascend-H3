@@ -142,7 +142,7 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
 
 Yerleşik NPU lansmanları, sunucu hazır olmadan önce AdaLN sonuçlarını hazırlar. Hazırlık, yüklenen modeli çözer ve LoRA'nin gerçek sigma konumlarını, DiT güncelleme sayısını ve video/ses geçişlerini birleştirir; sekiz adıma sabit kodlanmamıştır. Öğretmen/özel öğrenci başlatmayı belirtmek için `serve --steps N`'yi kullanın ve aynı sayıyı `generate --steps N`'de kullanın. Çakışan damıtılmış bir kontrol noktası programı reddedilir. Gerekli planlarla önbellek kapasitesi artar. Orijinal projeksiyon matematiği korunur; AdaLN ana ağırlıklar CPU'da kalırken, hazırlanan sonuçlar NPU'da kalır. TP4/TP8 aynı zamanda aşağı akış önbelleklerini geçersiz kılan düşük bitli FP32 azaltma varyasyonunu önlemek için tam zaman adımı girişlerinden yerel zaman yerleştirmelerini de belleğe alır. Ağırlıklar, sayısal ayarlar ve tüm sıralamalardaki isabet anlaşması hâlâ yeniden kullanımı koruyor. Farklı bir planlamayı önceden hesaplamak için yeni konfigürasyonla yeniden başlayın; hazırlıksız bir girdi orijinal hesaplamayı kullanır ve ağırlıkları aktarabilir. `--no-precompute-adaln` hazırlığı devre dışı bırakır; DiT modül/katman akışı, varsayılan olarak devre dışı kalmasını sağlar.
 
-Tek kartlı 345 çerçeveli Spark/VSA/VDN için, `--offload layer --no-precompute-adaln`'yi orijinal doğrulanmış operatörlerle birlikte kullanın. E2E tablosu bu yerel katman Boşaltma hücrelerini †L ile işaretler; ‡R, önceki çalıştırmadan yeniden kullanılan eşleşen ölçümleri tanımlar. Diğer tüm hücreler, bireysel olarak kaydedilmiş ikamet politikalarını korur.
+Tek kartlı 345 çerçeveli Spark/VSA/VDN için, `--offload layer --no-precompute-adaln`'yi orijinal doğrulanmış operatörlerle birlikte kullanın. E2E tablosu bu yerel katman Boşaltma hücrelerini †L ile işaretler. Diğer tüm hücreler, bireysel olarak kaydedilmiş ikamet politikalarını korur.
 
 Başlatıcı, yerel çalışan isteğinin son tarihini 7200 saniyeye ayarlar, böylece uzun bir video, yukarı akış 600 saniyelik varsayılan değere göre durdurulmaz. Bu sınırı geçersiz kılmak için başlatmadan önce `VLLM_OMNI_DLO_DP_WAVE_TIMEOUT`'yi ayarlayın; model hesaplamayı veya ölçülen istek süresini değil, bekleme davranışını değiştirir.
 
@@ -220,12 +220,12 @@ Projeksiyonlar, normalleştirme, RoPE, dikkat çekirdeği, AdaLN, FFN ve artık 
 | 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
 | 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
 | 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
+| 345 | VSA V2 · 80% | 617.55 s †L | 363.99 s †T | 193.33 s | 104.71 s |
 | 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
+| 345 | VDN · official | 620.67 s †L | 388.58 s †T | 209.84 s | 117.27 s |
+| 345 | Spark-H3 · 90% | 419.44 s †L | 267.61 s †T | 150.50 s | 87.02 s |
 
-Kapalı **40/40**: 37 taze ve 3 yeniden kullanılmış önceki ölçüm. †T: metin kodlayıcı katmanı Yalnızca boşaltma; †L: yerel DiT/metin kodlayıcı katmanı Tek katmanlı önceden getirme ve yerleşik VAE ile boşaltma; ‡R: 2026-10-31'den alınan orijinal ölçümlerle eşleşiyor. İşaretlenmemiş hücrelerde çalışma zamanı Aktarımı yoktur. Yalnızca yerleşik satırlar AdaLN'yi önceden hesaplar; katman Boşaltma satırları, DiT yerleşimi veya sıfır AdaLN aktarımı iddiasında bulunmaz. VAE maç kartı sayısını sıralar; DiT kafaları 56/28/14/7'ye bölündü. Yerel INT8 kapsamı korunur.[INT8 E2E kayıtları](../benchmarks/ascend-int8-e2e.json)
+Kapalı **40/40**: 37 taze ve 3 yeniden kullanılmış önceki ölçüm. †T: metin kodlayıcı katmanı Yalnızca boşaltma; †L: yerel DiT/metin kodlayıcı katmanı Tek katmanlı önceden getirme ve yerleşik VAE ile boşaltma. İşaretlenmemiş hücrelerde çalışma zamanı Aktarımı yoktur. Yalnızca yerleşik satırlar AdaLN'yi önceden hesaplar; katman Boşaltma satırları, DiT yerleşimi veya sıfır AdaLN aktarımı iddiasında bulunmaz. VAE maç kartı sayısını sıralar; DiT kafaları 56/28/14/7'ye bölündü. Yerel INT8 kapsamı korunur.[INT8 E2E kayıtları](../benchmarks/ascend-int8-e2e.json)
 
 <!-- END INT8 E2E MATRIX -->
 
