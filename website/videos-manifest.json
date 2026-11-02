@@ -1,52 +1,52 @@
 [
   {
     "file": "full-bf16.mp4",
-    "bytes": 40126485,
-    "sha256": "7018273f5b6e6705a0dc0e1e3b3684a2be0f6f87d1c25b767f07a30f8b7feca1"
+    "bytes": 15815452,
+    "sha256": "86072b85e4604c7c550e930e332f25a8a553e9a370ea94d5029bb917227eefd4"
   },
   {
     "file": "full-int8.mp4",
-    "bytes": 43095932,
-    "sha256": "6b5f5bf950ff1bd5da6dea3ad71d003515dd08ee309ba94573b462b1df06296f"
+    "bytes": 16794822,
+    "sha256": "00b10d8762e8e1cc4933ee1087c2148a7cba1f2a3cbf9e7d204048a7e074b127"
   },
   {
     "file": "vsa-bf16.mp4",
-    "bytes": 37321233,
-    "sha256": "ffa3f70ad466f454d60fb65ffd680baf5117938375b1941f180ce5ac8b635490"
+    "bytes": 12920847,
+    "sha256": "8fb90eb070ed2e3e1277eda110b49f56ddc8b3d48b26752022c294b35d1e789c"
   },
   {
     "file": "vsa-int8.mp4",
-    "bytes": 39733464,
-    "sha256": "de3288e47f3c5a3fd6d52756735d170315a00fc45fdb7354abf612a4d5c6b58c"
+    "bytes": 13129719,
+    "sha256": "76629ae697ffba53758136765db84a3a42faa05c6af6a2c2c861eb52586d38f8"
   },
   {
     "file": "veda-bf16.mp4",
-    "bytes": 44209648,
-    "sha256": "a013cbd95005245e795034d2c19a239f35b712b7e2b52341e04cc2259e74be42"
+    "bytes": 15866327,
+    "sha256": "b14e14827f492745e2553ee88d9eaac5c0df295e98906d20d09545122cd5246c"
   },
   {
     "file": "veda-int8.mp4",
-    "bytes": 44390134,
-    "sha256": "33e066b424cb5c69f64211679d2f3e95986bb6560a041a8cf17eeb7758e9cdf3"
+    "bytes": 16465217,
+    "sha256": "980786630f13abacd717ba0f36efba71340110870001725f95fc394b0e438a67"
   },
   {
     "file": "vdn-bf16.mp4",
-    "bytes": 37941323,
-    "sha256": "12e323e02bf263a3613409356b19ca7e40c1c7fc06450cf1e82831dfc8eecabe"
+    "bytes": 14622185,
+    "sha256": "32b14672f26c54430b7d5525c4713bd26ada03d149f80293af170e8390484bc1"
   },
   {
     "file": "vdn-int8.mp4",
-    "bytes": 39208194,
-    "sha256": "e165c968c10a74362571cdebbbe2f8f284228013dac538d0c14a3e6fcdc360e9"
+    "bytes": 15142569,
+    "sha256": "c8a98c0d2a867275118e13a1ca4c792e20bc95cc1457eef8f3d3ccb49490a564"
   },
   {
     "file": "spark-bf16.mp4",
-    "bytes": 42512710,
-    "sha256": "20f1c029dfe49ae92e6befcae8e23ac9d7f96ee0ec90df320321c6f34ceee1ac"
+    "bytes": 17340577,
+    "sha256": "9ad5d12c5d5f397e747c43713354b888eb901741930669a60399d8ab61c222bd"
   },
   {
     "file": "spark-int8.mp4",
-    "bytes": 43803938,
-    "sha256": "c74fd5680d232c709192cb3485a2949753232782f633f33e81f6a2e02ba12e18"
+    "bytes": 18144880,
+    "sha256": "0c2a2d6e69a93b10df1a1ca5bffd1cf5d33c5db974749e9aaf814df0e504118c"
   }
 ]

@@ -12,7 +12,7 @@ npm run dev
 Run `npm run build` to create the static site in `dist/`. The benchmark values
 and their qualifications are drawn from the root README. The ten comparison
 videos are stored in `public/videos` and their SHA256 values match the
-[345-frame provenance from the earlier repository revision](https://github.com/Huage001/Ascend-H3/blob/3ce8d35e49ee180b278f608ee9a9e00156015b69/examples/videos/qualitative-1344-345.json).
+[124-frame provenance](../examples/videos/qualitative-1344-124.json).
 Run `npm run verify:videos` to check all ten files against `videos-manifest.json`.
 
 The GitHub Pages workflow builds this site with the `/Ascend-H3/` base path.

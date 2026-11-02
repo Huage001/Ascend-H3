@@ -5,6 +5,12 @@ import { resolve } from 'node:path';
 
 const manifest = JSON.parse(await readFile(new URL('../videos-manifest.json', import.meta.url), 'utf8'));
 const directory = resolve(import.meta.dirname, '../public/videos');
+const expectedFiles = ['full', 'vsa', 'veda', 'vdn', 'spark'].flatMap(method =>
+  ['bf16', 'int8'].map(precision => `${method}-${precision}.mp4`)
+);
+if (manifest.length !== expectedFiles.length || expectedFiles.some(file => !manifest.some(video => video.file === file))) {
+  throw new Error('Video manifest must contain each of the ten comparisons exactly once');
+}
 
 for (const video of manifest) {
   const path = resolve(directory, video.file);

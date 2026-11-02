@@ -11,6 +11,7 @@ import FadeContent from './react-bits/FadeContent/FadeContent';
 import Magnet from './react-bits/Magnet/Magnet';
 import SpecularButton from './react-bits/SpecularButton/SpecularButton';
 import CardNav from './react-bits/CardNav/CardNav';
+import videoManifest from '../videos-manifest.json';
 import './i18n';
 import './style.css';
 
@@ -19,13 +20,14 @@ const Galaxy = lazy(() => import('./react-bits/Galaxy/Galaxy'));
 const SwarmCursor = lazy(() => import('./react-bits/SwarmCursor/SwarmCursor'));
 
 const github = 'https://github.com/Huage001/Ascend-H3';
-const showcaseSource = `${github}/blob/3ce8d35e49ee180b278f608ee9a9e00156015b69/README.md#watch-the-fair-comparison`;
+const showcaseSource = `${github}#watch-the-fair-comparison`;
+const videoVersions = new Map(videoManifest.map(video => [video.file, video.sha256.slice(0, 12)]));
 const media = [
-  { key: 'full', name: 'Full + LightX2V8', bf16: '1751d9fe-3ff9-48d1-a0dd-9ed62d431d17', int8: '0514e9a0-76dd-4946-b4b8-b39ca38d7c69' },
-  { key: 'vsa', name: 'VSA · FastH3 V2 · 80%', bf16: '4a03fd28-4c88-4b46-b3aa-7dcb4ec4b1c1', int8: 'bae64455-0bbc-4708-b33e-1e1a4269e4cf' },
-  { key: 'veda', name: 'Veda · 90%', bf16: '2c345f2b-4188-48d1-b0fc-6a44dd59800b', int8: 'bc8e2eb5-b51b-4a53-bf9b-05c432dfe62a' },
-  { key: 'vdn', name: 'VDN · 官方配置', bf16: '5e4d2ced-da14-4e50-b7ac-6ff1d298d478', int8: '7069c2e4-844c-497b-a824-7a26a515dce2' },
-  { key: 'spark', name: 'Spark-H3 + LightX2V8', bf16: '66032d79-cf29-499e-ad0e-3f1bcaa753a9', int8: 'c4a787a9-c1e9-46df-97f1-2887c7e49135' },
+  { key: 'full', name: 'Full + LightX2V8', bf16: 'e59cf141-3d11-44fe-911c-0ebc9c70a3f2', int8: 'b848532f-adcf-407b-99d8-23befe85ae18' },
+  { key: 'vsa', name: 'VSA · FastH3 V2 · 80%', bf16: '778a882a-5e8a-46ef-92c5-a24719fe1fd7', int8: '5567de11-f619-44f3-b369-7459fe45b105' },
+  { key: 'veda', name: 'Veda · 90%', bf16: '9948d9f9-ad79-4266-9cbf-2749dc02d344', int8: '03cfb9ec-66be-4ed9-8fd8-171a6672836a' },
+  { key: 'vdn', name: 'VDN · 官方配置', bf16: '2830941f-3a21-400e-aa9c-d0bbf7b84c4c', int8: 'fa7bff37-ba41-491f-b519-c071728cf34c' },
+  { key: 'spark', name: 'Spark-H3 + LightX2V8', bf16: '31f6b343-e897-4998-8969-9ff84385194c', int8: '18db86f3-4dd9-40de-89b2-64a981d709cd' },
 ];
 function Action({ children, ...props }) {
   return <Magnet padding={36} magnetStrength={4} maxOffset={8} wrapperClassName="action-magnet"><SpecularButton radius={8} size="md" baseColor="#6b7280" tint="#fff" tintOpacity={0.06} {...props}>{children}</SpecularButton></Magnet>;
@@ -35,7 +37,7 @@ function ComparisonVideo({ name, precision, id, local }) {
   const { t } = useTranslation();
   const [failed, setFailed] = useState(false);
   const original = `https://github.com/user-attachments/assets/${id}`;
-  const src = local ? `${import.meta.env.BASE_URL}videos/${local}` : original;
+  const src = local ? `${import.meta.env.BASE_URL}videos/${local}?v=${videoVersions.get(local)}` : original;
   return <div className="video-item"><div className="video-meta"><span>{name}</span><strong>{precision}</strong></div><div className="video-frame">{failed ? <div className="video-unavailable"><span>{t('videos.unavailable')}</span><a href={original} target="_blank" rel="noreferrer">{t('videos.github')} <ArrowUpRight size={14} /></a></div> : <video controls playsInline preload="metadata" src={src} onError={() => setFailed(true)} aria-label={t('videos.aria', { name, precision })} />}</div></div>;
 }
 
