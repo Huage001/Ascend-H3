@@ -360,68 +360,53 @@ not end-to-end generation times.
 <a id="performance"></a>
 <a id="sp-performance"></a>
 
-<!-- BEGIN SP E2E MATRIX -->
+<!-- BEGIN PARALLEL SCALING -->
 
-## Fresh INT8 SP: 2 / 4 / 8 cards
+## INT8 parallel scaling: TP and SP
 
-1344×768, eight actual DiT updates, seed 7. Every setting uses **one audited warmup and one formal request**, with no additional profiling request. All 30 cells are fresh. Timing includes text encoding, video/audio decoding and MP4 writing; model loading, prior LoRA merge and startup AdaLN preparation are excluded. Cells show SP latency and the existing TP latency divided by SP latency at the same card count. This is a complete-pipeline comparison, not a communication-only ratio.
-
-| Frames | Method | SP2 · vs TP2 | SP4 · vs TP4 | SP8 · vs TP8 |
-| ---: | --- | ---: | ---: | ---: |
-| 124 | Full | 106.17 s †T · 1.09× | 52.20 s · 1.24× | 28.38 s · 1.26× |
-| 124 | VSA V2 · 80% | 83.74 s †T · 1.12× | 41.05 s · 1.30× | 22.19 s · 1.37× |
-| 124 | Veda · 90% | 59.09 s †T · 1.18× | 29.59 s · 1.47× | 17.22 s · 1.47× |
-| 124 | VDN · official | 115.92 s †T · 1.17× | 59.90 s · 1.32× | 34.91 s · 1.27× |
-| 124 | Spark-H3 · 90% | 67.14 s †T · 1.18× | 35.02 s · 1.40× | 20.78 s · 1.40× |
-| 345 | Full | 625.72 s †T · 1.04× | 299.26 s · 1.10× | 159.88 s · 1.12× |
-| 345 | VSA V2 · 80% | 334.36 s †T · 1.09× | 165.62 s · 1.17× | 83.26 s · 1.26× |
-| 345 | Veda · 90% | 188.40 s †T · 1.20× | 98.70 s · 1.32× | 54.98 s · 1.38× |
-| 345 | VDN · official | 377.01 s †T · 1.03× | 167.51 s †T · 1.25× | 92.20 s · 1.27× |
-| 345 | Spark-H3 · 90% | 231.16 s †T · 1.16× | 120.20 s †T · 1.25× | 66.18 s · 1.31× |
-
-†T: text-encoder Offload only; †L: DiT/text layer Offload; †M: component Offload. Unmarked SP cells have no runtime Offload. TP uses its independently recorded policy in the table below, so a ratio with different Offload policies also includes that difference. The selected-card guard discards contaminated attempts and retries. VAE ranks match card count. SP2/SP4 reuse native input quantization where enabled; each raw record identifies its selected projection route. SP8 and streaming paths retain BF16 QKV transport. Attention cores are unchanged.
-
-[Fresh 30 records and source identity](benchmarks/ascend-sp-e2e.json)
-
-Resident-DiT BF16-QKV exception: **VDN · official / SP2 / 345**. For this setting, prefix the corresponding launch command with `H3_ASCEND_INPUT_EXCHANGE=0` and use its recorded Offload option. This removes the extra head-projection weight cache; model linears remain INT8.
-
-<!-- END SP E2E MATRIX -->
-
-<!-- BEGIN INT8 E2E MATRIX -->
-
-## Tensor-parallel INT8 E2E reference: 1 / 2 / 4 / 8 cards
-
-1344×768, eight actual DiT updates, including text encoding, video/audio decoding and MP4 writing. Loading, prior LoRA merge, AdaLN preparation and warmups are excluded. Prefer resident DiT; resident rows verify zero AdaLN misses and weight transfers on every rank around the formal request. After recorded OOMs, the marked single-card 345-frame cells use native layer Offload and reuse matching, fully validated prior measurements as requested; these cells are explicitly marked rather than presented as fresh measurements.
+1344×768, eight actual DiT updates, seed 7. **Speedup = single-card E2E time ÷ multi-card E2E time**, using the same attention method, precision and frame count. TP and SP share the same measured single-card baseline (1.00×). Each cell shows only that speedup; no TP-to-SP ratio is used.
 
 <table>
   <thead>
     <tr>
-      <th width="135" align="right">Frames</th>
-      <th width="135">Method</th>
-      <th width="135" align="right">1 card</th>
-      <th width="135" align="right">2 cards</th>
-      <th width="135" align="right">4 cards</th>
-      <th width="135" align="right">8 cards</th>
+      <th rowspan="2">Frames</th>
+      <th rowspan="2">Method</th>
+      <th colspan="2" align="center">2 cards</th>
+      <th colspan="2" align="center">4 cards</th>
+      <th colspan="2" align="center">8 cards</th>
+    </tr>
+    <tr>
+      <th width="105" align="right">TP</th>
+      <th width="105" align="right">SP</th>
+      <th width="105" align="right">TP</th>
+      <th width="105" align="right">SP</th>
+      <th width="105" align="right">TP</th>
+      <th width="105" align="right">SP</th>
     </tr>
   </thead>
   <tbody>
-    <tr><td align="right">124</td><td>Full</td><td align="right">197.66 s †T</td><td align="right">116.03 s</td><td align="right">64.78 s</td><td align="right">35.87 s</td></tr>
-    <tr><td align="right">124</td><td>VSA V2 · 80%</td><td align="right">146.81 s †T</td><td align="right">93.57 s</td><td align="right">53.47 s</td><td align="right">30.40 s</td></tr>
-    <tr><td align="right">124</td><td>Veda · 90%</td><td align="right">97.40 s †T</td><td align="right">69.66 s</td><td align="right">43.38 s</td><td align="right">25.33 s</td></tr>
-    <tr><td align="right">124</td><td>VDN · official</td><td align="right">216.91 s †T</td><td align="right">136.02 s</td><td align="right">79.26 s</td><td align="right">44.36 s</td></tr>
-    <tr><td align="right">124</td><td>Spark-H3 · 90%</td><td align="right">117.11 s †T</td><td align="right">79.41 s</td><td align="right">48.87 s</td><td align="right">29.05 s</td></tr>
-    <tr><td align="right">345</td><td>Full</td><td align="right">1211.17 s †T</td><td align="right">649.72 s †T</td><td align="right">328.63 s</td><td align="right">178.81 s</td></tr>
-    <tr><td align="right">345</td><td>VSA V2 · 80%</td><td align="right">617.55 s †L ‡R</td><td align="right">363.99 s †T</td><td align="right">193.33 s</td><td align="right">104.71 s</td></tr>
-    <tr><td align="right">345</td><td>Veda · 90%</td><td align="right">337.95 s †T</td><td align="right">225.31 s †T</td><td align="right">130.11 s</td><td align="right">75.93 s</td></tr>
-    <tr><td align="right">345</td><td>VDN · official</td><td align="right">620.67 s †L ‡R</td><td align="right">388.58 s †T</td><td align="right">209.84 s</td><td align="right">117.27 s</td></tr>
-    <tr><td align="right">345</td><td>Spark-H3 · 90%</td><td align="right">419.44 s †L ‡R</td><td align="right">267.61 s †T</td><td align="right">150.50 s</td><td align="right">87.02 s</td></tr>
+    <tr><td align="right">124</td><td>Full</td><td align="right">1.70×</td><td align="right">1.86× †T</td><td align="right">3.05×</td><td align="right">3.79×</td><td align="right">5.51×</td><td align="right">6.96×</td></tr>
+    <tr><td align="right">124</td><td>VSA V2 · 80%</td><td align="right">1.57×</td><td align="right">1.75× †T</td><td align="right">2.75×</td><td align="right">3.58×</td><td align="right">4.83×</td><td align="right">6.61×</td></tr>
+    <tr><td align="right">124</td><td>Veda · 90%</td><td align="right">1.40×</td><td align="right">1.65× †T</td><td align="right">2.25×</td><td align="right">3.29×</td><td align="right">3.84×</td><td align="right">5.66×</td></tr>
+    <tr><td align="right">124</td><td>VDN · official</td><td align="right">1.59×</td><td align="right">1.87× †T</td><td align="right">2.74×</td><td align="right">3.62×</td><td align="right">4.89×</td><td align="right">6.21×</td></tr>
+    <tr><td align="right">124</td><td>Spark-H3 · 90%</td><td align="right">1.47×</td><td align="right">1.74× †T</td><td align="right">2.40×</td><td align="right">3.34×</td><td align="right">4.03×</td><td align="right">5.64×</td></tr>
+    <tr><td align="right">345</td><td>Full</td><td align="right">1.86× †T</td><td align="right">1.94× †T</td><td align="right">3.69×</td><td align="right">4.05×</td><td align="right">6.77×</td><td align="right">7.58×</td></tr>
+    <tr><td align="right">345</td><td>VSA V2 · 80%</td><td align="right">1.70× †T</td><td align="right">1.85× †T</td><td align="right">3.19×</td><td align="right">3.73×</td><td align="right">5.90×</td><td align="right">7.42×</td></tr>
+    <tr><td align="right">345</td><td>Veda · 90%</td><td align="right">1.50× †T</td><td align="right">1.79× †T</td><td align="right">2.60×</td><td align="right">3.42×</td><td align="right">4.45×</td><td align="right">6.15×</td></tr>
+    <tr><td align="right">345</td><td>VDN · official</td><td align="right">1.60× †T</td><td align="right">1.65× †T</td><td align="right">2.96×</td><td align="right">3.71× †T</td><td align="right">5.29×</td><td align="right">6.73×</td></tr>
+    <tr><td align="right">345</td><td>Spark-H3 · 90%</td><td align="right">1.57× †T</td><td align="right">1.81× †T</td><td align="right">2.79×</td><td align="right">3.49× †T</td><td align="right">4.82×</td><td align="right">6.34×</td></tr>
   </tbody>
 </table>
 
-Covered **40/40**: 37 fresh and 3 reused prior measurements. †T: text-encoder layer Offload only; †L: native DiT/text-encoder layer Offload with one-layer prefetch and resident VAE; ‡R: matching original measurements from 2026-10-31. Unmarked cells have no runtime Offload. Only resident rows precompute AdaLN; layer-Offload rows make no DiT-residency or zero-AdaLN-transfer claim. VAE ranks match card count; DiT heads split 56/28/14/7. Native INT8 coverage is retained.
+†T marks text-encoder Offload in that multi-card run; unmarked cells have no runtime Offload. All single-card baselines use text-only Offload except 345-frame VSA, VDN and Spark, which use DiT/text layer Offload and reuse fully validated measurements from 2026-10-31. Scaling therefore includes any change in Offload policy, rather than isolating parallel efficiency. All 30 SP runs keep the DiT resident.
 
-[INT8 E2E records](benchmarks/ascend-int8-e2e.json)
+Timing includes text encoding, video/audio decoding and MP4 writing, and excludes loading, prior LoRA merge, startup AdaLN preparation and warmups. The 30 SP cells each use one audited warmup and one formal request, with no extra profiling request. The TP/single-card source contains 37 fresh and 3 explicitly marked historical measurements. Selected-card contention invalidates an attempt and triggers a retry. VAE ranks match card count; DiT heads split 56/28/14/7.
 
-<!-- END INT8 E2E MATRIX -->
+[Single-card baselines and TP timing records](benchmarks/ascend-int8-e2e.json) · [SP timing records and source identity](benchmarks/ascend-sp-e2e.json).
 
-The earlier matched layer-Offload comparison is retained in the [historical single-card reference](docs/archive/matched-offload-single-card.md). Reused cells in the current table link to unchanged original records.
+SP2/SP4 reuse native W8A8 input quantization before head-local QKV projection where enabled; SP8 retains BF16 QKV transport. **VDN / SP2 / 345 frames** uses BF16 QKV exchange with `H3_ASCEND_INPUT_EXCHANGE=0` to avoid the extra head-weight cache; model linears remain INT8. Attention cores are unchanged. See the [SP launch commands and memory settings](docs/serving.md#sequence-parallel-inference).
+
+<!-- END PARALLEL SCALING -->
+
+
+The earlier matched layer-Offload comparison is retained in the [historical single-card reference](docs/archive/matched-offload-single-card.md). The timing JSON retains links to unchanged original records.

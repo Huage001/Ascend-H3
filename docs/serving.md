@@ -160,7 +160,7 @@ Choose `--offload` for the requested frame count:
 All thirty selected SP records keep the DiT resident, with prepared AdaLN
 results. Text Offload does not stream the DiT. The examples above use `text`
 so that both supported frame counts fit; the short four-card cases were timed
-with `none` as shown in the [fresh SP table](../README.md#sp-performance).
+with `none` as shown in the [combined parallel-scaling table](../README.md#sp-performance).
 
 VDN SP2 / 345 retains the original BF16 QKV exchange to avoid the additional
 head-projection weight cache. Its DiT still uses the native INT8 recipe:

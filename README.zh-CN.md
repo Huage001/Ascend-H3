@@ -235,32 +235,53 @@ VDN／Spark 用 `text`；八卡全部 `none`。VAE 默认使用全部选中卡�
 <a id="performance"></a>
 <a id="sp-performance"></a>
 
-<!-- BEGIN SP E2E MATRIX -->
+<!-- BEGIN PARALLEL SCALING -->
 
-## 新测 INT8 SP：双卡／四卡／八卡
+## INT8 并行加速比：TP 与 SP
 
-1344×768、8 次实际 DiT 更新、seed 7。每个设定为**一次带对齐检查的预热、一次正式请求**，不追加 profile 请求，30 格均为新测。计时包括文本编码、视频／音频解码与 MP4 写入，排除模型加载、提前合并 LoRA 和启动阶段的 AdaLN 准备。每格列出 SP 耗时及同卡数原 TP 耗时除以 SP 耗时的比值；这是完整链路对照，不是纯通信加速比。
+1344×768、8 次实际 DiT 更新、seed 7。**加速比 = 同方法单卡端到端耗时 ÷ 多卡端到端耗时**，精度和帧数保持一致。TP 与 SP 共用已测的同方法单卡基线（1.00×），表内仅显示相对单卡的加速比。
 
-| 帧数 | 方法 | SP2 · 相对 TP2 | SP4 · 相对 TP4 | SP8 · 相对 TP8 |
-| ---: | --- | ---: | ---: | ---: |
-| 124 | Full | 106.17 s †T · 1.09× | 52.20 s · 1.24× | 28.38 s · 1.26× |
-| 124 | VSA V2 · 80% | 83.74 s †T · 1.12× | 41.05 s · 1.30× | 22.19 s · 1.37× |
-| 124 | Veda · 90% | 59.09 s †T · 1.18× | 29.59 s · 1.47× | 17.22 s · 1.47× |
-| 124 | VDN · official | 115.92 s †T · 1.17× | 59.90 s · 1.32× | 34.91 s · 1.27× |
-| 124 | Spark-H3 · 90% | 67.14 s †T · 1.18× | 35.02 s · 1.40× | 20.78 s · 1.40× |
-| 345 | Full | 625.72 s †T · 1.04× | 299.26 s · 1.10× | 159.88 s · 1.12× |
-| 345 | VSA V2 · 80% | 334.36 s †T · 1.09× | 165.62 s · 1.17× | 83.26 s · 1.26× |
-| 345 | Veda · 90% | 188.40 s †T · 1.20× | 98.70 s · 1.32× | 54.98 s · 1.38× |
-| 345 | VDN · official | 377.01 s †T · 1.03× | 167.51 s †T · 1.25× | 92.20 s · 1.27× |
-| 345 | Spark-H3 · 90% | 231.16 s †T · 1.16× | 120.20 s †T · 1.25× | 66.18 s · 1.31× |
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">帧数</th>
+      <th rowspan="2">方法</th>
+      <th colspan="2" align="center">2 卡</th>
+      <th colspan="2" align="center">4 卡</th>
+      <th colspan="2" align="center">8 卡</th>
+    </tr>
+    <tr>
+      <th width="105" align="right">TP</th>
+      <th width="105" align="right">SP</th>
+      <th width="105" align="right">TP</th>
+      <th width="105" align="right">SP</th>
+      <th width="105" align="right">TP</th>
+      <th width="105" align="right">SP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td align="right">124</td><td>Full</td><td align="right">1.70×</td><td align="right">1.86× †T</td><td align="right">3.05×</td><td align="right">3.79×</td><td align="right">5.51×</td><td align="right">6.96×</td></tr>
+    <tr><td align="right">124</td><td>VSA V2 · 80%</td><td align="right">1.57×</td><td align="right">1.75× †T</td><td align="right">2.75×</td><td align="right">3.58×</td><td align="right">4.83×</td><td align="right">6.61×</td></tr>
+    <tr><td align="right">124</td><td>Veda · 90%</td><td align="right">1.40×</td><td align="right">1.65× †T</td><td align="right">2.25×</td><td align="right">3.29×</td><td align="right">3.84×</td><td align="right">5.66×</td></tr>
+    <tr><td align="right">124</td><td>VDN · official</td><td align="right">1.59×</td><td align="right">1.87× †T</td><td align="right">2.74×</td><td align="right">3.62×</td><td align="right">4.89×</td><td align="right">6.21×</td></tr>
+    <tr><td align="right">124</td><td>Spark-H3 · 90%</td><td align="right">1.47×</td><td align="right">1.74× †T</td><td align="right">2.40×</td><td align="right">3.34×</td><td align="right">4.03×</td><td align="right">5.64×</td></tr>
+    <tr><td align="right">345</td><td>Full</td><td align="right">1.86× †T</td><td align="right">1.94× †T</td><td align="right">3.69×</td><td align="right">4.05×</td><td align="right">6.77×</td><td align="right">7.58×</td></tr>
+    <tr><td align="right">345</td><td>VSA V2 · 80%</td><td align="right">1.70× †T</td><td align="right">1.85× †T</td><td align="right">3.19×</td><td align="right">3.73×</td><td align="right">5.90×</td><td align="right">7.42×</td></tr>
+    <tr><td align="right">345</td><td>Veda · 90%</td><td align="right">1.50× †T</td><td align="right">1.79× †T</td><td align="right">2.60×</td><td align="right">3.42×</td><td align="right">4.45×</td><td align="right">6.15×</td></tr>
+    <tr><td align="right">345</td><td>VDN · official</td><td align="right">1.60× †T</td><td align="right">1.65× †T</td><td align="right">2.96×</td><td align="right">3.71× †T</td><td align="right">5.29×</td><td align="right">6.73×</td></tr>
+    <tr><td align="right">345</td><td>Spark-H3 · 90%</td><td align="right">1.57× †T</td><td align="right">1.81× †T</td><td align="right">2.79×</td><td align="right">3.49× †T</td><td align="right">4.82×</td><td align="right">6.34×</td></tr>
+  </tbody>
+</table>
 
-†T：仅文本编码器 Offload；†L：DiT／文本逐层 Offload；†M：整组件 Offload。无标记的 SP 格子不使用运行时 Offload。TP 沿用下表各自记录的策略，因此策略不同时，比值也包含 Offload 差异。选中卡出现竞争时，该次记录作废并重跑。VAE 并行卡数与总卡数一致。双／四卡在启用时复用原生输入量化；各原始记录注明实际投影通信路径。八卡及流式路径保留 BF16 QKV 通信。注意力核心不变。
+†T 表示该次多卡运行仅卸载文本编码器；无标记格子不使用运行时 Offload。单卡基线除 345 帧 VSA、VDN、Spark 外均仅文本 Offload；这三组使用 DiT／文本逐层 Offload，复用 2026-10-31 已完整验收的实测。因此加速比也包含 Offload 策略变化带来的收益，不等同于纯并行效率。30 组 SP 均保持 DiT 常驻。
 
-[新30组记录与源码标识](benchmarks/ascend-sp-e2e.json)
+端到端计时包含文本编码、音视频解码与 MP4 写出，排除模型加载、提前合并 LoRA、启动阶段 AdaLN 准备和预热。30 组 SP 各执行一次带对齐核验的预热和一次正式请求，不追加 profile 请求；TP／单卡来源包括 37 组新测和 3 组明确标记的历史实测。选中卡有竞争时该次记录作废并重跑。VAE 并行数等于卡数，DiT heads 按 56/28/14/7 分配。
 
-DiT 常驻、采用 BF16 QKV 通信的例外：**VDN · official / SP2 / 345**。在对应启动命令前加 `H3_ASCEND_INPUT_EXCHANGE=0`，并使用表中记录的 Offload 选项；这样去掉额外的 head 投影权重缓存，模型线性层仍为 INT8。
+[单卡基线与 TP 原始耗时](benchmarks/ascend-int8-e2e.json) · [SP 原始耗时与源码标识](benchmarks/ascend-sp-e2e.json)。
 
-<!-- END SP E2E MATRIX -->
+双／四卡在启用时复用原生 W8A8 输入量化，再计算本卡 heads 的 QKV；八卡保留 BF16 QKV 通信。**VDN／双卡 SP／345 帧** 使用 `H3_ASCEND_INPUT_EXCHANGE=0` 保留 BF16 QKV 通信，省去额外的 head 权重缓存，模型线性层仍为 INT8。注意力核心不变。具体启动方式见 [SP 服务指南](docs/serving.md#sequence-parallel-inference)。
+
+<!-- END PARALLEL SCALING -->
 
 ## 生成两组 768p 视频
 
@@ -325,32 +346,8 @@ done
 
 <!-- END BF16 LAYER RESULTS -->
 
-<!-- BEGIN INT8 E2E MATRIX -->
 
-## TP 参考：INT8 单卡、双卡、四卡、八卡
-
-1344×768，八次实际 DiT 更新，端到端包含文本编码、音视频解码与 MP4 写出；不含加载、提前 LoRA merge、AdaLN 准备和预热。优先让 DiT 常驻；常驻组正式请求前后逐 rank 核验 AdaLN 零未命中与零权重搬运。明确标记的单卡 345 帧组在实际显存不足后改用原生分层 Offload，并按用户要求复用配置一致、已完整验收的历史实测；逐项标记来源，不视为新测。
-
-| 帧数 | 方法 | 单卡 | 双卡 | 四卡 | 八卡 |
-| ---: | --- | ---: | ---: | ---: | ---: |
-| 124 | Full | 197.66 s †T | 116.03 s | 64.78 s | 35.87 s |
-| 124 | VSA V2 · 80% | 146.81 s †T | 93.57 s | 53.47 s | 30.40 s |
-| 124 | Veda · 90% | 97.40 s †T | 69.66 s | 43.38 s | 25.33 s |
-| 124 | VDN · official | 216.91 s †T | 136.02 s | 79.26 s | 44.36 s |
-| 124 | Spark-H3 · 90% | 117.11 s †T | 79.41 s | 48.87 s | 29.05 s |
-| 345 | Full | 1211.17 s †T | 649.72 s †T | 328.63 s | 178.81 s |
-| 345 | VSA V2 · 80% | 617.55 s †L ‡R | 363.99 s †T | 193.33 s | 104.71 s |
-| 345 | Veda · 90% | 337.95 s †T | 225.31 s †T | 130.11 s | 75.93 s |
-| 345 | VDN · official | 620.67 s †L ‡R | 388.58 s †T | 209.84 s | 117.27 s |
-| 345 | Spark-H3 · 90% | 419.44 s †L ‡R | 267.61 s †T | 150.50 s | 87.02 s |
-
-已覆盖 **40/40**：本轮新测 37 组，复用历史实测 3 组。†T：仅文本编码器逐层 Offload；†L：DiT 与文本编码器原生逐层 Offload，预取一层，VAE 常驻；‡R：复用 2026-10-31 的同配置原始记录。未标记格子无运行期 Offload。仅常驻组预计算 AdaLN；逐层 Offload 组不声称 DiT 常驻或 AdaLN 零搬运。VAE 并行数等于卡数，DiT head 按 56/28/14/7 分配；保留原生 INT8 覆盖规则。
-
-[INT8 E2E records](benchmarks/ascend-int8-e2e.json)
-
-<!-- END INT8 E2E MATRIX -->
-
-此前统一分层 Offload 的对照移至[历史单卡附录](docs/archive/matched-offload-single-card.zh-CN.md)。当前表中复用的格子仍链接到未改动的原始记录。
+此前统一分层 Offload 的对照移至[历史单卡附录](docs/archive/matched-offload-single-card.zh-CN.md)。原始耗时 JSON 保留了指向未改动记录的链接。
 
 ## 效果展示与验证范围
 
