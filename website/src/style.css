@@ -111,3 +111,6 @@
 .latency-value small{color:#a9bbae;font-size:10px}
 .latency-axis{display:flex;justify-content:space-between;margin:10px 92px 0 96px;color:#98aa9e;font:500 10px/1.4 Manrope,'Noto Sans SC',sans-serif}
 @media(max-width:760px){.latency-grid{grid-template-columns:1fr;gap:36px}.latency-row{grid-template-columns:76px minmax(0,1fr) 76px;gap:8px}.latency-axis{margin-left:84px;margin-right:84px}.latency-heading h4{font-size:17px}}
+
+.intro .intro-grid{grid-template-columns:minmax(0,1fr);max-width:760px;gap:28px}
+.intro-grid .body-copy{max-width:720px}
