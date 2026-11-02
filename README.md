@@ -250,7 +250,7 @@ and any required arguments:
   </thead>
   <tbody>
     <tr><td><code>full</code></td><td><code>/models/MiniMax-H3</code></td><td>—</td></tr>
-    <tr><td><code>vsa</code></td><td><code>/models/FastH3-V2</code></td><td>—</td></tr>
+    <tr><td><code>vsa</code></td><td><code>/models/FastH3-V2</code></td><td>None: official V2 full student weights, including trained gates, load through <code>--model</code>; do not pass <code>--lora</code>.</td></tr>
     <tr><td><code>veda</code></td><td><code>/models/MiniMax-H3</code></td><td><code>--predictor /models/veda/predictor.safetensors</code></td></tr>
     <tr><td><code>vdn</code></td><td><code>/models/MiniMax-H3</code></td><td><code>--lora /models/VDN/stage-dmd-step-250</code></td></tr>
     <tr><td><code>spark</code></td><td><code>/models/MiniMax-H3</code></td><td>—</td></tr>

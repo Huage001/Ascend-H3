@@ -116,7 +116,8 @@ h3-ascend serve --method full --model /models/MiniMax-H3 \
   --precision int8 --devices 1 --offload text
 ```
 
-其他注意力：
+其他注意力：VSA V2 直接通过 `--model` 加载官方完整学生权重及训练门控，
+无需额外 LoRA，也不接受 `--lora`；早期 V1 的“仅挂载官方 LoRA”说法不适用于当前版本。
 
 ```bash
 h3-ascend serve --method vsa --model /models/FastH3-V2 \

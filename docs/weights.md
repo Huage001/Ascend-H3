@@ -79,8 +79,10 @@ h3-ascend generate --method vsa --case 1344-345 --prompt-file prompt.txt \
 
 中文：VSA 已切换到官方 FastH3 V2 完整学生模型，80% 稀疏、8 次前向、shift 10/3。
 不能仅把旧 LoRA 的稀疏度从 90% 改为 80%，也不能复用旧四步结果；完整权重、训练门控、
-采样日程必须一起更换。INT8 使用同一 V2 学生，经原生量化后运行；双卡/四卡仍使用
-vLLM-Omni attention-head TP。新版视频和性能未验收前均标记为待完成。
+采样日程必须一起更换。通过 `--model /models/FastH3-V2` 加载完整学生权重及 50 个门控，
+不传 `--lora`；早期 V1 的“仅挂载官方 LoRA”说法不适用于当前 V2。INT8 使用同一
+V2 学生，经原生量化后运行。多卡支持 TP 和 SP；视频及两种时长的测试结果见
+[中英文 README](../README.zh-CN.md#performance)。
 
 ## Veda predictor
 
