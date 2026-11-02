@@ -129,7 +129,7 @@ https://github.com/user-attachments/assets/c4a787a9-c1e9-46df-97f1-2887c7e49135
 
 VSA V2 uses 80% video sparsity; Veda uses 90%. Text and audio retain their native rules.
 
-[Parameters, SHA256 and provenance for all ten videos](examples/videos/qualitative-1344-345.json). Full decoding verifies 345 frames and audio; 16 uniform frames per clip were visually reviewed. Distinct students are not asserted to be pixel- or perceptually equivalent. VSA retains shot changes; no flicker-free guarantee is made.
+[Parameters, SHA256 and provenance for all ten videos](examples/videos/qualitative-1344-345.json).
 
 The initial integration targets batch-one T2VA without reference videos.
 See [architecture](docs/architecture.md), [validation status](docs/validation.md)
